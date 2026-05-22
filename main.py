@@ -16,11 +16,11 @@ number_3_stats = []
 number_4_stats = []
 
 
-numbers_stat = {
+stats_by_number_pos = {
         'n1': [0,0,0,0,0,0,0,0,0,0],
         'n2': [0,0,0,0,0,0,0,0,0,0],
         'n3': [0,0,0,0,0,0,0,0,0,0],
-        'n4': [0,0,0,0,0,0,0,0,0,0]
+        'n4': [0,0,0,0,0,0,0,0,0,0],
 }
 
 print("-"*20)
@@ -39,23 +39,39 @@ for number in numbers_dict_list:
     if int(number['n4']) > 9 or  int(number['n4']) < 0:
         continue
 
-    if int(number['n1']) == 0:
-        numbers_stat['n1'] = numbers_stat['n1'] + 1
-    if int(number['n2']) == 0:
-        numbers_stat['n2'] = numbers_stat['n2'] + 1
-    if int(number['n3']) == 0:
-        numbers_stat['n3'] = numbers_stat['n3'] + 1
-    if int(number['n4']) == 0:
-        numbers_stat['n4'] = numbers_stat['n4'] + 1
+    stats_by_number_pos['n1'][int(number['n1'])] += 1
+ 
+    stats_by_number_pos['n2'][int(number['n2'])] += 1
+ 
+    stats_by_number_pos['n3'][int(number['n3'])] += 1
+ 
+    stats_by_number_pos['n4'][int(number['n4'])] += 1
+ 
 
+   
     print(f"Number1: {number['date']} {number['draw']} {number['n1']},{number['n2']}")
     p = p + 1
 
 print("-"*20)
 print(f"Total numbers: {i}")
-print(f"Total valid numbers: {p}")
-for number in numbers_stat:
-    print(f"{number}: {numbers_stat[number]}")
+print(f"Valid numbers: {p}")
+
+print("stats by number position:")
+for number in stats_by_number_pos:
+    print(f"{number}: {stats_by_number_pos[number]}")
+
+print("###n1")
+number = 0
+for count in stats_by_number_pos['n1']:
+    print(f"{number} -> {count}", '=' * count)
+    number +=1
+
+print("###n2")
+number = 0
+for count in stats_by_number_pos['n2']:
+    print(f"{number} -> {count}", '=' * count)
+    number += 1
+
 
 print("done.")
 
