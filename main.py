@@ -50,7 +50,7 @@ print("processing...")
 i = 0
 p = 0
 # process the numbers and calculate statistics
-# line by line in the csv; each line represent a dict datastruct that is an element of the list
+# process line by line in the csv; each line represent a dict datastruct that is an element of the list
 for number in numbers_dict_list:
     i = i + 1
 
@@ -64,7 +64,7 @@ for number in numbers_dict_list:
     if int(number['n4']) > 9 or  int(number['n4']) < 0:
         continue
 
-    # tally up number 0-9 for each pos n1-n4
+    # calculate tally up number 0-9 for each pos n1-n4
     stats_by_number_pos['n1'][int(number['n1'])] += 1
  
     stats_by_number_pos['n2'][int(number['n2'])] += 1
@@ -88,7 +88,7 @@ for number in stats_by_number_pos:
 
 
 print("###n1")
-number = 0
+# todo: make a function TOP3
 
 count_top3 = [{
     "number": 0,
@@ -102,7 +102,84 @@ count_top3 = [{
 }]
 
 ### n1 TOP3
+number = 0
 for count in stats_by_number_pos['n1']:
+    print(f"{number} -> {count}", '=' * count)
+
+    top_idx = 0
+    for top in count_top3:
+
+        print(f"checking {count} against {top['count']} top{top_idx}")    
+        if count > top['count']:
+            print (f"\tOk count {count} > top {top['count']}")
+
+            replaced_count = -1
+            replaced_number = 0
+            # while i < len(count_top3):      # shift top numbers down
+            #     replaced_count = count_top3[i]['count']
+            #     replaced_number = count_top3[i]['number']
+            #     print(f"i {i} replaced_count {replaced_count}, replaced_number {replaced_number}")
+
+            #     count_top3[i]['count'] = count
+            #     count_top3[i]['number'] = number
+            #     print(f"i {i} count {count_top3[i]['count']}, count_top3[i]['number'] {number}")
+            #     i +=1
+
+            current_top_idx = 0
+            while current_top_idx < len(count_top3):
+                
+                #print(f"current_top_idx {current_top_idx}")
+
+                # skip to the current top and start shift from there 
+                if (current_top_idx < top_idx):
+                    #print(f"skippng {current_top_idx}")
+                    continue
+
+                #now shift down top numbers from current_top, top_idx
+                current_top = count_top3[current_top_idx]
+                if replaced_count == -1:
+                    top['count'] = count
+                    top['number'] = number
+                    print(f"set {top['number']} has {top['count']}")
+                    replaced_count = count
+                    replaced_number = number
+                else:                
+                    replaced_count = current_top['count']
+                    replaced_number = current_top['number']
+                    current_top['count'] = replaced_count
+                    current_top['number'] = replaced_number
+
+
+                current_top_idx += 1
+            break
+
+        pprint.pprint(top)     
+        top_idx +=1         
+    number +=1
+
+    ###end for
+
+print("n1_Top3: ")
+for top in count_top3:
+    print(f"{top['number']} has {top['count']}")
+
+print("###n2")
+
+# todo: make a function TOP3
+number = 0
+count_top3 = [{
+    "number": 0,
+    "count": 0
+},{
+    "number": 0,
+    "count": 0
+},{
+    "number": 0,
+    "count": 0
+}]
+
+### n2 TOP3
+for count in stats_by_number_pos['n2']:
     print(f"{number} -> {count}", '=' * count)
     # top_i = 0
     for top in count_top3:
@@ -115,17 +192,11 @@ for count in stats_by_number_pos['n1']:
         # top_i +=1         
     number +=1
 
-print("n1_Top3: ")
+
+print("n2_Top3: ")
 for top in count_top3:
     print(f"{top['number']} has {top['count']}")
 
-print("###n2")
-
-number = 0
-for count in stats_by_number_pos['n2']:
-    print(f"{number} -> {count}", '=' * count)
-    number += 1
-print("n2_Top3: ")
 
 ### TOP 3 n1-n4
 
