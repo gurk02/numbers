@@ -1,12 +1,14 @@
 
 import csv
+import pprint
 
 numbers_file_csv = 'data/4numbers.csv'
 
+####IMPORT
 # read the numbers from the csv file and store them in a list of dictionaries
 with open(numbers_file_csv, 'r') as f:
-    reader = csv.DictReader(f)
-    numbers_dict_list = list(reader)
+    reader = csv.DictReader(f)      # instaniate a dictreader from obj file f
+    numbers_dict_list = list(reader) # convert dictreader obj to a list of dictionaires
 
 numbers_stats = []
 valid_numbers = [0,1,2,3,4,5,6,7,8,9]
@@ -23,13 +25,36 @@ stats_by_number_pos = {
         'n4': [0,0,0,0,0,0,0,0,0,0],
 }
 
+eve_n1_number_9_dates = [
+    #dates
+]
+
+eve_n1_numbers = [10]
+
+
+universe = [
+    {
+        "draw": "eve",
+        "position": 1,
+        "number": 9,
+        "dates": ["05/21/26","05/08/26"]
+    },
+    {
+        
+    }
+]
+
+### PROCESS
 print("-"*20)
 print("processing...")
 i = 0
 p = 0
 # process the numbers and calculate statistics
+# line by line in the csv; each line represent a dict datastruct that is an element of the list
 for number in numbers_dict_list:
     i = i + 1
+
+    ## check if number valid
     if int(number['n1']) > 9 or int(number['n1']) < 0:
         continue
     if int(number['n2']) > 9 or int(number['n2']) < 0:
@@ -39,6 +64,7 @@ for number in numbers_dict_list:
     if int(number['n4']) > 9 or  int(number['n4']) < 0:
         continue
 
+    # tally up number 0-9 for each pos n1-n4
     stats_by_number_pos['n1'][int(number['n1'])] += 1
  
     stats_by_number_pos['n2'][int(number['n2'])] += 1
@@ -47,11 +73,11 @@ for number in numbers_dict_list:
  
     stats_by_number_pos['n4'][int(number['n4'])] += 1
  
-
-   
-    print(f"Number1: {number['date']} {number['draw']} {number['n1']},{number['n2']}")
+    #print(f"Number1: {number['date']} {number['draw']} {number['n1']},{number['n2']}") #debug
     p = p + 1
 
+
+#### DISPLAY STATS
 print("-"*20)
 print(f"Total numbers: {i}")
 print(f"Valid numbers: {p}")
@@ -60,18 +86,48 @@ print("stats by number position:")
 for number in stats_by_number_pos:
     print(f"{number}: {stats_by_number_pos[number]}")
 
+
 print("###n1")
 number = 0
+
+count_top3 = [{
+    "number": 0,
+    "count": 0
+},{
+    "number": 0,
+    "count": 0
+},{
+    "number": 0,
+    "count": 0
+}]
+
+### n1 TOP3
 for count in stats_by_number_pos['n1']:
     print(f"{number} -> {count}", '=' * count)
+    # top_i = 0
+    for top in count_top3:
+       # print(f"checking {count} against {top['count']} top{top_i}")
+        if count > top['count']:
+            top['count'] = count
+            top['number'] = number
+            break
+        # pprint.pprint(top)     
+        # top_i +=1         
     number +=1
 
+print("n1_Top3: ")
+for top in count_top3:
+    print(f"{top['number']} has {top['count']}")
+
 print("###n2")
+
 number = 0
 for count in stats_by_number_pos['n2']:
     print(f"{number} -> {count}", '=' * count)
     number += 1
+print("n2_Top3: ")
 
+### TOP 3 n1-n4
 
 print("done.")
 
