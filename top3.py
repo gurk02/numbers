@@ -29,6 +29,7 @@ while n < len(numbers):
                 else:
                     swap2 = top3[idx]
                     top3[idx] = swap1
+                    swap1=swap2
                 print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={top3[idx]}")
                 idx += 1
             break

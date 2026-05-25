@@ -106,58 +106,33 @@ number = 0
 for count in stats_by_number_pos['n1']:
     print(f"{number} -> {count}", '=' * count)
 
+    number = count
+    
     top_idx = 0
-    for top in count_top3:
+    while top_idx < len(count_top3):
+        #print(f"top_number {top_number} top3_{top3[top_number]}")
+        print(f"compare {number} at idx {top_idx} top_number {count_top3[top_idx]['count']}")
+        if count > count_top3[top_idx]['count']: #found new top3 number
+            #shift down all top3 numbers
+            print(f"new top number found {count} top_idx {top_idx}")
 
-        print(f"checking {count} against {top['count']} top{top_idx}")    
-        if count > top['count']:
-            print (f"\tOk count {count} > top {top['count']}")
-
-            replaced_count = -1
-            replaced_number = 0
-            # while i < len(count_top3):      # shift top numbers down
-            #     replaced_count = count_top3[i]['count']
-            #     replaced_number = count_top3[i]['number']
-            #     print(f"i {i} replaced_count {replaced_count}, replaced_number {replaced_number}")
-
-            #     count_top3[i]['count'] = count
-            #     count_top3[i]['number'] = number
-            #     print(f"i {i} count {count_top3[i]['count']}, count_top3[i]['number'] {number}")
-            #     i +=1
-
-            current_top_idx = 0
-            while current_top_idx < len(count_top3):
-                
-                #print(f"current_top_idx {current_top_idx}")
-
-                # skip to the current top and start shift from there 
-                if (current_top_idx < top_idx):
-                    #print(f"skippng {current_top_idx}")
-                    continue
-
-                #now shift down top numbers from current_top, top_idx
-                current_top = count_top3[current_top_idx]
-                if replaced_count == -1:
-                    top['count'] = count
-                    top['number'] = number
-                    print(f"set {top['number']} has {top['count']}")
-                    replaced_count = count
-                    replaced_number = number
-                else:                
-                    replaced_count = current_top['count']
-                    replaced_number = current_top['number']
-                    current_top['count'] = replaced_count
-                    current_top['number'] = replaced_number
-
-
-                current_top_idx += 1
+            idx = top_idx
+            swap1 = -1
+            swap2 = -1
+            while idx < len(count_top3):
+                if swap1 == -1:
+                    swap1 = count_top3[idx]['count']
+                    count_top3[idx]['count'] = count
+                else:
+                    swap2 = count_top3[idx]['count']
+                    count_top3[idx]['count'] = swap1
+                    swap1=swap2
+                print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={count_top3[top_idx]}")
+                idx += 1
             break
-
-        pprint.pprint(top)     
-        top_idx +=1         
+        top_idx +=1   
     number +=1
-
-    ###end for
+###end for
 
 print("n1_Top3: ")
 for top in count_top3:
@@ -179,18 +154,38 @@ count_top3 = [{
 }]
 
 ### n2 TOP3
+number = 0
 for count in stats_by_number_pos['n2']:
     print(f"{number} -> {count}", '=' * count)
-    # top_i = 0
-    for top in count_top3:
-       # print(f"checking {count} against {top['count']} top{top_i}")
-        if count > top['count']:
-            top['count'] = count
-            top['number'] = number
+
+    number = count
+    
+    top_idx = 0
+    while top_idx < len(count_top3):
+        #print(f"top_number {top_number} top3_{top3[top_number]}")
+        print(f"compare {number} at idx {top_idx} top_number {count_top3[top_idx]['count']}")
+        if count > count_top3[top_idx]['count']: #found new top3 number
+            #shift down all top3 numbers
+            print(f"new top number found {count} top_idx {top_idx}")
+
+            idx = top_idx
+            swap1 = -1
+            swap2 = -1
+            while idx < len(count_top3):
+                if swap1 == -1:
+                    swap1 = count_top3[idx]['count']
+                    count_top3[idx]['count'] = count
+                else:
+                    swap2 = count_top3[idx]['count']
+                    count_top3[idx]['count'] = swap1
+                    swap1=swap2
+                print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={count_top3[top_idx]}")
+                idx += 1
             break
-        # pprint.pprint(top)     
-        # top_i +=1         
+        top_idx +=1   
     number +=1
+###end for
+
 
 
 print("n2_Top3: ")
