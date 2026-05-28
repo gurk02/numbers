@@ -2,7 +2,44 @@
 import csv
 import pprint
 
+
 numbers_file_csv = 'data/4numbers.csv'
+
+def find_top3(numbers,top3):
+        n = 0 
+        print (f"top3 {top3} top3 len {len(top3)}")
+        while n < len(numbers):
+            number = numbers[n]
+            print(f"{n}, checking number{number}")
+
+            top_idx = 0
+            while top_idx < len(top3):
+                #print(f"top_number {top_number} top3_{top3[top_number]}")
+                print(f"compare {number} at idx {top_idx} top_number {top3[top_idx]}")
+                if number > top3[top_idx]: #found new top3 number
+                    #shift down all top3 numbers
+                    print(f"new top number found {number} top_idx {top_idx}")
+
+                    idx = top_idx
+                    swap1 = -1
+                    swap2 = -1
+                    while idx < len(top3):
+                        if swap1 == -1:
+                            swap1 = top3[idx]
+                            top3[idx] = number
+                        else:
+                            swap2 = top3[idx]
+                            top3[idx] = swap1
+                            swap1=swap2
+                        print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={top3[idx]}")
+                        idx += 1
+                    break
+
+                top_idx +=1
+
+            n += 1
+            print(f"top3 {top3}")
+        return top3
 
 ####IMPORT
 # read the numbers from the csv file and store them in a list of dictionaries
@@ -101,20 +138,24 @@ count_top3 = [{
     "count": 0
 }]
 
+
+# print("finding top3 from numbers{stats_by_number_pos['n1']}")
+# print(f"results -> {find_top3(stats_by_number_pos['n1'],count_top3)}")
+
 ### n1 TOP3
 number = 0
 for count in stats_by_number_pos['n1']:
     print(f"{number} -> {count}", '=' * count)
 
-    number = count
+   #number = count
     
     top_idx = 0
     while top_idx < len(count_top3):
         #print(f"top_number {top_number} top3_{top3[top_number]}")
-        print(f"compare {number} at idx {top_idx} top_number {count_top3[top_idx]['count']}")
+        #print(f"compare {number} at idx {top_idx} top_number {count_top3[top_idx]['count']}")
         if count > count_top3[top_idx]['count']: #found new top3 number
             #shift down all top3 numbers
-            print(f"new top number found {count} top_idx {top_idx}")
+            #print(f"new top number found {count} top_idx {top_idx}")
 
             idx = top_idx
             swap1 = -1
@@ -127,16 +168,16 @@ for count in stats_by_number_pos['n1']:
                     swap2 = count_top3[idx]['count']
                     count_top3[idx]['count'] = swap1
                     swap1=swap2
-                print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={count_top3[top_idx]}")
+                #print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={count_top3[top_idx]}")
                 idx += 1
             break
         top_idx +=1   
     number +=1
 ###end for
 
-print("n1_Top3: ")
+print("\tn1_Top3: ")
 for top in count_top3:
-    print(f"{top['number']} has {top['count']}")
+    print(f"\t{top['number']} has {top['count']}")
 
 print("###n2")
 
@@ -158,15 +199,15 @@ number = 0
 for count in stats_by_number_pos['n2']:
     print(f"{number} -> {count}", '=' * count)
 
-    number = count
+    #number = count
     
     top_idx = 0
     while top_idx < len(count_top3):
         #print(f"top_number {top_number} top3_{top3[top_number]}")
-        print(f"compare {number} at idx {top_idx} top_number {count_top3[top_idx]['count']}")
+        #print(f"compare {number} at idx {top_idx} top_number {count_top3[top_idx]['count']}")
         if count > count_top3[top_idx]['count']: #found new top3 number
             #shift down all top3 numbers
-            print(f"new top number found {count} top_idx {top_idx}")
+            #print(f"new top number found {count} top_idx {top_idx}")
 
             idx = top_idx
             swap1 = -1
@@ -179,7 +220,7 @@ for count in stats_by_number_pos['n2']:
                     swap2 = count_top3[idx]['count']
                     count_top3[idx]['count'] = swap1
                     swap1=swap2
-                print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={count_top3[top_idx]}")
+                #print(f"idx{idx}, swap1={swap1}, swap2={swap2} top3[idx]={count_top3[top_idx]}")
                 idx += 1
             break
         top_idx +=1   
@@ -188,12 +229,14 @@ for count in stats_by_number_pos['n2']:
 
 
 
-print("n2_Top3: ")
+print("\tn2_Top3: ")
 for top in count_top3:
-    print(f"{top['number']} has {top['count']}")
+    print(f"\t{top['number']} has {top['count']}")
 
 
 ### TOP 3 n1-n4
 
 print("done.")
+
+
 

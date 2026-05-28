@@ -7,7 +7,7 @@ top3 = [0,0,0]
 
 
 def find_top3(numbers,top3):
-        n = 0
+        n = 0 
         print (f"top3 {top3} top3 len {len(top3)}")
         while n < len(numbers):
             number = numbers[n]
