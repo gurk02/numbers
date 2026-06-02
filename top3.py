@@ -5,7 +5,21 @@ numbers = [80, 77, 68, 66, 71, 79, 67, 66, 76, 76]
 
 top3 = [0,0,0]
 
+#
+# Method 1
+#
 
+#
+# idea: find top 3 numbers from a list of numbers
+#
+# for each element in numbers, compare against all top3 numbers 
+# if element is greater shift rest of number less than
+#
+#
+# note: numbers can be unlimited
+#       tops can be unlimited
+#       tops list numbers ascending
+#
 def find_top3(numbers,top3):
         n = 0 
         print (f"top3 {top3} top3 len {len(top3)}")
@@ -14,11 +28,11 @@ def find_top3(numbers,top3):
             print(f"{n}, checking number{number}")
 
             top_idx = 0
-            while top_idx < len(top3):
+            while top_idx < len(top3):      # scan each top numbers
                 #print(f"top_number {top_number} top3_{top3[top_number]}")
                 print(f"compare {number} at idx {top_idx} top_number {top3[top_idx]}")
                 if number > top3[top_idx]: #found new top3 number
-                    #shift down all top3 numbers
+                    # new number found!: shift down all top3 numbers
                     print(f"new top number found {number} top_idx {top_idx}")
 
                     idx = top_idx
@@ -46,3 +60,17 @@ def find_top3(numbers,top3):
 print("finding top3 from numbers{numbers}")
 print(f"results -> {find_top3(numbers,top3)}")
 
+
+#
+# Method 2
+# 
+
+#
+# idea: sort numbers ascending, return top N numbers
+#
+# find_topN_numbers(numbers, tops, n)
+#
+# note: numbers can be unlimited
+#       tops limited by n
+#       numbers - unascending then sorted ascending
+#       tops numbers ascending

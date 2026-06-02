@@ -5,6 +5,7 @@ import pprint
 
 numbers_file_csv = 'data/4numbers.csv'
 
+# see top3p.py module
 def find_top3(numbers,top3):
         n = 0 
         print (f"top3 {top3} top3 len {len(top3)}")
@@ -60,6 +61,7 @@ stats_by_number_pos = {
         'n2': [0,0,0,0,0,0,0,0,0,0],
         'n3': [0,0,0,0,0,0,0,0,0,0],
         'n4': [0,0,0,0,0,0,0,0,0,0],
+        'fb': [0,0,0,0,0,0,0,0,0,0],
 }
 
 eve_n1_number_9_dates = [
@@ -100,6 +102,8 @@ for number in numbers_dict_list:
         continue
     if int(number['n4']) > 9 or  int(number['n4']) < 0:
         continue
+    if int(number['fb']) > 9 or  int(number['fb']) < 0:
+        continue
 
     # calculate tally up number 0-9 for each pos n1-n4
     stats_by_number_pos['n1'][int(number['n1'])] += 1
@@ -110,6 +114,8 @@ for number in numbers_dict_list:
  
     stats_by_number_pos['n4'][int(number['n4'])] += 1
  
+    stats_by_number_pos['fb'][int(number['fb'])] += 1
+
     #print(f"Number1: {number['date']} {number['draw']} {number['n1']},{number['n2']}") #debug
     p = p + 1
 
@@ -235,6 +241,39 @@ for top in count_top3:
 
 
 ### TOP 3 n1-n4
+
+#
+# find hot frequency in n time draws for each n1
+#
+
+#
+# find hot frequency in n time draws for each n2
+#
+
+#
+# find hot frequency in n time draws for each n3
+#
+
+#
+# find hot frequency in n time draws for each n4
+#
+
+#
+# find frequency front pair n1,n2
+#
+
+#
+# find frequency mid pair n2,n3
+#
+
+#
+# find frequency back pair n3,n4
+#
+
+#
+# find frequency split pair n1,n4
+#
+
 
 print("done.")
 
