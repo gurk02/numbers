@@ -2,7 +2,7 @@
 import csv
 import pprint
 import numpy as np
-import pandas as pd
+# import pandas as pd
 
 
 numbers_file_csv = 'data/4numbers.csv'
@@ -37,6 +37,11 @@ numbers_dl = import_csv_data_as_dictlist(numbers_file_csv)
 
 
 n1 = np.arange(len(numbers_dl))
+n1_mid = np.arange(int(len(numbers_dl)/2))
+print("n1_mid len", len(n1_mid))
+n1_eve = np.arange(int(len(numbers_dl)/2))
+print("n1_mid len", len(n1_eve))
+
 n2 = []
 n3 = []
 n4 = []
@@ -62,15 +67,24 @@ eve_top3_nums = [0,0,0]
 #
 # calculate
 #
-
 i = 0
+i_mid = 0
+i_eve = 0
 for entry in numbers_dl:
     n1[i] = int(entry['n1']) #extract n1 from each line entry
     n1_cnt[n1[i]] += 1
+    
     if entry['draw']=='MID':
+
+        n1_mid[i_mid] = int(entry['n1'])
         n1_mid_cnt[n1[i]] += 1
+        i_mid += 1
+
     elif entry['draw']=='EVE':
+      
+        n1_eve[i_eve] = int(entry['n1'])
         n1_eve_cnt[n1[i]] += 1
+        i_eve += 1
 
     #print(f"i {i}, n1 {n1[i]}")
     i += 1
@@ -179,12 +193,12 @@ def find_top3(numbers,top3,nums):
 #
 print("REGRESSION")
 print("finding mid top3 from n1_mid_cnt{n1_mid_cnt}")
-print(f"results -> {find_top3(n1_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
+print(f"N1 MID results -> {find_top3(n1_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
 print (mid_top3_cnt)
 print (mid_top3_nums)
 
 tag_mid_top3_nums = ""
-for n in n1:
+for n in n1_mid:
     if n == mid_top3_nums[0]:
          tag_mid_top3_nums += f" {n}*"
     elif n == mid_top3_nums[1]:
@@ -202,28 +216,126 @@ print(tag_mid_top3_nums)
 #
 
 print("finding eve top3 from n1_eve_cnt{n1_eve_cnt}")
-print(f"results -> {find_top3(n1_eve_cnt,eve_top3_cnt,eve_top3_nums)}")
+print(f"N1 EVE results -> {find_top3(n1_eve_cnt,eve_top3_cnt,eve_top3_nums)}")
 print (eve_top3_cnt)
 print (eve_top3_nums)
 
 
-# tag_eve_top3_nums = ""
-# for n in n1:
-#     if n == eve_top3_nums[0]:
-#          tag_eve_top3_nums += f" {n}*"
-#     elif n == eve_top3_nums[1]:
-#          tag_eve_top3_nums += f" {n} "
-#     elif n == eve_top3_nums[2]:
-#         tag_eve_top3_nums += f" {n} "
-#     else:
-#        tag_eve_top3_nums += f" {n} "
+tag_eve_top3_nums = ""
+for n in n1_eve:
+    if n == eve_top3_nums[0]:
+         tag_eve_top3_nums += f" {n}*"
+    elif n == eve_top3_nums[1]:
+         tag_eve_top3_nums += f" {n} "
+    elif n == eve_top3_nums[2]:
+        tag_eve_top3_nums += f" {n} "
+    else:
+       tag_eve_top3_nums += f" {n} "
 
-# print("tag eve top3 numbers")
-# print(tag_eve_top3_nums)
+print("tag eve top3 numbers")
+print(tag_eve_top3_nums)
 
 pattern = [ 9, 3,  2,  8,  8,  9,  0,  6,  7,  9,  2,  1, 3,  8,  3,  5,  1]
 
-series = pd.Series(n1)
-print(series)
+
+#
+# Find N1 Hot Pattern
+#
+
+    #
+    # find hot number
+    #
+def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_loc, prev_last_seen_loc, last_seen_rate_change):
+    hot_pick_dial = 0
+    if seen_count > 1 and diff_last_seen_loc < 6 and (last_seen_rate_change > -5 and last_seen_rate_change < 5):
+        return True
+    else:
+        return False
+
+#
+# Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
+#
+def calculate_pattern(pattern):
+    i = 0   # current count draws
+    prev_cnt = 0 # previous count draws since last seen
+    find_number_count = 0
+    draw_number_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    last_seen_draw_loc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    diff_last_seen_draw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    hot_picks =  [False, False, False, False, False, False, False, False, False, False]
+
+    debug = True
+    i = 0
+    total_draws = len(pattern)
+    print("total draws ", total_draws)
+    mean_draw_number_count = 0
+    print(len(pattern))
+    for n in pattern:
+        i += 1
+      
+        draw_number_count[n] +=1
+    
+        #
+        # rate of last seen
+        #
+        prev_last_seen_draw_loc = last_seen_draw_loc[n]
+        last_seen_draw_loc[n] = i
+
+        prev_diff_last_seen_draw = diff_last_seen_draw[n]
+        diff_last_seen_draw[n] = last_seen_draw_loc[n] - prev_last_seen_draw_loc
+    
+        # rate_of_change =  prev_diff_last_seen_draw - diff_last_seen_draw[n]
+
+        rate_of_change =  diff_last_seen_draw[n] - prev_diff_last_seen_draw
+
+        if hot_pick(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_last_seen_draw_loc, rate_of_change) == True:
+            if debug == True:
+                print(i," ",n, draw_number_count[n], " ",diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "HP")
+            hot_picks[n] = True
+        else:
+            # hot_picks[n] = False
+            if debug == True:
+                print(i," ",n, draw_number_count[n], " ",diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change,)
+
+    return hot_picks
+
+# debug = False
+# print("calulcate N1 hot picks")
+# hot_picks = calculate_pattern(n1[::-1])
+# i = 0 
+# for hot_pick in hot_picks:
+#     if hot_pick == True:
+#         print(i)
+#     i += 1
+
+debug = False
+print("calulcate N1 - MID hot picks")
+print(n1_mid)
+hot_picks = calculate_pattern(n1_mid)
+i = 0 
+for hot_pick in hot_picks:
+    # print(i," ", hot_pick)
+    if debug == True:
+        print(i, " ", hot_pick, " ")
+    if hot_pick == True:
+        print(i)
+    i += 1
+
+# debug = True
+# print("calulcate N1 - EVEs hot picks")
+# print(n1_eve)
+# hot_picks = calculate_pattern(n1_eve)
+# i = 0 
+# for hot_pick in hot_picks:
+#     if debug == True:
+#         print(i, " ", hot_pick, " ")
+#     if hot_pick == True:
+#         print(i)
+#     i += 1
+
+
+
+# series = pd.Series(n1)
+# print(series)
 
 print("done.")
