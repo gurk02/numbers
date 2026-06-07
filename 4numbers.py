@@ -79,7 +79,7 @@ for entry in numbers_dl:
 #
 # Reports
 #
-
+print("REPORTS")
 print(n1)
 print(n1_cnt)
 print(n1_mid_cnt)
@@ -122,7 +122,7 @@ for num_count in n1_eve_cnt:
 
 
 #
-# find top3 
+# find top3 - ascending order 46,43, 40
 #
 def find_top3(numbers,top3,nums):
         debug = False
@@ -149,7 +149,7 @@ def find_top3(numbers,top3,nums):
                     swap2_cnt = -1
                     swap1_num = -1
                     swap2_num = -1
-                    while idx < len(top3):
+                    while idx < len(top3):          # new number found!: shift down all top3 numbers
                         if swap1_cnt == -1:
                             swap1_cnt = top3[idx]
                             swap1_num = nums[idx]
@@ -170,16 +170,32 @@ def find_top3(numbers,top3,nums):
                 top_idx +=1
 
             n += 1
-            if debug == False:
+            if debug == True:
                 print(f"top3 {top3}")
         return top3, nums
 
 #
 # Regression - mid
 #
-
+print("REGRESSION")
 print("finding mid top3 from n1_mid_cnt{n1_mid_cnt}")
 print(f"results -> {find_top3(n1_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
+print (mid_top3_cnt)
+print (mid_top3_nums)
+
+tag_mid_top3_nums = ""
+for n in n1:
+    if n == mid_top3_nums[0]:
+         tag_mid_top3_nums += f" {n}*"
+    elif n == mid_top3_nums[1]:
+         tag_mid_top3_nums += f" {n} "
+    elif n == mid_top3_nums[2]:
+        tag_mid_top3_nums += f" {n} "
+    else:
+       tag_mid_top3_nums += f" {n} "
+
+print("tag mid top3 numbers")
+print(tag_mid_top3_nums)
 
 #
 # Regression - eve
@@ -187,7 +203,25 @@ print(f"results -> {find_top3(n1_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
 
 print("finding eve top3 from n1_eve_cnt{n1_eve_cnt}")
 print(f"results -> {find_top3(n1_eve_cnt,eve_top3_cnt,eve_top3_nums)}")
+print (eve_top3_cnt)
+print (eve_top3_nums)
 
+
+# tag_eve_top3_nums = ""
+# for n in n1:
+#     if n == eve_top3_nums[0]:
+#          tag_eve_top3_nums += f" {n}*"
+#     elif n == eve_top3_nums[1]:
+#          tag_eve_top3_nums += f" {n} "
+#     elif n == eve_top3_nums[2]:
+#         tag_eve_top3_nums += f" {n} "
+#     else:
+#        tag_eve_top3_nums += f" {n} "
+
+# print("tag eve top3 numbers")
+# print(tag_eve_top3_nums)
+
+pattern = [ 9, 3,  2,  8,  8,  9,  0,  6,  7,  9,  2,  1, 3,  8,  3,  5,  1]
 
 series = pd.Series(n1)
 print(series)
