@@ -309,8 +309,8 @@ def find_top3(numbers,top3,nums):
 # Regression - mid
 #
 print("REGRESSION")
-print("finding mid top3 from n1_mid_cnt{n1_mid_cnt}")
-print(f"N1 MID results -> {find_top3(n1_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
+print("finding mid top3 from n1_mid_cnt{n2_mid_cnt}")
+print(f"N2 MID results -> {find_top3(n4_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
 print (mid_top3_cnt)
 print (mid_top3_nums)
 
@@ -332,8 +332,8 @@ for n in n1_mid:
 # Regression - eve
 #
 
-print("finding eve top3 from n1_eve_cnt{n1_eve_cnt}")
-print(f"N1 EVE results -> {find_top3(n1_eve_cnt,eve_top3_cnt,eve_top3_nums)}")
+print("finding eve top3 from n1_eve_cnt{n2_eve_cnt}")
+print(f"N2 EVE results -> {find_top3(n4_eve_cnt,eve_top3_cnt,eve_top3_nums)}")
 print (eve_top3_cnt)
 print (eve_top3_nums)
 
@@ -441,9 +441,9 @@ test_pattern = [3, 8, 9, 6, 9, 1, 8, 5, 5, 5, 8, 1, 4, 0, 9, 7, 5, 8, 7, 0, 5, 5
 , 6, 2, 3, 6, 8, 0, 3, 5]
 
 # n1_mid = test_pattern
-sampling_arr = n2_mid
+sampling_arr = n4_eve
 sampling_draws =  [14, 30, 90, len(sampling_arr)]
-sample_draws = sampling_draws[0]
+sample_draws = sampling_draws[2]
 
 print(test_pattern)
 hot_picks, draw_number_count = calculate_pattern(sampling_arr[:sample_draws])
