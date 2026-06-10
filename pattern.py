@@ -97,16 +97,16 @@ find_prec = 0
 
 
 
-    #
+      #
     # find hot number
     #
-def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_loc, prev_last_seen_loc, last_seen_rate_change):
+def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_last_seen_draw, prev_last_seen_loc, last_seen_rate_change):
     hot_pick_dial = 0
     # if seen_count > 1 and diff_last_seen_loc < 6 and (last_seen_rate_change > -5 and last_seen_rate_change < 5):
     #     return True
     # else:
     #     return False     # steps diff from 1st and 2nd last seen  # rate > -15 means compacting   and rate < 5 means compacting still everything else means expanding              
-    if seen_count > 1 and diff_last_seen_loc < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
+    if seen_count > 1 and diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
         return True
     else:
         return False
@@ -123,6 +123,7 @@ def calculate_pattern(pattern):
     last_seen_draw_loc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     diff_last_seen_draw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     hot_picks =  [False, False, False, False, False, False, False, False, False, False]
+    hot_picks_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     debug = True
     i = 0
@@ -150,16 +151,17 @@ def calculate_pattern(pattern):
 
         rate_of_change =  diff_last_seen_draw[n] - prev_diff_last_seen_draw
 
-        if hot_pick(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_last_seen_draw_loc, rate_of_change) == True:
+        if hot_pick(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_diff_last_seen_draw, prev_last_seen_draw_loc, rate_of_change) == True:
             if debug == True:
                 print(i," ",n, draw_number_count[n], " ",diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "HP")
             hot_picks[n] = True
+            hot_picks_count[n] += 1
         else:
             # hot_picks[n] = False
             if debug == True:
                 print(i," ",n, draw_number_count[n], " ",diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change,)
 
-    return hot_picks, draw_number_count
+    return hot_picks, draw_number_count, hot_picks_count
 
 test_pattern = [3, 8, 9, 6, 9, 1, 8, 5, 5, 5, 8, 1, 4, 0, 9, 7, 5, 8, 7, 0, 5, 5, 8, 5, 9, 1, 7, 2, 5, 9, 7, 0, 4, 3, 5, 1, 0
 , 6, 2, 3, 6, 8, 0, 3, 5]
@@ -176,7 +178,9 @@ pattern = test_pattern
 print("calulcate hot picks")
 print (pattern)
 
-hot_picks, draw_number_count = calculate_pattern(pattern)
+hot_picks, draw_number_count, hot_picks_count = calculate_pattern(pattern)
+print(hot_picks)
+print(hot_picks_count)
 print (draw_number_count)
 i = 0 
 for hot_pick in hot_picks:

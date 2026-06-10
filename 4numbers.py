@@ -362,13 +362,13 @@ pattern = [ 9, 3,  2,  8,  8,  9,  0,  6,  7,  9,  2,  1, 3,  8,  3,  5,  1]
       #
     # find hot number
     #
-def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_loc, prev_last_seen_loc, last_seen_rate_change):
+def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_last_seen_draw, prev_last_seen_loc, last_seen_rate_change):
     hot_pick_dial = 0
     # if seen_count > 1 and diff_last_seen_loc < 6 and (last_seen_rate_change > -5 and last_seen_rate_change < 5):
     #     return True
     # else:
     #     return False     # steps diff from 1st and 2nd last seen  # rate > -15 means compacting   and rate < 5 means compacting still everything else means expanding              
-    if seen_count > 1 and diff_last_seen_loc < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
+    if seen_count > 1 and diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
         return True
     else:
         return False
@@ -385,8 +385,9 @@ def calculate_pattern(pattern):
     last_seen_draw_loc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     diff_last_seen_draw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     hot_picks =  [False, False, False, False, False, False, False, False, False, False]
+    hot_picks_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    debug = True
+    debug = False
     i = 0
     total_draws = len(pattern)
     print("total draws ", total_draws)
@@ -412,16 +413,17 @@ def calculate_pattern(pattern):
 
         rate_of_change =  diff_last_seen_draw[n] - prev_diff_last_seen_draw
 
-        if hot_pick(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_last_seen_draw_loc, rate_of_change) == True:
+        if hot_pick(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_diff_last_seen_draw, prev_last_seen_draw_loc, rate_of_change) == True:
             if debug == True:
                 print(i," ",n, draw_number_count[n], " ",diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "HP")
             hot_picks[n] = True
+            hot_picks_count[n] += 1
         else:
             # hot_picks[n] = False
             if debug == True:
                 print(i," ",n, draw_number_count[n], " ",diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change,)
 
-    return hot_picks, draw_number_count
+    return hot_picks, draw_number_count, hot_picks_count 
 
 
 # debug = False
@@ -444,16 +446,20 @@ test_pattern = [3, 8, 9, 6, 9, 1, 8, 5, 5, 5, 8, 1, 4, 0, 9, 7, 5, 8, 7, 0, 5, 5
 sampling_arr = n4_eve
 sampling_draws =  [14, 30, 90, len(sampling_arr)]
 sample_draws = sampling_draws[2]
+digit = 'n1'
+draw_time = 'eve'
 
 print(test_pattern)
-hot_picks, draw_number_count = calculate_pattern(sampling_arr[:sample_draws])
+hot_picks, draw_number_count, hot_picks_count = calculate_pattern(sampling_arr[:sample_draws])
 print(draw_number_count)
-hot_pick_top3_nums = [0, 0, 0]
-hot_picks_top3_cnt = [0, 0, 0]
+draw_count_top3_nums = [0, 0, 0]
+draw_count_top3_cnt = [0, 0, 0]
+pattern_hot_picks_top3_nums = [0, 0, 0]
+pattern_hot_picks_top3_cnt = [0, 0, 0]
 
-print(f"N1 Mid Find Top3 Hot Picks -> {find_top3(draw_number_count,hot_picks_top3_cnt,hot_pick_top3_nums)}")
+print(f"{digit} {draw_time} {sample_draws} Find Top3 Hot Picks -> {find_top3(draw_number_count,draw_count_top3_cnt,draw_count_top3_nums)}")
 
-cross_ref_cnt_pattern_hop_picks = [-1,-1,-1]
+cross_ref_cnt_vs_pattern_hop_picks = [-1,-1,-1]
 
 i = 0 
 for hot_pick in hot_picks:
@@ -468,20 +474,40 @@ for hot_pick in hot_picks:
     #     if num == i and hot_pick == True:
     #         # cross referance top3 based on count vs pattern
     #         print(num, " ", j, " ", i)
-    #         cross_ref_cnt_pattern_hop_picks[j] = num
+    #         cross_ref_cnt_vs_pattern_hop_picks[j] = num
     #         print("break")
     #         break;
     #     j += 1
     i += 1
 
 
-print ("N1 HOT PICKS -> ", hot_pick_top3_nums)
-print ("cross_ref_cnt_pattern_hop_picks ", cross_ref_cnt_pattern_hop_picks)
-print ("N1 All Freq Picks")
+print ("N1 TOP3 Draw Count PICKS -> ", draw_count_top3_nums)
+print("Pattern Hot picks ->",hot_picks_count)
+print ("TOP3 Pattern Hot Picks ->", find_top3(hot_picks_count,pattern_hot_picks_top3_cnt,pattern_hot_picks_top3_nums))
+
+for hot_pick_num in pattern_hot_picks_top3_nums:
+    i = 0
+    # print("checking ", hot_pick_num)
+    for draw_count_num in draw_count_top3_nums:
+        # print("against ", draw_count_num)
+        if hot_pick_num == draw_count_num:
+            cross_ref_cnt_vs_pattern_hop_picks[i] = hot_pick_num
+            # print("ok hotpick", hot_pick_num)
+            break
+        i +=1
+
+print ("cross_ref_cnt_vs_pattern_hop_picks ", cross_ref_cnt_vs_pattern_hop_picks)
+print (f"{draw_time} All Freq Picks")
 print (mid_top3_cnt)
 print (mid_top3_nums)
 print (eve_top3_cnt)
 print (eve_top3_nums)
+
+print("---RESULTS---")
+print("N1 =>", )
+for n in cross_ref_cnt_vs_pattern_hop_picks:
+    if n != -1:
+        print(n)
 
 
 
