@@ -38,28 +38,28 @@ numbers_dl = import_csv_data_as_dictlist(numbers_file_csv)
 
 n1 = np.arange(len(numbers_dl))
 print("len N1",len(n1))
-n1_mid = np.arange(int(len(numbers_dl)/2))
+n1_mid = np.arange(int(len(numbers_dl)/2)+1)
 print("n1_mid len", len(n1_mid))
-n1_eve = np.arange(int(len(numbers_dl)/2))
+n1_eve = np.arange(int(len(numbers_dl)/2)+1)
 print("n1_mid len", len(n1_eve))
 
 n2 = np.arange(len(numbers_dl))
-n2_mid = np.arange(int(len(numbers_dl)/2))
+n2_mid = np.arange(int(len(numbers_dl)/2)+1)
 print("n2_mid len", len(n2_mid))
-n2_eve = np.arange(int(len(numbers_dl)/2))
+n2_eve = np.arange(int(len(numbers_dl)/2)+1)
 print("n2_mid len", len(n2_eve))
 
 
 n3 = np.arange(len(numbers_dl))
-n3_mid = np.arange(int(len(numbers_dl)/2))
+n3_mid = np.arange(int(len(numbers_dl)/2)+1)
 print("n3_mid len", len(n3_mid))
-n3_eve = np.arange(int(len(numbers_dl)/2))
+n3_eve = np.arange(int(len(numbers_dl)/2)+1)
 print("n3_mid len", len(n3_eve))
 
 n4 = np.arange(len(numbers_dl))
-n4_mid = np.arange(int(len(numbers_dl)/2))
+n4_mid = np.arange(int(len(numbers_dl)/2)+1)
 print("n4_mid len", len(n4_mid))
-n4_eve = np.arange(int(len(numbers_dl)/2))
+n4_eve = np.arange(int(len(numbers_dl)/2)+1)
 print("n4_mid len", len(n4_eve))
 
 
@@ -551,19 +551,24 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
     # return picks
     return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums
                    # element 3 - get all
-sampling_draws =  [14, 30, 90, len(n1)]
-draw_sz = sampling_draws[3]                 
+sampling_draws =  [14, 21, 30, 90, 120, 365, len(n1)]
+draw_sz = sampling_draws[2]  
 
-n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', 'ALL',n1,draw_sz)
+sample_arr_n1 = n1_eve
+sample_arr_n2 = n2_eve
+sample_arr_n3 = n3_eve
+sample_arr_n4 = n4_eve
+
+n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', 'ALL',sample_arr_n1,draw_sz)
 print("generate numbers for N1 ...", n1_picks)
 
-n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', 'ALL',n2,draw_sz)
+n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', 'ALL',sample_arr_n2,draw_sz)
 print("generate numbers for N2 ...", n2_picks)
 
-n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('N3', 'ALL',n3,draw_sz)
+n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('N3', 'ALL',sample_arr_n3,draw_sz)
 print("generate numbers for N3 ...", n3_picks)
 
-n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', 'ALL',n4,draw_sz)
+n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', 'ALL',sample_arr_n4,draw_sz)
 print("generate numbers for N4 ...", n4_picks)
 
 
@@ -606,7 +611,7 @@ def is_numbers_in_source(n1,n2,n3,n4, source):
 
 print("\t\t*** generate_picks by count")
 n = 0
-max_generate_picks = 24
+max_generate_picks = 100
 while n < max_generate_picks:
     n1_picked = generate_picks(n1_draw_count_top3_nums)
     n2_picked = generate_picks(n2_draw_count_top3_nums)
@@ -626,10 +631,13 @@ while n < max_generate_picks:
     n2_picked = generate_picks(n2_pattern_hot_picks_top3_nums)
     n3_picked = generate_picks(n3_pattern_hot_picks_top3_nums)
     n4_picked = generate_picks(n4_pattern_hot_picks_top3_nums)
-    print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
+    if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
+        print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
+    else:
+        print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
     n +=1
 
-print('9 8 8 0 previous winner', is_numbers_in_source(9,8,8,0, numbers_dl))
+# print('9 8 8 0 previous winner', is_numbers_in_source(9,8,8,0, numbers_dl))
     #
     # Original Code - Not in a Function; Generate Numbers 
     #
