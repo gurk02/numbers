@@ -596,15 +596,23 @@ def lookup_number_exists(num, arr):
 
     return is_found
 
+def is_numbers_in_source(n1,n2,n3,n4, source):
+    i = 0
+    for entry in source:
+        if n1 == int(entry['n1']) and  n2 == int(entry['n2']) and  n3 == int(entry['n3']) and n4 == int(entry['n4']):
+            return True
+        i += 1
+    return False
+
 print("\t\t*** generate_picks by count")
 n = 0
-max_generate_picks = 5
+max_generate_picks = 24
 while n < max_generate_picks:
     n1_picked = generate_picks(n1_draw_count_top3_nums)
     n2_picked = generate_picks(n2_draw_count_top3_nums)
     n3_picked = generate_picks(n3_draw_count_top3_nums)
     n4_picked = generate_picks(n4_draw_count_top3_nums)
-    if lookup_number_exists(n1_picked[0], n1) == True and lookup_number_exists(n2_picked[0], n2) == True and lookup_number_exists(n3_picked[0], n3) == True and lookup_number_exists(n4_picked[0], n4) == True:
+    if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
         print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
     else:
         print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
@@ -621,7 +629,7 @@ while n < max_generate_picks:
     print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
     n +=1
 
-
+print('9 8 8 0 previous winner', is_numbers_in_source(9,8,8,0, numbers_dl))
     #
     # Original Code - Not in a Function; Generate Numbers 
     #
