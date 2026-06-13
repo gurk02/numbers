@@ -63,10 +63,12 @@ print("n4_mid len", len(n4_eve))
 
 
 n1_cnt = [0,0,0,0,0,0,0,0,0,0]
+n1_cnt_prec = [0,0,0,0,0,0,0,0,0,0]
 n1_mid_cnt = [0,0,0,0,0,0,0,0,0,0]
 n1_eve_cnt = [0,0,0,0,0,0,0,0,0,0]
 
 n2_cnt = [0,0,0,0,0,0,0,0,0,0]
+n2_cnt_prec = [0,0,0,0,0,0,0,0,0,0]
 n2_mid_cnt = [0,0,0,0,0,0,0,0,0,0]
 n2_eve_cnt = [0,0,0,0,0,0,0,0,0,0]
 
@@ -101,7 +103,10 @@ i_eve = 0
 for entry in numbers_dl:
     n1[i] = int(entry['n1']) #extract n1 from each line entry
     n1_cnt[n1[i]] += 1
-    
+
+    n1_cnt_prec[n1[i]] = round( n1_cnt[n1[i]] / len(numbers_dl) , 3)
+
+
     if entry['draw']=='MID':
 
         n1_mid[i_mid] = int(entry['n1'])
@@ -117,6 +122,7 @@ for entry in numbers_dl:
     #print(f"i {i}, n1 {n1[i]}")
     i += 1
 
+
     #
     # N2
     #
@@ -127,6 +133,9 @@ for entry in numbers_dl:
     n2[i] = int(entry['n2']) #extract n2 from each line entry
     n2_cnt[n2[i]] += 1
     
+    n2_cnt_prec[n2[i]] = round( n2_cnt[n2[i]] / len(numbers_dl) , 3)
+
+
     if entry['draw']=='MID':
 
         n2_mid[i_mid] = int(entry['n2'])
@@ -167,7 +176,7 @@ for entry in numbers_dl:
     #print(f"i {i}, n3 {n3[i]}")
     i += 1
 
-        #
+    #
     # n4
     #
     i = 0
@@ -195,14 +204,17 @@ for entry in numbers_dl:
 #
 # Reports
 #
-print("REPORTS")
+print("\t\t***REPORTS")
 # print(n1)
+print("Digits N1-N2 Count Distribution")
 print('N1')
 print(n1_cnt)
+print(n1_cnt_prec)
 print(n1_mid_cnt)
 print(n1_eve_cnt)
 print('N2')
 print(n2_cnt)
+print(n2_cnt_prec)
 print(n2_mid_cnt)
 print(n2_eve_cnt)
 print('N3')
@@ -214,41 +226,43 @@ print(n4_cnt)
 print(n4_mid_cnt)
 print(n4_eve_cnt)
 
+debug = False
 
-print('N1 Freq Distribution')
-# 
-# frequency distribution 
-#
-n = 0
-freq_dist_header = ""
-freq_dist = ""
-for num_count in n1_cnt:
-    freq_dist_header += f"\t{n}"
-    freq_dist += f"\t{num_count} "
-    n +=1
+if debug == True:
+    print('***\t\tN1 Freq Distribution')
+    # 
+    # frequency distribution 
+    #
+    n = 0
+    freq_dist_header = ""
+    freq_dist = ""
+    for num_count in n1_cnt:
+        freq_dist_header += f"\t{n}"
+        freq_dist += f"\t{num_count} "
+        n +=1
 
-print(f"{freq_dist_header}")
-print(f"{freq_dist}")
+    print(f"{freq_dist_header}")
+    print(f"{freq_dist}")
 
-#
-# mid
-#
-print("mid")
-n = 0
-for num_count in n1_mid_cnt:
-    print(f"{n}", "=" * num_count)
-    n += 1
+    #
+    # mid
+    #
+    print("mid")
+    n = 0
+    for num_count in n1_mid_cnt:
+        print(f"{n}", "=" * num_count)
+        n += 1
 
-print("\n\n")
+    print("\n\n")
 
-#
-# eve
-#
-print("eve")
-n = 0
-for num_count in n1_eve_cnt:
-    print(f"{n}", "=" * num_count)
-    n += 1
+    #
+    # eve
+    #
+    print("eve")
+    n = 0
+    for num_count in n1_eve_cnt:
+        print(f"{n}", "=" * num_count)
+        n += 1
 
 
 
@@ -308,51 +322,52 @@ def find_top3(numbers,top3,nums):
 #
 # Regression - mid
 #
-print("REGRESSION")
-print("finding mid top3 from n1_mid_cnt{n2_mid_cnt}")
-print(f"N2 MID results -> {find_top3(n4_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
-print (mid_top3_cnt)
-print (mid_top3_nums)
+# print("\n\n")
+# print("\t\t***REGRESSION")
+# print("finding mid top3 from n1_mid_cnt{n2_mid_cnt}")
+# print(f"N2 MID results -> {find_top3(n4_mid_cnt,mid_top3_cnt,mid_top3_nums)}")
+# print (mid_top3_cnt)
+# print (mid_top3_nums)
 
-tag_mid_top3_nums = ""
-for n in n1_mid:
-    if n == mid_top3_nums[0]:
-         tag_mid_top3_nums += f" {n}*"
-    elif n == mid_top3_nums[1]:
-         tag_mid_top3_nums += f" {n} "
-    elif n == mid_top3_nums[2]:
-        tag_mid_top3_nums += f" {n} "
-    else:
-       tag_mid_top3_nums += f" {n} "
+# tag_mid_top3_nums = ""
+# for n in n1_mid:
+#     if n == mid_top3_nums[0]:
+#          tag_mid_top3_nums += f" {n}*"
+#     elif n == mid_top3_nums[1]:
+#          tag_mid_top3_nums += f" {n} "
+#     elif n == mid_top3_nums[2]:
+#         tag_mid_top3_nums += f" {n} "
+#     else:
+#        tag_mid_top3_nums += f" {n} "
 
-# print("tag mid top3 numbers")
-# print(tag_mid_top3_nums)
+# # print("tag mid top3 numbers")
+# # print(tag_mid_top3_nums)
 
-#
-# Regression - eve
-#
+# #
+# # Regression - eve
+# #
+# print("\n\n")
+# print("finding eve top3 from n1_eve_cnt{n2_eve_cnt}")
+# print(f"N2 EVE results -> {find_top3(n4_eve_cnt,eve_top3_cnt,eve_top3_nums)}")
+# print (eve_top3_cnt)
+# print (eve_top3_nums)
 
-print("finding eve top3 from n1_eve_cnt{n2_eve_cnt}")
-print(f"N2 EVE results -> {find_top3(n4_eve_cnt,eve_top3_cnt,eve_top3_nums)}")
-print (eve_top3_cnt)
-print (eve_top3_nums)
 
+# tag_eve_top3_nums = ""
+# for n in n1_eve:
+#     if n == eve_top3_nums[0]:
+#          tag_eve_top3_nums += f" {n}*"
+#     elif n == eve_top3_nums[1]:
+#          tag_eve_top3_nums += f" {n} "
+#     elif n == eve_top3_nums[2]:
+#         tag_eve_top3_nums += f" {n} "
+#     else:
+#        tag_eve_top3_nums += f" {n} "
 
-tag_eve_top3_nums = ""
-for n in n1_eve:
-    if n == eve_top3_nums[0]:
-         tag_eve_top3_nums += f" {n}*"
-    elif n == eve_top3_nums[1]:
-         tag_eve_top3_nums += f" {n} "
-    elif n == eve_top3_nums[2]:
-        tag_eve_top3_nums += f" {n} "
-    else:
-       tag_eve_top3_nums += f" {n} "
+# # print("tag eve top3 numbers")
+# # print(tag_eve_top3_nums)
 
-# print("tag eve top3 numbers")
-# print(tag_eve_top3_nums)
-
-pattern = [ 9, 3,  2,  8,  8,  9,  0,  6,  7,  9,  2,  1, 3,  8,  3,  5,  1]
+# # pattern = [ 9, 3,  2,  8,  8,  9,  0,  6,  7,  9,  2,  1, 3,  8,  3,  5,  1]
 
 
 #
@@ -390,7 +405,7 @@ def calculate_pattern(pattern):
     debug = False
     i = 0
     total_draws = len(pattern)
-    print("total draws ", total_draws)
+    print("calculate_pattern - total draws ", total_draws)
     mean_draw_number_count = 0
     if debug == True:
         print (i, " ", "n", "s_cnt", " steps_diff", " ", "steps_diff_prev", " ", "steps_diff", " ", "HP")
@@ -436,11 +451,9 @@ def calculate_pattern(pattern):
 #     i += 1
 
 debug = False
-print("calulcate N1 - MID hot picks")
-# print(n1_mid)
 
-test_pattern = [3, 8, 9, 6, 9, 1, 8, 5, 5, 5, 8, 1, 4, 0, 9, 7, 5, 8, 7, 0, 5, 5, 8, 5, 9, 1, 7, 2, 5, 9, 7, 0, 4, 3, 5, 1, 0
-, 6, 2, 3, 6, 8, 0, 3, 5]
+# test_pattern = [3, 8, 9, 6, 9, 1, 8, 5, 5, 5, 8, 1, 4, 0, 9, 7, 5, 8, 7, 0, 5, 5, 8, 5, 9, 1, 7, 2, 5, 9, 7, 0, 4, 3, 5, 1, 0
+# , 6, 2, 3, 6, 8, 0, 3, 5]
 
 # n1_mid = test_pattern
 sampling_arr = n1_eve
@@ -449,25 +462,30 @@ sample_draws = sampling_draws[3]
 digit = 'n1'
 draw_time = 'eve'
 
-print(test_pattern)
+# print(test_pattern)
+print("calculate_pattern ...")
 hot_picks, draw_number_count, hot_picks_count = calculate_pattern(sampling_arr[:sample_draws])
-print(draw_number_count)
+print("draw number count ", draw_number_count)
 draw_count_top3_nums = [0, 0, 0]
 draw_count_top3_cnt = [0, 0, 0]
 pattern_hot_picks_top3_nums = [0, 0, 0]
 pattern_hot_picks_top3_cnt = [0, 0, 0]
 
+print("\n\n")
+print(f"\t\***tcalulcate {digit} - {draw_time}")
+
 print(f"{digit} {draw_time} {sample_draws} Find Top3 Draw Count Hot Picks -> {find_top3(draw_number_count,draw_count_top3_cnt,draw_count_top3_nums)}")
 
 cross_ref_cnt_vs_pattern_hop_picks = [-1,-1,-1]
 
+debug = False
 i = 0 
 for hot_pick in hot_picks:
     # print(i," ", hot_pick)
     if debug == True:
         print(i, " ", hot_pick, " ")
-    if hot_pick == True:
-        print(i)
+        if hot_pick == True:
+            print(i)
     # j = 0
     # print("checking ", i)
     # for num in hot_pick_top3_nums:
@@ -481,9 +499,9 @@ for hot_pick in hot_picks:
     i += 1
 
 
-print ("N1 TOP3 Draw Count PICKS -> ", draw_count_top3_nums)
-print("Pattern Hot picks ->",hot_picks_count)
-print ("TOP3 Pattern Hot Picks ->", find_top3(hot_picks_count,pattern_hot_picks_top3_cnt,pattern_hot_picks_top3_nums))
+print (f"{digit} TOP3 Draw Count PICKS -> ", draw_count_top3_nums)
+print("Pattern Hot picks Count ->",hot_picks_count)
+print ("TOP3 Pattern Hot Picks Count ->", find_top3(hot_picks_count,pattern_hot_picks_top3_cnt,pattern_hot_picks_top3_nums))
 
 for hot_pick_num in pattern_hot_picks_top3_nums:
     i = 0
@@ -498,18 +516,19 @@ for hot_pick_num in pattern_hot_picks_top3_nums:
 
 print ("cross_ref_cnt_vs_pattern_hop_picks ", cross_ref_cnt_vs_pattern_hop_picks)
 print (f"{draw_time} All Freq Picks")
+# find_top3(n4_mid_cnt,mid_top3_cnt,mid_top3_nums)
 print (mid_top3_cnt)
 print (mid_top3_nums)
 print (eve_top3_cnt)
 print (eve_top3_nums)
 
-print("---RESULTS---")
-print("N1 =>", )
+print("\t\t---RESULTS---")
+print(f"{digit} =>", )
 for n in cross_ref_cnt_vs_pattern_hop_picks:
     if n != -1:
         print(n)
 
-
+picks_n1 = cross_ref_cnt_vs_pattern_hop_picks
 
 # debug = True
 # print("calulcate N1 - EVEs hot picks")
