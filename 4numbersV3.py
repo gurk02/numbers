@@ -580,7 +580,7 @@ def dump_to_file(file, data, mode):
 
                    # element 3 - get all
 sampling_draws =  [14, 21, 30, 90, 120, 365, len(n1)]
-draw_sz = sampling_draws[5]  
+draw_sz = sampling_draws[2]  
 draw_types = ['MID', 'EVE', 'ALL']
 draw_type = draw_types[1]
 
@@ -661,7 +661,7 @@ dump_to_file(generated_hotpicks_combo_file_csv, "date,draw,sampledrawsize,type,r
 
 print("\t\t*** generate_picks by count")
 n = 0
-max_generate_picks = 24
+max_generate_picks = 500
 while n < max_generate_picks:
     n1_picked = generate_picks(n1_draw_count_top3_nums)
     n2_picked = generate_picks(n2_draw_count_top3_nums)
