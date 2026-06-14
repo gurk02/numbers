@@ -4,8 +4,11 @@ import pprint
 import numpy as np
 # import pandas as pd
 import random
+from datetime import datetime
 
 numbers_file_csv = 'data/4numbers.csv'
+hotpicks_file_csv = 'data/4numbers_hotpicks.csv'
+generated_hotpicks_combo_file_csv = 'data/4numbers_generated_hotpicks_combo.csv'
 
 #
 #import data
@@ -35,6 +38,7 @@ def import_csv_data_as_dictlist(df):
 print("start.")
 numbers_dl = import_csv_data_as_dictlist(numbers_file_csv)
 
+hotpicks_dl = import_csv_data_as_dictlist(hotpicks_file_csv)
 
 n1 = np.arange(len(numbers_dl))
 print("len N1",len(n1))
@@ -550,27 +554,61 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
     # print ('picks -> ', picks)
     # return picks
     return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums
+
+
+#
+# GENERATE - numbers by count and pattern, also their generated combos  dump to files
+#
+def dump_to_file(file, data, mode):
+    debug = False
+    if debug == True:
+        print (f"file {file}, {mode}, {data}")
+    
+    if file == '':
+        return False
+
+    if mode != 'w' and mode != 'a' and mode != '+':
+        return False
+    
+    if debug == True:
+        print (f"writing to file {file} {mode}, {data}")
+
+    with open(file, mode) as f:
+        f.write(data)
+
+    return True
+
                    # element 3 - get all
 sampling_draws =  [14, 21, 30, 90, 120, 365, len(n1)]
-draw_sz = sampling_draws[2]  
+draw_sz = sampling_draws[5]  
+draw_types = ['MID', 'EVE', 'ALL']
+draw_type = draw_types[1]
 
 sample_arr_n1 = n1_eve
 sample_arr_n2 = n2_eve
 sample_arr_n3 = n3_eve
 sample_arr_n4 = n4_eve
 
-n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', 'ALL',sample_arr_n1,draw_sz)
+n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
 print("generate numbers for N1 ...", n1_picks)
 
-n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', 'ALL',sample_arr_n2,draw_sz)
+n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', draw_type,sample_arr_n2,draw_sz)
 print("generate numbers for N2 ...", n2_picks)
 
-n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('N3', 'ALL',sample_arr_n3,draw_sz)
+n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('N3', draw_type,sample_arr_n3,draw_sz)
 print("generate numbers for N3 ...", n3_picks)
 
-n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', 'ALL',sample_arr_n4,draw_sz)
+n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', draw_type,sample_arr_n4,draw_sz)
 print("generate numbers for N4 ...", n4_picks)
 
+# date,draw,sampledrawsize,type,n1,n2,n3,n4
+
+# already_recorded = false
+# for entry in hotpicks_dl:
+#     if entry['date'] == datetime.today().strftime("%m/%d/%Y"):
+
+today_date = datetime.today().strftime("%m/%d/%Y")
+print(today_date)
 
 print ('Generate Numbers of N1-N4')
 print ('N1', "\t", 'N2',"\t",  'N3',"\t",  'N4')
@@ -578,12 +616,20 @@ print("hot numbers by count")
 n = 0 
 while n < 3:
     print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n],"\t",n4_draw_count_top3_nums[n])
+    data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]},{n4_draw_count_top3_nums[n]}\n"
+    # print(f"dump to file {data}")
+    dump_to_file(hotpicks_file_csv, data, 'a')
     n += 1
+
 print("hot numbers by pattern")
 n = 0 
 while n < 3:
     print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n],"\t",n4_pattern_hot_picks_top3_nums[n])
+    data = f"{today_date},{draw_type},{draw_sz},pattern,{n1_pattern_hot_picks_top3_nums[n]},{n2_pattern_hot_picks_top3_nums[n]},{n3_pattern_hot_picks_top3_nums[n]},{n4_pattern_hot_picks_top3_nums[n]}\n"
+    # print(f"dump to file {data}")
+    dump_to_file(hotpicks_file_csv, data, 'a')
     n += 1
+
 
 def generate_picks(picks_arr):
     generated_picks = []
@@ -609,9 +655,13 @@ def is_numbers_in_source(n1,n2,n3,n4, source):
         i += 1
     return False
 
+# refnum,date,draw,sampledrawsize,type,refnum,n1,n2,n3,n4,pastwinner
+
+dump_to_file(generated_hotpicks_combo_file_csv, "date,draw,sampledrawsize,type,refnum,n1,n2,n3,n4,pastwinner\n", "w")
+
 print("\t\t*** generate_picks by count")
 n = 0
-max_generate_picks = 100
+max_generate_picks = 24
 while n < max_generate_picks:
     n1_picked = generate_picks(n1_draw_count_top3_nums)
     n2_picked = generate_picks(n2_draw_count_top3_nums)
@@ -619,9 +669,12 @@ while n < max_generate_picks:
     n4_picked = generate_picks(n4_draw_count_top3_nums)
     if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
         print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
+        data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},exists\n"
     else:
         print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
-
+        data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},\n"
+    
+    dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
     n +=1
 
 print("\t\t*** generate_picks by pattern")
@@ -633,8 +686,12 @@ while n < max_generate_picks:
     n4_picked = generate_picks(n4_pattern_hot_picks_top3_nums)
     if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
         print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
+        data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},exists\n"
     else:
         print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
+        data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},\n"
+    
+    dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
     n +=1
 
 # print('9 8 8 0 previous winner', is_numbers_in_source(9,8,8,0, numbers_dl))
