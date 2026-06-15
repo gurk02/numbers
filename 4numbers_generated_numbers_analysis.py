@@ -110,6 +110,8 @@ hotpicks_dl = import_csv_data_as_dictlist(generated_hotpicks_combo_file_csv)
 # 6 6 3 5 , 9 6 3 5 , 9 6 6 5 , 9 6 3 6
 
 winner_number = ['9','6','3','5']
+# winner_number = ['7', '9', '2', '1']
+winner_number = ['5','9','1','4']
 winner_number_fb = ['6']
 
 winner_number_n1 = winner_number[0]
@@ -130,9 +132,14 @@ for entry in hotpicks_dl:
     n2 = entry['n2']
     n3 = entry['n3']
     n4 = entry['n4']
+    pastwinner = entry['pastwinner']
+
+    # skip past winners. no need to check generated guess number
+    if pastwinner == 'exists':
+        continue
 
     # analysis check generated combo against winner see difference
-    print(f"checking number {n1}, {n2}, {n3}, {n4} against winner number{winner_number}")
+    # print(f"checking number {n1}, {n2}, {n3}, {n4} against winner number{winner_number}")
     score = check_number_against_winner(winner_number_n1,winner_number_n2,winner_number_n3,winner_number_n4, n1,n2,n3,n4)
         # print (f"got a good hot pick number {n1}")
     print (f"score {score} for {n1}, {n2}, {n3}, {n4}")
