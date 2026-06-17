@@ -23,4 +23,11 @@ def import_csv_data_as_dictlist(df):
         num_dict_list = list(reader)  # convert dictreader to list of dictionaires
     return num_dict_list
 
+numbers_dl = import_csv_data_as_dictlist(numbers_file_csv)
+
+i =0
+for entry in numbers_dl:
+    print (i, ' ', entry)
+    i += 1
+
 print("done.")
