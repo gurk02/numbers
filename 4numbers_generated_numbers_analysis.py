@@ -112,14 +112,17 @@ hotpicks_dl = import_csv_data_as_dictlist(generated_hotpicks_combo_file_csv)
 winner_number = ['9','6','3','5']
 # winner_number = ['7', '9', '2', '1']
 winner_number = ['5','9','1','4']
-winner_number_fb = ['6']
+winner_number = ['2','7','4','6'] # 6/15/26 EVE
+winner_number = ['6','4','3','4'] # 6/16/26 EVE
+winner_number_fb = ['4']
 
 winner_number_n1 = winner_number[0]
 winner_number_n2 = winner_number[1]
 winner_number_n3 = winner_number[2]
 winner_number_n4 = winner_number[3]
 
-dump_to_file(generated_hotpicks_combo_file_anaylsis_csv, "date,draw,sampledrawsize,type,refnum,n1,n2,n3,n4,pastwinner,score\n", "w")
+dump_to_file(generated_hotpicks_combo_file_anaylsis_csv, "date,draw,sampledrawsize,type,refnum,n1,n2,n3,n4,score\n", "w")
+dump_to_file(generated_hotpicks_combo_file_anaylsis_csv, f"date,draw,sampledrawsize,type,refnum,{winner_number_n1},{winner_number_n2},{winner_number_n3},{winner_number_n4},4.0\n", "a")
 
 i = 0
 for entry in hotpicks_dl:
@@ -135,7 +138,7 @@ for entry in hotpicks_dl:
     pastwinner = entry['pastwinner']
 
     # skip past winners. no need to check generated guess number
-    if pastwinner == 'exists':
+    if pastwinner == 'exists' or pastwinner == 'nr':
         continue
 
     # analysis check generated combo against winner see difference

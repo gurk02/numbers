@@ -581,6 +581,9 @@ def dump_to_file(file, data, mode):
                    # element 3 - get all
 sampling_draws =  [14, 21, 30, 90, 120, 365, len(n1)]
 draw_sz = sampling_draws[2]  
+draw_sz = sampling_draws[5]
+ 
+
 draw_types = ['MID', 'EVE', 'ALL']
 draw_type = draw_types[1]
 
@@ -686,6 +689,29 @@ def is_numbers_in_source(n1,n2,n3,n4, source):
         i += 1
     return False
 
+def is_number_repeat(combo_pick0,combo_pick1,combo_pick2,combo_pick3):
+    number_repeat_cnt = 0
+    combo_pick = [combo_pick0, combo_pick1, combo_pick2, combo_pick3]
+
+    if combo_pick[0] == combo_pick[1] or combo_pick[0] == combo_pick[2] or combo_pick[0] == combo_pick[3]:
+        # print (f"number repeat {combo_pick}")
+        return True
+
+    if combo_pick[1] == combo_pick[0] or combo_pick[1] == combo_pick[2] or combo_pick[1] == combo_pick[3]:
+        # print (f"number repeat {combo_pick}")
+        return True
+
+    if combo_pick[2] == combo_pick[0] or combo_pick[2] == combo_pick[1] or combo_pick[2] == combo_pick[3]:
+        # print (f"number repeat {combo_pick}")
+        return True
+
+    if combo_pick[3] == combo_pick[0] or combo_pick[3] == combo_pick[1] or combo_pick[3] == combo_pick[2]:
+        # print (f"number repeat {combo_pick}")
+        return True
+
+    return False
+
+
 # refnum,date,draw,sampledrawsize,type,refnum,n1,n2,n3,n4,pastwinner
 
 dump_to_file(generated_hotpicks_combo_file_csv, "date,draw,sampledrawsize,type,refnum,n1,n2,n3,n4,pastwinner\n", "w")
@@ -751,6 +777,9 @@ elif generated_method == 'combo':
             if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3], numbers_dl) == True:
                 print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "exists")
                 data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},exists\n"
+            elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3]):
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "nr")        # digit repeat
+                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},nr\n" #number repeat
             else:
                 print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t")
                 data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},\n"
@@ -770,6 +799,9 @@ elif generated_method == 'combo':
             if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3], numbers_dl) == True:
                 print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "exists")
                 data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},exists\n"
+            elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3]):
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "nr")        # digit repeat
+                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},nr\n" #number repeat
             else:
                 print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t")
                 data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},\n"
@@ -780,104 +812,5 @@ elif generated_method == 'combo':
 
 else:
     print('skip generating picks..')
-
-# print('9 8 8 0 previous winner', is_numbers_in_source(9,8,8,0, numbers_dl))
-    #
-    # Original Code - Not in a Function; Generate Numbers 
-    #
-# test_pattern = [3, 8, 9, 6, 9, 1, 8, 5, 5, 5, 8, 1, 4, 0, 9, 7, 5, 8, 7, 0, 5, 5, 8, 5, 9, 1, 7, 2, 5, 9, 7, 0, 4, 3, 5, 1, 0
-# , 6, 2, 3, 6, 8, 0, 3, 5]
-
-# n1_mid = test_pattern
-# sampling_arr = n1_eve
-# sampling_draws =  [14, 30, 90, len(sampling_arr)]
-# sample_draws = sampling_draws[3]
-# digit = 'n1'
-# draw_time = 'eve'
-
-# # print(test_pattern)
-# print("calculate_pattern ...")
-# hot_picks, draw_number_count, hot_picks_count = calculate_pattern(sampling_arr[:sample_draws])
-# print("draw number count ", draw_number_count)
-# draw_count_top3_nums = [0, 0, 0]
-# draw_count_top3_cnt = [0, 0, 0]
-# pattern_hot_picks_top3_nums = [0, 0, 0]
-# pattern_hot_picks_top3_cnt = [0, 0, 0]
-
-# print("\n\n")
-# print(f"\t\***tcalulcate {digit} - {draw_time}")
-
-# print(f"{digit} {draw_time} {sample_draws} Find Top3 Draw Count Hot Picks -> {find_top3(draw_number_count,draw_count_top3_cnt,draw_count_top3_nums)}")
-
-# cross_ref_cnt_vs_pattern_hop_picks = [-1,-1,-1]
-
-# debug = False
-# i = 0 
-# for hot_pick in hot_picks:
-#     # print(i," ", hot_pick)
-#     if debug == True:
-#         print(i, " ", hot_pick, " ")
-#         if hot_pick == True:
-#             print(i)
-#     # j = 0
-#     # print("checking ", i)
-#     # for num in hot_pick_top3_nums:
-#     #     if num == i and hot_pick == True:
-#     #         # cross referance top3 based on count vs pattern
-#     #         print(num, " ", j, " ", i)
-#     #         cross_ref_cnt_vs_pattern_hop_picks[j] = num
-#     #         print("break")
-#     #         break;
-#     #     j += 1
-#     i += 1
-
-
-# print (f"{digit} TOP3 Draw Count PICKS -> ", draw_count_top3_nums)
-# print("Pattern Hot picks Count ->",hot_picks_count)
-# print ("TOP3 Pattern Hot Picks Count ->", find_top3(hot_picks_count,pattern_hot_picks_top3_cnt,pattern_hot_picks_top3_nums))
-
-# for hot_pick_num in pattern_hot_picks_top3_nums:
-#     i = 0
-#     # print("checking ", hot_pick_num)
-#     for draw_count_num in draw_count_top3_nums:
-#         # print("against ", draw_count_num)
-#         if hot_pick_num == draw_count_num:
-#             cross_ref_cnt_vs_pattern_hop_picks[i] = hot_pick_num
-#             # print("ok hotpick", hot_pick_num)
-#             break
-#         i +=1
-
-# print ("cross_ref_cnt_vs_pattern_hop_picks ", cross_ref_cnt_vs_pattern_hop_picks)
-# print (f"{draw_time} All Freq Picks")
-# # find_top3(n4_mid_cnt,mid_top3_cnt,mid_top3_nums)
-# print (mid_top3_cnt)
-# print (mid_top3_nums)
-# print (eve_top3_cnt)
-# print (eve_top3_nums)
-
-# print("\t\t---RESULTS---")
-# print(f"{digit} =>", )
-# for n in cross_ref_cnt_vs_pattern_hop_picks:
-#     if n != -1:
-#         print(n)
-
-# picks_n1 = cross_ref_cnt_vs_pattern_hop_picks
-
-# debug = True
-# print("calulcate N1 - EVEs hot picks")
-# print(n1_eve)
-# hot_picks = calculate_pattern(n1_eve)
-# i = 0 
-# for hot_pick in hot_picks:
-#     if debug == True:
-#         print(i, " ", hot_pick, " ")
-#     if hot_pick == True:
-#         print(i)
-#     i += 1
-
-
-
-# series = pd.Series(n1)
-# print(series)
 
 print("done.")
