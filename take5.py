@@ -452,4 +452,25 @@ print("generate numbers for N1 ...", n1_picks)
 print (n1_draw_count_top3_nums)
 print(n1_pattern_hot_picks_top3_nums)
 
+n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', draw_type,sample_arr_n2,draw_sz)
+print("generate numbers for N2 ...", n2_picks)
+print (n2_draw_count_top3_nums)
+print(n2_pattern_hot_picks_top3_nums)
+
+n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('n3', draw_type,sample_arr_n3,draw_sz)
+print("generate numbers for n3 ...", n3_picks)
+print (n3_draw_count_top3_nums)
+print(n3_pattern_hot_picks_top3_nums)
+
+n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('n4', draw_type,sample_arr_n4,draw_sz)
+print("generate numbers for n4 ...", n4_picks)
+print (n4_draw_count_top3_nums)
+print(n4_pattern_hot_picks_top3_nums)
+
+n5_picks, n5_draw_count_top3_nums ,n5_pattern_hot_picks_top3_nums = generate_numbers('n5', draw_type,sample_arr_n5,draw_sz)
+print("generate numbers for n5 ...", n5_picks)
+print (n5_draw_count_top3_nums)
+print(n5_pattern_hot_picks_top3_nums)
+
+
 print("done.")

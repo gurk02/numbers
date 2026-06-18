@@ -113,7 +113,8 @@ winner_number = ['9','6','3','5']
 # winner_number = ['7', '9', '2', '1']
 winner_number = ['5','9','1','4']
 winner_number = ['2','7','4','6'] # 6/15/26 EVE
-winner_number = ['6','4','3','4'] # 6/16/26 EVE
+winner_number = ['6','4','3','4'] # 6/16/26
+winner_number = ['2','9','9','0'] # 6/17/26 #FB 8 EVE
 winner_number_fb = ['4']
 
 winner_number_n1 = winner_number[0]
