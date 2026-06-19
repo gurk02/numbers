@@ -583,6 +583,7 @@ sampling_draws =  [14, 21, 30, 90, 120, 365, len(n1)]
 draw_sz = sampling_draws[2]  
 draw_sz = sampling_draws[5]
 draw_sz = sampling_draws[2]
+draw_sz = sampling_draws[5]
 
 draw_types = ['MID', 'EVE', 'ALL']
 draw_type = draw_types[1]
