@@ -1,5 +1,6 @@
 
 import csv
+from datetime import datetime
 # 6/17/26 
 
 #
@@ -36,6 +37,7 @@ def print_arr(arr, low_num, high_num):
     debug = True
 
     n = low_num
+    n -= 1      # skip the 1st one is -1
     idx = 0 
     while idx < len(arr):
         print (n, ' ', arr[idx])
@@ -87,6 +89,13 @@ high_range_numbers = 45
 n = low_range_numbers
 reset = 0
 i = 0
+numbers_cnt.append(-1)
+n1_cnt.append(-1)
+n2_cnt.append(-1)
+n3_cnt.append(-1)
+n4_cnt.append(-1)
+n5_cnt.append(-1)
+
 while n <= high_range_numbers :
     numbers_cnt.append(reset)
     n1_cnt.append(reset)
@@ -112,19 +121,33 @@ for entry in numbers_dl:
     n5_num = int(entry['n5'])
     true_win = entry['true_win']
 
-    numbers_cnt[n1_num-1] +=1 
-    numbers_cnt[n2_num-1] +=1
-    numbers_cnt[n3_num-1] +=1
-    numbers_cnt[n4_num-1] +=1
-    numbers_cnt[n5_num-1] +=1
+    # numbers_cnt[n1_num-1] +=1 
+    # numbers_cnt[n2_num-1] +=1
+    # numbers_cnt[n3_num-1] +=1
+    # numbers_cnt[n4_num-1] +=1
+    # numbers_cnt[n5_num-1] +=1
 
-    n1_cnt[n1_num-1] +=1 
-    n2_cnt[n2_num-1] +=1
-    n3_cnt[n3_num-1] +=1
-    n4_cnt[n4_num-1] +=1
-    n5_cnt[n5_num-1] +=1
+    # n1_cnt[n1_num-1] +=1 
+    # n2_cnt[n2_num-1] +=1
+    # n3_cnt[n3_num-1] +=1
+    # n4_cnt[n4_num-1] +=1
+    # n5_cnt[n5_num-1] +=1
 
-    n1.append(n1_num)
+    
+    numbers_cnt[n1_num] +=1 
+    numbers_cnt[n2_num] +=1
+    numbers_cnt[n3_num] +=1
+    numbers_cnt[n4_num] +=1
+    numbers_cnt[n5_num] +=1
+
+    n1_cnt[n1_num] +=1 
+    n2_cnt[n2_num] +=1
+    n3_cnt[n3_num] +=1
+    n4_cnt[n4_num] +=1
+    n5_cnt[n5_num] +=1
+
+
+    n1.append(n1_num)       #pattern n1..n5
     n2.append(n2_num)
     n3.append(n3_num)
     n4.append(n4_num)
@@ -132,20 +155,20 @@ for entry in numbers_dl:
 
     i += 1
 
-# debug = True
+debug = True
 if debug == True:
     print('numbers counted')
-    print (numbers_cnt)
-    print (n1_cnt)
-    print (n2_cnt)
-    print (n3_cnt)
-    print (n4_cnt)
-    print (n5_cnt)
-    print('n1',n1)
-    print('n2',n2)
-    print('n3',n3)
-    print('n4',n4)
-    print('n5',n5)
+    print ('numbers cnt', len(numbers_cnt), numbers_cnt)
+    print ('n1 cnt', len(n1_cnt), n1_cnt)
+    print ('n2 cnt', len(n2_cnt), n2_cnt)
+    print ('n3 cnt', len(n3_cnt), n3_cnt)
+    print ('n4 cnt', len(n4_cnt), n4_cnt)
+    print ('n5 cnt', (n5_cnt), n5_cnt)
+    print('n1',len(n1), n1)
+    print('n2',len(n2), n2)
+    print('n3',len(n3), n3)
+    print('n4',len(n4), n4)
+    print('n5',len(n5), n5)
     print(' total count',print_arr(numbers_cnt,low_range_numbers, high_range_numbers))
     print('n1 count', print(print_arr(n1_cnt,low_range_numbers, high_range_numbers)))
 
@@ -256,7 +279,8 @@ def reset_arr_to_value(arr, start, stop, value):
 def build_arr(arr, max_len, value):
     # arr = []
     n = 0
-    while n < max_len:
+    # while n < max_len:
+    while n <= max_len:
         arr.append(value)
         n += 1
 
@@ -271,23 +295,29 @@ def calculate_pattern(pattern):
     prev_cnt = 0 # previous count draws since last seen
     find_number_count = 0
     # draw_number_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    draw_number_count = []
-    build_arr(draw_number_count,45, 0)
+    draw_number_count = [] 
+    # build_arr(draw_number_count,45 + 1, 0)
+    build_arr(draw_number_count, high_range_numbers, 0)
     prev_draw_number_count = 0
     # last_seen_draw_loc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     last_seen_draw_loc = []
-    build_arr(last_seen_draw_loc,45, 0)
+    # build_arr(last_seen_draw_loc,45 + 1, 0)
+    build_arr(last_seen_draw_loc, high_range_numbers, 0)
+
     # diff_last_seen_draw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     diff_last_seen_draw = []
-    build_arr(diff_last_seen_draw,45, 0)
+    # build_arr(diff_last_seen_draw,45 + 1, 0)
+    build_arr(diff_last_seen_draw,high_range_numbers, 0)
 
     # hot_picks =  [False, False, False, False, False, False, False, False, False, False]
     hot_picks =  []
-    build_arr(hot_picks,45, False)
+    # build_arr(hot_picks,45 + 1, False)
+    build_arr(hot_picks,high_range_numbers, False)
     # hot_picks_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     hot_picks_count = []
-    build_arr(hot_picks_count,45, False)
-
+    # build_arr(hot_picks_count,45 + 1, False)
+    build_arr(hot_picks_count,high_range_numbers, 0)
+    print (' len ', len(hot_picks_count), hot_picks_count)
     debug = False
     i = 0
     total_draws = len(pattern)
@@ -297,7 +327,7 @@ def calculate_pattern(pattern):
         print (i, " ", "n", "s_cnt", " steps_diff", " ", "steps_diff_prev", " ", "steps_diff", " ", "HP")
     
     for n in pattern:
-        i += 1
+        i += 1                  # i is location in pattern
         
         draw_number_count[n] +=1
     
@@ -436,7 +466,7 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
 sampling_draws =  [14, 21, 30, 90, 120, 365, len(n1)]
 draw_sz = sampling_draws[2]  
 draw_sz = sampling_draws[6]
- 
+draw_sz = sampling_draws[4] 
 
 draw_types = ['ALL']
 draw_type = draw_types[0]
@@ -472,5 +502,28 @@ print("generate numbers for n5 ...", n5_picks)
 print (n5_draw_count_top3_nums)
 print(n5_pattern_hot_picks_top3_nums)
 
+today_date = datetime.today().strftime("%m/%d/%Y")
+print(today_date)
+
+print ('Generate Numbers of N1-N5')
+print ('N1', "\t", 'N2',"\t",  'N3',"\t",  'N4',"\t",  'N5')
+print("hot numbers by count")
+
+n = 0 
+while n < 3:
+    print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n],"\t",n4_draw_count_top3_nums[n],"\t", n5_draw_count_top3_nums[n])
+    data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]},{n4_draw_count_top3_nums[n]},{n5_draw_count_top3_nums[n]}\n"
+    # print(f"dump to file {data}")
+    # dump_to_file(hotpicks_file_csv, data, 'a')
+    n += 1
+
+print("hot numbers by pattern")
+n = 0 
+while n < 3:
+    print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n],"\t",n4_pattern_hot_picks_top3_nums[n],"\t",n5_pattern_hot_picks_top3_nums[n])
+    data = f"{today_date},{draw_type},{draw_sz},pattern,{n1_pattern_hot_picks_top3_nums[n]},{n2_pattern_hot_picks_top3_nums[n]},{n3_pattern_hot_picks_top3_nums[n]},{n4_pattern_hot_picks_top3_nums[n]},{n5_pattern_hot_picks_top3_nums[n]}\n"
+    # print(f"dump to file {data}")
+    # dump_to_file(hotpicks_file_csv, data, 'a')
+    n += 1
 
 print("done.")
