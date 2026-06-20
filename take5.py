@@ -743,7 +743,25 @@ while n < 3:
 
 draw_sz = sampling_draws[8] 
 
-draw_sz = 50
+draw_sz = 600  
+# [6, 44, 4, 43, 11]
+# [6, 44, 4, 43, 37]
+
+# draw_sz = 300      # 60 days
+# [6, 4, 21, 40, 44]
+# [4, 6, 44, 2, 38]
+
+# draw_sz = 150      # 30 days
+# [44, 6, 4, 14, 40]
+# [44, 6, 4, 38, 40]
+
+# draw_sz = 100      # 20 days
+# [44, 6, 14, 40, 10]
+# [44, 6, 40, 41, 20]
+
+# draw_sz = 50      # 10 days
+# [41, 44, 6, 14, 1]
+# [41, 6, 23, 27, 32]
 
 numbers_picks, numbers_draw_count_top5_nums ,numbers_pattern_hot_picks_top5_nums = generate_numbers_10('N1-N5', draw_type,numbers, draw_sz)
 print("generate using seq numbers for N1-N5 ...", numbers_picks)
