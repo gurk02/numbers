@@ -8,8 +8,8 @@ from datetime import datetime
 # 
 
 numbers_file_csv = 'data/5numbers.csv'
-
-generated_combo_picks_file_csv = 'data/5numbers_generated_combo.csv'
+hotpicks_file_csv = 'data/5numbers_hotpicks.csv'
+generated_hotpicks_combo_file_csv = 'data/5numbers_generated_hotpicks_combo.csv'
 
 #
 #import data
@@ -114,7 +114,7 @@ print("reset",numbers_cnt)
 
 i =0
 for entry in numbers_dl:
-    print (i, ' ', entry)
+    # print (i, ' ', entry)
     n1_num = int(entry['n1'])
     n2_num = int(entry['n2'])
     n3_num = int(entry['n3'])
@@ -166,7 +166,7 @@ for entry in numbers_dl:
 # print(numbers)
 # exit(1)
 
-debug = True
+debug = False
 if debug == True:
     print('numbers counted')
     print ('numbers cnt', len(numbers_cnt), numbers_cnt)
@@ -280,7 +280,8 @@ def hot_pick_10(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_la
     #     return True
     # else:
     #     return False     # steps diff from 1st and 2nd last seen  # rate > -15 means compacting   and rate < 5 means compacting still everything else means expanding              
-    if seen_count > 1 and diff_last_seen_draw < 14 and prev_diff_last_seen_draw < 14 and (last_seen_rate_change > -15 or last_seen_rate_change < 10):
+    # if seen_count > 1 and diff_last_seen_draw < 21 and prev_diff_last_seen_draw < 21 and (last_seen_rate_change > -15 and last_seen_rate_change < 10):
+    if seen_count > 1 and diff_last_seen_draw < 21 and prev_diff_last_seen_draw < 21 and (last_seen_rate_change < 10):
         return True
     else:
         return False
@@ -432,7 +433,8 @@ def calculate_pattern_10(pattern):
         # rate_of_change =  prev_diff_last_seen_draw - diff_last_seen_draw[n]
 
         rate_of_change =  diff_last_seen_draw[n] - prev_diff_last_seen_draw
-
+        
+        debug = True
         if hot_pick_10(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_diff_last_seen_draw, prev_last_seen_draw_loc, rate_of_change) == True:
             if debug == True:
                 print(i," ",n, draw_number_count[n], " ",diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "HP")
@@ -642,6 +644,27 @@ def generate_numbers_10(digit, draw_time, sample_arr, sampling_draws):
 
 
 
+#
+# GENERATE - numbers by count and pattern, also their generated combos  dump to files
+#
+def dump_to_file(file, data, mode):
+    debug = False
+    if debug == True:
+        print (f"file {file}, {mode}, {data}")
+    
+    if file == '':
+        return False
+
+    if mode != 'w' and mode != 'a' and mode != '+':
+        return False
+    
+    if debug == True:
+        print (f"writing to file {file} {mode}, {data}")
+
+    with open(file, mode) as f:
+        f.write(data)
+
+    return True
 
 
 #
@@ -657,9 +680,9 @@ draw_sz = sampling_draws[6]
 draw_sz = sampling_draws[2] 
 draw_sz = sampling_draws[6]
 
-draw_sz = sampling_draws[2] 
+draw_sz = sampling_draws[7] 
 
-draw_types = ['ALL']
+draw_types = ['DAILY']
 draw_type = draw_types[0]
 
 sample_arr_n1 = n1
@@ -705,7 +728,7 @@ while n < 3:
     print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n],"\t",n4_draw_count_top3_nums[n],"\t", n5_draw_count_top3_nums[n])
     data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]},{n4_draw_count_top3_nums[n]},{n5_draw_count_top3_nums[n]}\n"
     # print(f"dump to file {data}")
-    # dump_to_file(hotpicks_file_csv, data, 'a')
+    dump_to_file(hotpicks_file_csv, data, 'a')
     n += 1
 
 print("hot numbers by pattern")
@@ -714,11 +737,13 @@ while n < 3:
     print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n],"\t",n4_pattern_hot_picks_top3_nums[n],"\t",n5_pattern_hot_picks_top3_nums[n])
     data = f"{today_date},{draw_type},{draw_sz},pattern,{n1_pattern_hot_picks_top3_nums[n]},{n2_pattern_hot_picks_top3_nums[n]},{n3_pattern_hot_picks_top3_nums[n]},{n4_pattern_hot_picks_top3_nums[n]},{n5_pattern_hot_picks_top3_nums[n]}\n"
     # print(f"dump to file {data}")
-    # dump_to_file(hotpicks_file_csv, data, 'a')
+    dump_to_file(hotpicks_file_csv, data, 'a')
     n += 1
 
 
-draw_sz = sampling_draws[3] 
+draw_sz = sampling_draws[8] 
+
+draw_sz = 50
 
 numbers_picks, numbers_draw_count_top5_nums ,numbers_pattern_hot_picks_top5_nums = generate_numbers_10('N1-N5', draw_type,numbers, draw_sz)
 print("generate using seq numbers for N1-N5 ...", numbers_picks)
