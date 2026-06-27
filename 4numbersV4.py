@@ -390,7 +390,9 @@ def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_last_
     #     return True
     # else:
     #     return False     # steps diff from 1st and 2nd last seen  # rate > -15 means compacting   and rate < 5 means compacting still everything else means expanding              
-    if seen_count > 1 and diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
+    # if seen_count > 1 and diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
+    if seen_count > 1 and ((diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7) or (last_seen_rate_change > -10 and last_seen_rate_change < 5)):
+
         return True
     else:
         return False
