@@ -281,7 +281,8 @@ def hot_pick_10(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_la
     # else:
     #     return False     # steps diff from 1st and 2nd last seen  # rate > -15 means compacting   and rate < 5 means compacting still everything else means expanding              
     # if seen_count > 1 and diff_last_seen_draw < 21 and prev_diff_last_seen_draw < 21 and (last_seen_rate_change > -15 and last_seen_rate_change < 10):
-    if seen_count > 1 and diff_last_seen_draw < 21 and prev_diff_last_seen_draw < 21 and (last_seen_rate_change < 10):
+    # if seen_count > 1 and (diff_last_seen_draw < 21 and prev_diff_last_seen_draw < 21) and (last_seen_rate_change < 10):
+    if seen_count > 1 and ((diff_last_seen_draw <= 25 and prev_diff_last_seen_draw <= 25) or last_seen_rate_change < 6):
         return True
     else:
         return False
@@ -567,19 +568,39 @@ def generate_numbers_10(digit, draw_time, sample_arr, sampling_draws):
 
     # print(test_pattern)
     print("calculate_pattern ...")
-    hot_picks, draw_number_count, hot_picks_count = calculate_pattern_10(sampling_arr[:sample_draws])
+    # sampling_arr = [0, 6, 5, 3, 3, 9, 2, 4, 1, 4, 5, 6, 2, 4, 6,]
+    # sampling_arr_trim = sampling_arr[:80] # TEST
+
+    sampling_arr_trim = sampling_arr[:sampling_draws] # TEST
+
+    # hot_picks, draw_number_count, hot_picks_count = calculate_pattern_10(sampling_arr[:sample_draws])
+    hot_picks, draw_number_count, hot_picks_count = calculate_pattern_10(sampling_arr_trim)
+
     print("draw number count ", draw_number_count)
-    draw_count_top3_nums = [0, 0, 0, 0, 0 ]
-    draw_count_top3_cnt = [0, 0, 0, 0, 0 ]
-    pattern_hot_picks_top3_nums = [0, 0, 0, 0, 0]
-    pattern_hot_picks_top3_cnt = [0, 0, 0, 0, 0]
+    ## TOP 5
+    # draw_count_top3_nums = [0, 0, 0, 0, 0 ]
+    # draw_count_top3_cnt = [0, 0, 0, 0, 0 ]
+    # pattern_hot_picks_top3_nums = [0, 0, 0, 0, 0]
+    # pattern_hot_picks_top3_cnt = [0, 0, 0, 0, 0]
+    
+    ## TOP 10
+    draw_count_top3_nums = [ ]
+    build_arr(draw_count_top3_nums, 10, 0)
+    draw_count_top3_cnt = []
+    build_arr(draw_count_top3_cnt, 10, 0)
+    pattern_hot_picks_top3_nums = []
+    build_arr(pattern_hot_picks_top3_nums, 10, 0)
+    pattern_hot_picks_top3_cnt = []
+    build_arr(pattern_hot_picks_top3_cnt, 10, 0)
 
     print("\n\n")
     print(f"\t\t***calulcate {digit} - {draw_time}")
 
     print(f"{digit} {draw_time} {sample_draws} Find Top5 Draw Count Hot Picks -> {find_top3(draw_number_count,draw_count_top3_cnt,draw_count_top3_nums)}")
 
+    # cross_ref_cnt_vs_pattern_hop_picks = [-1,-1,-1,-1,-1]
     cross_ref_cnt_vs_pattern_hop_picks = [-1,-1,-1,-1,-1]
+    build_arr(cross_ref_cnt_vs_pattern_hop_picks, high_range_numbers, -1)
 
     debug = False
     i = 0 
@@ -680,7 +701,9 @@ draw_sz = sampling_draws[6]
 draw_sz = sampling_draws[2] 
 draw_sz = sampling_draws[6]
 
-draw_sz = sampling_draws[7] 
+# draw_sz = sampling_draws[7] 
+draw_sz = sampling_draws[2] 
+
 
 draw_types = ['DAILY']
 draw_type = draw_types[0]
@@ -691,59 +714,63 @@ sample_arr_n3 = n3
 sample_arr_n4 = n4
 sample_arr_n5 = n5
 
-n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
-print("generate numbers for N1 ...", n1_picks)
-print (n1_draw_count_top3_nums)
-print(n1_pattern_hot_picks_top3_nums)
+# 
+# Old method count and pattern (see generate_pattern_10)
+#
 
-n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', draw_type,sample_arr_n2,draw_sz)
-print("generate numbers for N2 ...", n2_picks)
-print (n2_draw_count_top3_nums)
-print(n2_pattern_hot_picks_top3_nums)
+# n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
+# print("generate numbers for N1 ...", n1_picks)
+# print (n1_draw_count_top3_nums)
+# print(n1_pattern_hot_picks_top3_nums)
 
-n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('n3', draw_type,sample_arr_n3,draw_sz)
-print("generate numbers for n3 ...", n3_picks)
-print (n3_draw_count_top3_nums)
-print(n3_pattern_hot_picks_top3_nums)
+# n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', draw_type,sample_arr_n2,draw_sz)
+# print("generate numbers for N2 ...", n2_picks)
+# print (n2_draw_count_top3_nums)
+# print(n2_pattern_hot_picks_top3_nums)
 
-n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('n4', draw_type,sample_arr_n4,draw_sz)
-print("generate numbers for n4 ...", n4_picks)
-print (n4_draw_count_top3_nums)
-print(n4_pattern_hot_picks_top3_nums)
+# n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('n3', draw_type,sample_arr_n3,draw_sz)
+# print("generate numbers for n3 ...", n3_picks)
+# print (n3_draw_count_top3_nums)
+# print(n3_pattern_hot_picks_top3_nums)
 
-n5_picks, n5_draw_count_top3_nums ,n5_pattern_hot_picks_top3_nums = generate_numbers('n5', draw_type,sample_arr_n5,draw_sz)
-print("generate numbers for n5 ...", n5_picks)
-print (n5_draw_count_top3_nums)
-print(n5_pattern_hot_picks_top3_nums)
+# n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('n4', draw_type,sample_arr_n4,draw_sz)
+# print("generate numbers for n4 ...", n4_picks)
+# print (n4_draw_count_top3_nums)
+# print(n4_pattern_hot_picks_top3_nums)
+
+# n5_picks, n5_draw_count_top3_nums ,n5_pattern_hot_picks_top3_nums = generate_numbers('n5', draw_type,sample_arr_n5,draw_sz)
+# print("generate numbers for n5 ...", n5_picks)
+# print (n5_draw_count_top3_nums)
+# print(n5_pattern_hot_picks_top3_nums)
 
 today_date = datetime.today().strftime("%m/%d/%Y")
 print(today_date)
 
-print ('Generate Numbers of N1-N5')
-print ('N1', "\t", 'N2',"\t",  'N3',"\t",  'N4',"\t",  'N5')
-print("hot numbers by count")
+# print ('Generate Numbers of N1-N5')
+# print ('N1', "\t", 'N2',"\t",  'N3',"\t",  'N4',"\t",  'N5')
+# print("hot numbers by count")
 
-n = 0 
-while n < 3:
-    print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n],"\t",n4_draw_count_top3_nums[n],"\t", n5_draw_count_top3_nums[n])
-    data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]},{n4_draw_count_top3_nums[n]},{n5_draw_count_top3_nums[n]}\n"
-    # print(f"dump to file {data}")
-    dump_to_file(hotpicks_file_csv, data, 'a')
-    n += 1
+# n = 0 
+# while n < 3:
+#     print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n],"\t",n4_draw_count_top3_nums[n],"\t", n5_draw_count_top3_nums[n])
+#     data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]},{n4_draw_count_top3_nums[n]},{n5_draw_count_top3_nums[n]}\n"
+#     # print(f"dump to file {data}")
+#     dump_to_file(hotpicks_file_csv, data, 'a')
+#     n += 1
 
-print("hot numbers by pattern")
-n = 0 
-while n < 3:
-    print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n],"\t",n4_pattern_hot_picks_top3_nums[n],"\t",n5_pattern_hot_picks_top3_nums[n])
-    data = f"{today_date},{draw_type},{draw_sz},pattern,{n1_pattern_hot_picks_top3_nums[n]},{n2_pattern_hot_picks_top3_nums[n]},{n3_pattern_hot_picks_top3_nums[n]},{n4_pattern_hot_picks_top3_nums[n]},{n5_pattern_hot_picks_top3_nums[n]}\n"
-    # print(f"dump to file {data}")
-    dump_to_file(hotpicks_file_csv, data, 'a')
-    n += 1
+# print("hot numbers by pattern")
+# n = 0 
+# while n < 3:
+#     print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n],"\t",n4_pattern_hot_picks_top3_nums[n],"\t",n5_pattern_hot_picks_top3_nums[n])
+#     data = f"{today_date},{draw_type},{draw_sz},pattern,{n1_pattern_hot_picks_top3_nums[n]},{n2_pattern_hot_picks_top3_nums[n]},{n3_pattern_hot_picks_top3_nums[n]},{n4_pattern_hot_picks_top3_nums[n]},{n5_pattern_hot_picks_top3_nums[n]}\n"
+#     # print(f"dump to file {data}")
+#     dump_to_file(hotpicks_file_csv, data, 'a')
+#     n += 1
 
 
 draw_sz = sampling_draws[8] 
 
-draw_sz = 600  
+draw_sz = 30
 # [6, 44, 4, 43, 11]
 # [6, 44, 4, 43, 37]
 
@@ -763,9 +790,35 @@ draw_sz = 600
 # [41, 44, 6, 14, 1]
 # [41, 6, 23, 27, 32]
 
-numbers_picks, numbers_draw_count_top5_nums ,numbers_pattern_hot_picks_top5_nums = generate_numbers_10('N1-N5', draw_type,numbers, draw_sz)
-print("generate using seq numbers for N1-N5 ...", numbers_picks)
-print (numbers_draw_count_top5_nums)
-print(numbers_pattern_hot_picks_top5_nums)
+
+run = 0
+run_number_picks_arr = []
+run_numbers_draw_count_top10_nums = []
+run_numbers_pattern_hot_picks_top10_nums = []
+draws = [30, 50, 100, 150, 300]
+for draw in draws:
+    draw_sz = draw
+    numbers_picks, numbers_draw_count_top10_nums ,numbers_pattern_hot_picks_top10_nums = generate_numbers_10('N1-N5', draw_type,numbers, draw_sz)
+    run_number_picks_arr.append(numbers_picks)
+    run_numbers_draw_count_top10_nums.append(numbers_draw_count_top10_nums)
+    run_numbers_pattern_hot_picks_top10_nums.append(numbers_pattern_hot_picks_top10_nums)
+    # print (f"RUN# {run} , draw_sample {draw_sz}")
+    # print("generate using seq numbers for N1-N5 ...", numbers_picks)
+    # print (numbers_draw_count_top5_nums)
+    # print(numbers_pattern_hot_picks_top5_nums)
+    # print("")
+    run += 1
+
+print("\t\t**RESULTS")
+
+i = 0
+while(i < run):
+    draw_sz = draws[i]
+    print (f"RUN# {i} , draw_sample {draw_sz}")
+    print("generate using seq numbers for N1-N5 ...", numbers_picks)
+    # print(run_numbers_draw_count_top10_nums[i])
+    print(run_numbers_pattern_hot_picks_top10_nums[i])
+    print("")
+    i += 1
 
 print("done.")
