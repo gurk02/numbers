@@ -120,6 +120,7 @@ winner_number = ['1','9','2','5'] # 6/17/26 #FB 8 EVE
 winner_number = ['0', '2', '3', '1'] # 6/23/26 #FB 8 EVE
 winner_number = ['1', '0', '7', '2'] # 6/23/26 #FB 8 EVE
 winner_number = ['7', '3', '3', '3'] # 6/26/26 #FB 8 EVE
+winner_number = ['7','6','2','8'] # 6/27/26 #FB 8 EVE
 
 winner_number_fb = ['4']
 
