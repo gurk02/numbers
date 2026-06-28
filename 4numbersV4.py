@@ -701,18 +701,26 @@ def is_number_repeat(combo_pick0,combo_pick1,combo_pick2,combo_pick3):
 
     if combo_pick[0] == combo_pick[1] or combo_pick[0] == combo_pick[2] or combo_pick[0] == combo_pick[3]:
         # print (f"number repeat {combo_pick}")
-        return True
+        # return True
+        number_repeat_cnt += 1
 
     if combo_pick[1] == combo_pick[0] or combo_pick[1] == combo_pick[2] or combo_pick[1] == combo_pick[3]:
         # print (f"number repeat {combo_pick}")
-        return True
+        # return True
+        number_repeat_cnt += 1
 
     if combo_pick[2] == combo_pick[0] or combo_pick[2] == combo_pick[1] or combo_pick[2] == combo_pick[3]:
         # print (f"number repeat {combo_pick}")
-        return True
+        # return True
+        number_repeat_cnt += 1
 
     if combo_pick[3] == combo_pick[0] or combo_pick[3] == combo_pick[1] or combo_pick[3] == combo_pick[2]:
         # print (f"number repeat {combo_pick}")
+        # return True
+        number_repeat_cnt += 1
+
+
+    if number_repeat_cnt > 2:
         return True
 
     return False
