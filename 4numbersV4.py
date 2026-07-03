@@ -588,10 +588,16 @@ draw_sz = sampling_draws[2]
 draw_sz = sampling_draws[5]
 draw_sz = sampling_draws[2]
 # draw_sz = sampling_draws[5]
+draw_sz = sampling_draws[2]
 
 
 draw_types = ['MID', 'EVE', 'ALL']
 draw_type = draw_types[1]
+# draw_type = draw_types[0]
+# sample_arr_n1 = n1_mid
+# sample_arr_n2 = n2_mid
+# sample_arr_n3 = n3_mid
+# sample_arr_n4 = n4_mid
 
 sample_arr_n1 = n1_eve
 sample_arr_n2 = n2_eve
