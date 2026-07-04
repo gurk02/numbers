@@ -12,7 +12,7 @@ def remove_arr_item(arr, item):
             
 sequence = [ 1, 3, 4, 5]
 
-my_guess = [ 5, 3 ]     # guess
+my_guess = [ 5, 3, 1, 5 ]     # guess
 my_guess_idx = 0
 
 available_choices = [ 1, 2, 3, 4, 5  ]
@@ -49,7 +49,8 @@ for target in sequence:
         possible_choices = remove_arr_item(available_choices, my_guess[my_guess_idx])
     
     prop_of_succ = 1 / len(possible_choices)
-    my_guess_idx = 1
+    # my_guess_idx = event % 2
+    my_guess_idx += 1 
 
 print('\n')
 print("\t**STATS")

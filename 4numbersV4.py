@@ -381,9 +381,10 @@ def find_top3(numbers,top3,nums):
 # Find N1 Hot Pattern
 #
 
-      #
+    #
     # find hot number
     #
+rate_of_change_sensitive = [5, 7, 10, 12, 15, 17, 20, 22, 25 ] # from tighter rate to most related
 def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_last_seen_draw, prev_last_seen_loc, last_seen_rate_change):
     hot_pick_dial = 0
     # if seen_count > 1 and diff_last_seen_loc < 6 and (last_seen_rate_change > -5 and last_seen_rate_change < 5):
@@ -391,7 +392,8 @@ def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_last_
     # else:
     #     return False     # steps diff from 1st and 2nd last seen  # rate > -15 means compacting   and rate < 5 means compacting still everything else means expanding              
     # if seen_count > 1 and diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
-    if seen_count > 1 and ((diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7) or (last_seen_rate_change > -10 and last_seen_rate_change < 5)):
+    # if seen_count > 1 and ((diff_last_seen_draw <= 7 and prev_diff_last_seen_draw <= 7) or (last_seen_rate_change > -10 and last_seen_rate_change < 5)): # ok: default rule works decent 7/4/26
+    if seen_count > 1 and (last_seen_rate_change >= -10 and last_seen_rate_change <= 10):   # rate_of_change_sensitive[2] = 10 for every 10 draws check pattern exists
 
         return True
     else:
@@ -413,6 +415,7 @@ def calculate_pattern(pattern):
     hot_picks_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     debug = False
+    debug = True
     i = 0
     total_draws = len(pattern)
     print("calculate_pattern - total draws ", total_draws)
@@ -589,7 +592,9 @@ draw_sz = sampling_draws[5]
 draw_sz = sampling_draws[2]
 # draw_sz = sampling_draws[5]
 draw_sz = sampling_draws[2]
-
+draw_sz = sampling_draws[1]
+# draw_sz = sampling_draws[0]
+# draw_sz = 15
 
 draw_types = ['MID', 'EVE', 'ALL']
 draw_type = draw_types[1]
@@ -598,6 +603,8 @@ draw_type = draw_types[1]
 # sample_arr_n2 = n2_mid
 # sample_arr_n3 = n3_mid
 # sample_arr_n4 = n4_mid
+
+draw_type = draw_types[1]
 
 sample_arr_n1 = n1_eve
 sample_arr_n2 = n2_eve
