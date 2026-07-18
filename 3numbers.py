@@ -6,9 +6,9 @@ import numpy as np
 import random
 from datetime import datetime
 
-numbers_file_csv = 'data/4numbers.csv'
-hotpicks_file_csv = 'data/4numbers_hotpicks.csv'
-generated_hotpicks_combo_file_csv = 'data/4numbers_generated_hotpicks_combo.csv'
+numbers_file_csv = 'data/3numbers.csv'
+hotpicks_file_csv = 'data/3numbers_hotpicks.csv'
+generated_hotpicks_combo_file_csv = 'data/3numbers_generated_hotpicks_combo.csv'
 
 #
 #import data
@@ -60,11 +60,11 @@ print("n3_mid len", len(n3_mid))
 n3_eve = np.arange(int(len(numbers_dl)/2)+1)
 print("n3_mid len", len(n3_eve))
 
-n4 = np.arange(len(numbers_dl))
-n4_mid = np.arange(int(len(numbers_dl)/2)+1)
-print("n4_mid len", len(n4_mid))
-n4_eve = np.arange(int(len(numbers_dl)/2)+1)
-print("n4_mid len", len(n4_eve))
+# n4 = np.arange(len(numbers_dl))
+# n4_mid = np.arange(int(len(numbers_dl)/2)+1)
+# print("n4_mid len", len(n4_mid))
+# n4_eve = np.arange(int(len(numbers_dl)/2)+1)
+# print("n4_mid len", len(n4_eve))
 
 
 n1_cnt = [0,0,0,0,0,0,0,0,0,0]
@@ -81,9 +81,9 @@ n3_cnt = [0,0,0,0,0,0,0,0,0,0]
 n3_mid_cnt = [0,0,0,0,0,0,0,0,0,0]
 n3_eve_cnt = [0,0,0,0,0,0,0,0,0,0]
 
-n4_cnt = [0,0,0,0,0,0,0,0,0,0]
-n4_mid_cnt = [0,0,0,0,0,0,0,0,0,0]
-n4_eve_cnt = [0,0,0,0,0,0,0,0,0,0]
+# n4_cnt = [0,0,0,0,0,0,0,0,0,0]
+# n4_mid_cnt = [0,0,0,0,0,0,0,0,0,0]
+# n4_eve_cnt = [0,0,0,0,0,0,0,0,0,0]
 
 mid_top3_cnt = [0,0,0]
 mid_top3_nums = [0,0,0]
@@ -181,30 +181,30 @@ for entry in numbers_dl:
     #print(f"i {i}, n3 {n3[i]}")
     i += 1
 
-    #
-    # n4
-    #
-i = 0
-i_mid = 0
-i_eve = 0
-for entry in numbers_dl:
-    n4[i] = int(entry['n4']) #extract n4 from each line entry
-    n4_cnt[n4[i]] += 1
+#     #
+#     # n4
+#     #
+# i = 0
+# i_mid = 0
+# i_eve = 0
+# for entry in numbers_dl:
+#     n4[i] = int(entry['n4']) #extract n4 from each line entry
+#     n4_cnt[n4[i]] += 1
     
-    if entry['draw']=='MID':
+#     if entry['draw']=='MID':
 
-        n4_mid[i_mid] = int(entry['n4'])
-        n4_mid_cnt[n4[i]] += 1
-        i_mid += 1
+#         n4_mid[i_mid] = int(entry['n4'])
+#         n4_mid_cnt[n4[i]] += 1
+#         i_mid += 1
 
-    elif entry['draw']=='EVE':
+#     elif entry['draw']=='EVE':
       
-        n4_eve[i_eve] = int(entry['n4'])
-        n4_eve_cnt[n4[i]] += 1
-        i_eve += 1
+#         n4_eve[i_eve] = int(entry['n4'])
+#         n4_eve_cnt[n4[i]] += 1
+#         i_eve += 1
 
-    #print(f"i {i}, n4 {n4[i]}")
-    i += 1
+#     #print(f"i {i}, n4 {n4[i]}")
+#     i += 1
 
 #
 # Reports
@@ -228,10 +228,10 @@ print('N3')
 print(n3_cnt)
 print(n3_mid_cnt)
 print(n3_eve_cnt)
-print('N4')
-print(n4_cnt)
-print(n4_mid_cnt)
-print(n4_eve_cnt)
+# print('N4')
+# print(n4_cnt)
+# print(n4_mid_cnt)
+# print(n4_eve_cnt)
 
 debug = False
 
@@ -393,17 +393,180 @@ def hot_pick(row_draw_cnt, num, seen_count, diff_last_seen_draw, prev_diff_last_
     #     return False     # steps diff from 1st and 2nd last seen  # rate > -15 means compacting   and rate < 5 means compacting still everything else means expanding              
     # if seen_count > 1 and diff_last_seen_draw < 7 and prev_diff_last_seen_draw < 7 and (last_seen_rate_change > -15 and last_seen_rate_change < 5):
     # if seen_count > 1 and ((diff_last_seen_draw <= 7 and prev_diff_last_seen_draw <= 7) or (last_seen_rate_change > -10 and last_seen_rate_change < 5)): # ok: default rule works decent 7/4/26
-    if seen_count > 1 and (last_seen_rate_change >= -10 and last_seen_rate_change <= 10):   # rate_of_change_sensitive[2] = 10 for every 10 draws check pattern exists
+    # if seen_count > 1 and (last_seen_rate_change >= -10 and last_seen_rate_change <= 10):   # rate_of_change_sensitive[2] = 10 for every 10 draws check pattern exists
+    if seen_count > 1 and (last_seen_rate_change >= -10 and last_seen_rate_change <= 10):   #modified for 3 numbers instead of five numbers # rate_of_change_sensitive[2] = 10 for every 10 draws check pattern exists
 
         return True
     else:
         return False
+
+
+def gen_pairs():
+    layer1 = [0,1, 2,3, 4,5, 6,7, 8,9]
+    layer2 = [0,1, 2,3, 4,5, 6,7, 8,9]
+    pairs=[]
+    cnt = 0
+
+    for i in layer1:
+        for j in layer2:
+            pairs.append((i,j))
+            print(f"{i},{j}")   
+            cnt += 1
+
+    print(f"total pairs {cnt}")     
+    return pairs
+
+# def get_high(numbers):
+#     high = numbers[0]
+#     high_idx = 0
+#     idx = 0
+#     for i in numbers:
+#         if i > high:
+#             high = i
+#             high_idx = idx
+#         idx += 1
+
+#     # print(f"high_idx {high_idx} high {high}")
+#     return high_idx
+
+def get_high(numbers, start, end):
+    high = numbers[start]
+    high_idx = start
+    idx = start
+    for i in numbers[start:end]:
+        if i > high:
+            high = i
+            high_idx = idx
+        idx += 1
+
+    # print(f"high_idx {high_idx} high {high}")
+    return high_idx
+
+
+# def get_lowest(numbers):
+#     low = numbers[0]
+#     low_idx = 0
+#     idx = 0
+#     for i in numbers:
+#         # print (f"idx{idx}, i {i}, low{low}")
+#         if i < low:
+#             low = i
+#             low_idx = idx
+        
+#         idx += 1
+
+#     return low_idx
+
+def get_lowest(numbers, start, end):
+    low = numbers[start]
+    low_idx = start
+    idx = start
+    for i in numbers[start:end]:
+        # print (f"idx{idx}, i {i}, low{low}")
+        if i < low:
+            low = i
+            low_idx = idx
+        
+        idx += 1
+
+    return low_idx
+
+n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+prev_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+curr_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+pred_n1 = 5
+n1_cnt_sorted = []
+n1_match_cnt = 0
+n1_below_five = 0
+n1_above_five = 0
+n1_at_five = 0
+
+def calculate_n1_ppattern(pattern):
+    print('\t calculate_n1_ppattern')
+    n1_match_cnt = 0
+    n1_below_five = 0
+    n1_above_five = 0
+    n1_at_five = 0
+    prev_num1 = 0
+    curr_num1 = 0
+    last_num_lower = False
+
+    # gen_pairs()
+    # exit()
+
+    for n in pattern:
+
+        # if n == 5:
+        #     n1_at_five += 1
+        # elif n < 5:    
+        #     n1_below_five += 1
+        # else: 
+        #     n1_above_five += 1
+        
+        # print(f"at_five {n1_at_five} below_five {n1_below_five} above_five {n1_above_five}")
+        print(f"prev_num1 {prev_num1} curr_num1 {curr_num1} n {n}")
+
+        if n1_below_five == n1_above_five:
+            # 50 - 50 split go with opposite last seen
+            if last_num_lower == True:
+                pred_n1 = get_high(n1_ppoints, 5, 9)
+            else:
+                pred_n1 = get_high(n1_ppoints, 0, 5)
+            # last_num_lower = not last_num_lower
+
+        elif n1_below_five > n1_above_five:
+            pred_n1 = get_high(n1_ppoints, 5, 9)
+        elif n1_above_five > n1_below_five:
+            pred_n1 = get_high(n1_ppoints, 0, 5)
+        else:
+            pred_n1 = get_high(n1_ppoints, 0, 9)
+
+        # pred_n1 = get_high(n1_ppoints)
+        #pred_n1 = get_high(n1_ppoints)
+        # pred_n1 = 4
+        print(f"pred_n1 {pred_n1}")
+        
+          
+        if n == pred_n1:
+            n1_ppoints[pred_n1] += 1
+            n1_match_cnt += 1
+            print(f"{n} Match {pred_n1}? Y")
+        else:
+            print(f"{n} Match {pred_n1}? N")
+            n1_ppoints[pred_n1] -= 1
+
+        print(f"n {n}, prev_n1 {prev_n1[n]}, curr_n1 {curr_n1[n]}", f"\nn1_cnt {n1_cnt}",f"\nn1_ppoints {n1_ppoints}\n")
+
+        n1_cnt[n] += 1
+        if n == 5:
+            n1_at_five += 1
+        elif n < 5:    
+            n1_below_five += 1
+        else: 
+            n1_above_five += 1
+        
+        prev_num1 = curr_num1
+        curr_num1 = n
+        
+        if n < 5:
+            last_num_lower = True
+        else:
+            last_num_lower = False
+
+        print(f"at_five {n1_at_five} below_five {n1_below_five} above_five {n1_above_five}")
+
+    print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)}")
 
 #
 # Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
 #
 def calculate_pattern(pattern):
     # print("pattern ", pattern)
+    
+    calculate_n1_ppattern(pattern)
+    exit()
+
     i = 0   # current count draws
     prev_cnt = 0 # previous count draws since last seen
     find_number_count = 0
@@ -640,12 +803,16 @@ draw_type = draw_types[1]
 # sample_arr_n3 = n3_mid
 # sample_arr_n4 = n4_mid
 
-draw_type = draw_types[1]
+draw_type = draw_types[1]   # EVE
+# draw_type = draw_types[0] # MID
 
 sample_arr_n1 = n1_eve
 sample_arr_n2 = n2_eve
 sample_arr_n3 = n3_eve
-sample_arr_n4 = n4_eve
+# sample_arr_n1 = n1_mid
+# sample_arr_n2 = n2_mid
+# sample_arr_n3 = n3_mid
+# sample_arr_n4 = n4_eve
 
 n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
 print("generate numbers for N1 ...", n1_picks)
@@ -656,8 +823,8 @@ print("generate numbers for N2 ...", n2_picks)
 n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('N3', draw_type,sample_arr_n3,draw_sz)
 print("generate numbers for N3 ...", n3_picks)
 
-n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', draw_type,sample_arr_n4,draw_sz)
-print("generate numbers for N4 ...", n4_picks)
+# n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', draw_type,sample_arr_n4,draw_sz)
+# print("generate numbers for N4 ...", n4_picks)
 
 # date,draw,sampledrawsize,type,n1,n2,n3,n4
 
@@ -670,13 +837,16 @@ today_date = datetime.today().strftime("%m/%d/%Y")
 print('\n\n\t\t***REPORT***',today_date)
 print('\n')
 
-print ('Generate Numbers of N1-N4')
-print ('N1', "\t", 'N2',"\t",  'N3',"\t",  'N4')
+print ('Generate Numbers of N1-N3')
+# print ('N1', "\t", 'N2',"\t",  'N3',"\t",  'N4')
+print ('N1', "\t", 'N2',"\t",  'N3')
 print("hot numbers by count")
 n = 0 
 while n < 3:
-    print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n],"\t",n4_draw_count_top3_nums[n])
-    data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]},{n4_draw_count_top3_nums[n]}\n"
+    # print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n],"\t",n4_draw_count_top3_nums[n])
+    # data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]},{n4_draw_count_top3_nums[n]}\n"
+    print (n1_draw_count_top3_nums[n],"\t",n2_draw_count_top3_nums[n],"\t",n3_draw_count_top3_nums[n])
+    data = f"{today_date},{draw_type},{draw_sz},count,{n1_draw_count_top3_nums[n]},{n2_draw_count_top3_nums[n]},{n3_draw_count_top3_nums[n]}\n"
     # print(f"dump to file {data}")
     dump_to_file(hotpicks_file_csv, data, 'a')
     n += 1
@@ -684,8 +854,9 @@ while n < 3:
 print("hot numbers by pattern")
 n = 0 
 while n < 3:
-    print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n],"\t",n4_pattern_hot_picks_top3_nums[n])
-    data = f"{today_date},{draw_type},{draw_sz},pattern,{n1_pattern_hot_picks_top3_nums[n]},{n2_pattern_hot_picks_top3_nums[n]},{n3_pattern_hot_picks_top3_nums[n]},{n4_pattern_hot_picks_top3_nums[n]}\n"
+    # print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n],"\t",n4_pattern_hot_picks_top3_nums[n])
+    print (n1_pattern_hot_picks_top3_nums[n],"\t",n2_pattern_hot_picks_top3_nums[n],"\t",n3_pattern_hot_picks_top3_nums[n])
+    data = f"{today_date},{draw_type},{draw_sz},pattern,{n1_pattern_hot_picks_top3_nums[n]},{n2_pattern_hot_picks_top3_nums[n]},{n3_pattern_hot_picks_top3_nums[n]}\n"
     # print(f"dump to file {data}")
     dump_to_file(hotpicks_file_csv, data, 'a')
     n += 1
@@ -695,7 +866,8 @@ def generate_random_picks(picks_arr):
     generated_picks = []
     return random.sample(picks_arr,1)
 
-def generate_combo_picks(n1_top3_arr,n2_top3_arr,n3_top3_arr,n4_top3_arr):
+# def generate_combo_picks(n1_top3_arr,n2_top3_arr,n3_top3_arr,n4_top3_arr):
+def generate_combo_picks(n1_top3_arr,n2_top3_arr,n3_top3_arr):
     generated_picks = []
           #across_i #1   #2   #3
     # n1_top3_count = ['2', '3', '7']     #n
@@ -715,11 +887,15 @@ def generate_combo_picks(n1_top3_arr,n2_top3_arr,n3_top3_arr,n4_top3_arr):
             for k in n3_top3_arr:      # down
                 # print('n', n, ', ', ' j', j, ' k',k)
 
-                for m in n4_top3_arr:      # down
-                    # print('n', n, ', ', ' j', j, ' k',k, ' m',m)
-                    generated_picks.append([n,j,k,m])
-                    total_combos += 1
-                 
+                #   for m in n4_top3_arr:      # down
+                #     # print('n', n, ', ', ' j', j, ' k',k, ' m',m)
+                #     generated_picks.append([n,j,k,m])
+                #     total_combos += 1
+
+                # generated_picks.append([n,j,k,m])
+                generated_picks.append([n,j,k])
+                total_combos += 1
+            
         across_i += 1
         # print('n across', across_i)
     print(total_combos)
@@ -738,44 +914,76 @@ def lookup_number_exists(num, arr):
 
     return is_found
 
-def is_numbers_in_source(n1,n2,n3,n4, source):
+# def is_numbers_in_source(n1,n2,n3,n4, source):
+#     i = 0
+#     for entry in source:
+#         if n1 == int(entry['n1']) and  n2 == int(entry['n2']) and  n3 == int(entry['n3']) and n4 == int(entry['n4']):
+#             return True
+#         i += 1
+#     return False
+
+def is_numbers_in_source(n1,n2,n3, source):
     i = 0
     for entry in source:
-        if n1 == int(entry['n1']) and  n2 == int(entry['n2']) and  n3 == int(entry['n3']) and n4 == int(entry['n4']):
+        if n1 == int(entry['n1']) and  n2 == int(entry['n2']) and  n3 == int(entry['n3']):
             return True
         i += 1
     return False
 
-def is_number_repeat(combo_pick0,combo_pick1,combo_pick2,combo_pick3):
+# def is_number_repeat(combo_pick0,combo_pick1,combo_pick2,combo_pick3):
+#     number_repeat_cnt = 0
+#     combo_pick = [combo_pick0, combo_pick1, combo_pick2, combo_pick3]
+
+#     if combo_pick[0] == combo_pick[1] or combo_pick[0] == combo_pick[2] or combo_pick[0] == combo_pick[3]:
+#         # print (f"number repeat {combo_pick}")
+#         # return True
+#         number_repeat_cnt += 1
+
+#     if combo_pick[1] == combo_pick[0] or combo_pick[1] == combo_pick[2] or combo_pick[1] == combo_pick[3]:
+#         # print (f"number repeat {combo_pick}")
+#         # return True
+#         number_repeat_cnt += 1
+
+#     if combo_pick[2] == combo_pick[0] or combo_pick[2] == combo_pick[1] or combo_pick[2] == combo_pick[3]:
+#         # print (f"number repeat {combo_pick}")
+#         # return True
+#         number_repeat_cnt += 1
+
+#     if combo_pick[3] == combo_pick[0] or combo_pick[3] == combo_pick[1] or combo_pick[3] == combo_pick[2]:
+#         # print (f"number repeat {combo_pick}")
+#         # return True
+#         number_repeat_cnt += 1
+
+
+#     if number_repeat_cnt > 2:
+#         return True
+
+#     return False
+
+# modified for 3 numbers only
+def is_number_repeat(combo_pick0,combo_pick1,combo_pick2):
     number_repeat_cnt = 0
-    combo_pick = [combo_pick0, combo_pick1, combo_pick2, combo_pick3]
+    combo_pick = [combo_pick0, combo_pick1, combo_pick2]
 
-    if combo_pick[0] == combo_pick[1] or combo_pick[0] == combo_pick[2] or combo_pick[0] == combo_pick[3]:
+    if combo_pick[0] == combo_pick[1] or combo_pick[0] == combo_pick[2]:
         # print (f"number repeat {combo_pick}")
         # return True
         number_repeat_cnt += 1
 
-    if combo_pick[1] == combo_pick[0] or combo_pick[1] == combo_pick[2] or combo_pick[1] == combo_pick[3]:
+    if combo_pick[1] == combo_pick[0] or combo_pick[1] == combo_pick[2]:
         # print (f"number repeat {combo_pick}")
         # return True
         number_repeat_cnt += 1
 
-    if combo_pick[2] == combo_pick[0] or combo_pick[2] == combo_pick[1] or combo_pick[2] == combo_pick[3]:
+    if combo_pick[2] == combo_pick[0] or combo_pick[2] == combo_pick[1]:
         # print (f"number repeat {combo_pick}")
         # return True
         number_repeat_cnt += 1
-
-    if combo_pick[3] == combo_pick[0] or combo_pick[3] == combo_pick[1] or combo_pick[3] == combo_pick[2]:
-        # print (f"number repeat {combo_pick}")
-        # return True
-        number_repeat_cnt += 1
-
 
     if number_repeat_cnt > 2:
         return True
 
     return False
-
 
 # refnum,date,draw,sampledrawsize,type,refnum,n1,n2,n3,n4,pastwinner
 
@@ -798,15 +1006,20 @@ if generated_method == 'random':
         n1_picked = generate_random_picks(n1_draw_count_top3_nums)
         n2_picked = generate_random_picks(n2_draw_count_top3_nums)
         n3_picked = generate_random_picks(n3_draw_count_top3_nums)
-        n4_picked = generate_random_picks(n4_draw_count_top3_nums)
+        # n4_picked = generate_random_picks(n4_draw_count_top3_nums)
 
-        if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
-            print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
-            data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},exists\n"
+        # if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
+        if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0], numbers_dl) == True:
+            # print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
+            print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", "exists")
+            # data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},exists\n"
+            data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},exists\n"
         else:
-            print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
-            data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},\n"
-    
+            # print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
+            print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0])
+            # data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},\n"
+            data = f"{today_date},{draw_type},{draw_sz},count,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]}\n"
+
         dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
         n +=1
     
@@ -814,18 +1027,18 @@ if generated_method == 'random':
     print("\t\t*** generate_picks by pattern")
     n = 0
     while n < max_generate_picks:
-        n1_picked = generate_picks(n1_pattern_hot_picks_top3_nums)
-        n2_picked = generate_picks(n2_pattern_hot_picks_top3_nums)
-        n3_picked = generate_picks(n3_pattern_hot_picks_top3_nums)
-        n4_picked = generate_picks(n4_pattern_hot_picks_top3_nums)
-        if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
-            print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
-            data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},exists\n"
-        else:
-            print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
-            data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},\n"
+        # n1_picked = generate_picks(n1_pattern_hot_picks_top3_nums)
+        # n2_picked = generate_picks(n2_pattern_hot_picks_top3_nums)
+        # n3_picked = generate_picks(n3_pattern_hot_picks_top3_nums)
+        # # n4_picked = generate_picks(n4_pattern_hot_picks_top3_nums)
+        # if is_numbers_in_source(n1_picked[0],n2_picked[0],n3_picked[0],n4_picked[0], numbers_dl) == True:
+        #     print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t", "exists")
+        #     data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},exists\n"
+        # else:
+        #     print(n1_picked[0],"\t",  n2_picked[0],"\t", n3_picked[0],"\t", n4_picked[0],"\t")
+        #     data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{n1_picked[0]},{n2_picked[0]},{n3_picked[0]},{n4_picked[0]},\n"
     
-        dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
+        # dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
         n +=1
 
 elif generated_method == 'combo':
@@ -835,19 +1048,32 @@ elif generated_method == 'combo':
         print('generating methond combo')
     
         n = 0
-        generated_combo_picks = generate_combo_picks(n1_draw_count_top3_nums,n2_draw_count_top3_nums,n3_draw_count_top3_nums,n4_draw_count_top3_nums)
+        # generated_combo_picks = generate_combo_picks(n1_draw_count_top3_nums,n2_draw_count_top3_nums,n3_draw_count_top3_nums,n4_draw_count_top3_nums)
+        generated_combo_picks = generate_combo_picks(n1_draw_count_top3_nums,n2_draw_count_top3_nums,n3_draw_count_top3_nums)
         
+
         for combo_pick in generated_combo_picks:
             # print ('combo_pick', combo_pick)
-            if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3], numbers_dl) == True:
-                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "exists")
-                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},exists\n"
-            elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3]):
-                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "nr")        # digit repeat
-                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},nr\n" #number repeat
+            # if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3], numbers_dl) == True:
+            #     print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "exists")
+            #     data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},exists\n"
+            # elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3]):
+            #     print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "nr")        # digit repeat
+            #     data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},nr\n" #number repeat
+            # else:
+            #     print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t")
+            #     data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},\n"
+
+            if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2], numbers_dl) == True:
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "exists")
+                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},exists\n"
+            elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2]):
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "nr")        # digit repeat
+                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},nr\n" #number repeat
             else:
-                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t")
-                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},\n"
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t")
+                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},\n"
+
 
             dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
             n +=1
@@ -857,19 +1083,31 @@ elif generated_method == 'combo':
         print("\t\t*** generate_picks by pattern")
 
         n = 0
-        generated_combo_picks = generate_combo_picks(n1_pattern_hot_picks_top3_nums,n2_pattern_hot_picks_top3_nums,n3_pattern_hot_picks_top3_nums,n4_pattern_hot_picks_top3_nums)
+        # generated_combo_picks = generate_combo_picks(n1_pattern_hot_picks_top3_nums,n2_pattern_hot_picks_top3_nums,n3_pattern_hot_picks_top3_nums,n4_pattern_hot_picks_top3_nums)
+        generated_combo_picks = generate_combo_picks(n1_pattern_hot_picks_top3_nums,n2_pattern_hot_picks_top3_nums,n3_pattern_hot_picks_top3_nums)
         
         for combo_pick in generated_combo_picks:
             # print ('combo_pick', combo_pick)
-            if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3], numbers_dl) == True:
-                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "exists")
-                data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},exists\n"
-            elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2],combo_pick[3]):
-                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t", "nr")        # digit repeat
-                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},nr\n" #number repeat
+            # if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2], numbers_dl) == True:
+            #     print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "exists")
+            #     data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},exists\n"
+            # elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2]):
+            #     print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "nr")        # digit repeat
+            #     data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},nr\n" #number repeat
+            # else:
+            #     print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t")
+            #     data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},\n"
+
+            if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2], numbers_dl) == True:
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "exists")
+                data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},exists\n"
+            elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2]):
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "nr")        # digit repeat
+                data = f"{today_date},{draw_type},{draw_sz},count,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},nr\n" #number repeat
             else:
-                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", combo_pick[3],"\t")
-                data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},{combo_pick[3]},\n"
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t")
+                data = f"{today_date},{draw_type},{draw_sz},pattern,{n},{combo_pick[0]},{combo_pick[1]},{combo_pick[2]},\n"
+
 
             dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
             n +=1

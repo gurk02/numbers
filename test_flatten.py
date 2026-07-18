@@ -1,6 +1,8 @@
 
 # test
 
+# BROKEN need to fix does not work 7/4
+
 arr1= [17, 25, 5, 18, 21, 28, 0, 0, 0, 0, 0]
 arr2= [17, 5, 25, 18, 21, 23, 27, 28, 39, 0, 0]
 arr3= [6, 44, 17, 40, 41, 5, 14, 18, 20, 21, 25]
@@ -42,9 +44,9 @@ def flatten_to_arr(arr1, arr2):
 
     return flatten_arr
     
-flatten = (flatten_to_arr(arr2,arr1))
+flatten = (flatten_to_arr(arr1,arr2))
 print(f"flatten {flatten}")
-flatten = (flatten_to_arr(flatten,arr3))
+flatten = (flatten_to_arr(arr1,arr3))
 print(f"flatten {flatten}")
 # flatten = (flatten_to_arr(flatten,arr4))
 

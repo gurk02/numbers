@@ -13,6 +13,12 @@ n2_top3_count = ['9', '5', '3']     #j
 n3_top3_count = ['3', '0', '5']     #k
 n4_top3_count = ['2', '4', '0']     #m
 
+
+n1_top3_count = ['6', '7', '0']     #n
+n2_top3_count = ['9', '2', '3']     #j
+n3_top3_count = ['3', '2', '6']     #k
+n4_top3_count = ['1', '3', '8']
+
                 # ['3', '0'],
                 # ['2', '4'] ]
 
@@ -30,7 +36,9 @@ for n in n1_top3_count:
             # print('n', n, ', ', ' j', j, ' k',k)
 
             for m in n4_top3_count:      # down
-                print('n', n, ', ', ' j', j, ' k',k, ' m',m)
+                # print('n', n, ', ', ' j', j, ' k',k, ' m',m)
+                print(n, ' ', j, ' ',k, ' ',m)
+
                 total_combos += 1
                  
     across_i += 1
