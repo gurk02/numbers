@@ -481,7 +481,7 @@ n1_match_cnt = 0
 n1_below_five = 0
 n1_above_five = 0
 n1_at_five = 0
-
+zero_nine_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 
 def calculate_n1_ppattern_V1(pattern):
     print('\t calculate_n1_ppattern')
@@ -572,6 +572,9 @@ def calculate_n1_ppattern_V2(pattern):
 
     direction = ""
     direction_rate = 0
+    prev_direction_rate = 0
+    delta_direction_rate = 0
+    direction_correct = 0
     below_five_prec = 0
     above_five_prec = 0
 
@@ -584,33 +587,48 @@ def calculate_n1_ppattern_V2(pattern):
         print(f"prev_num1 {prev_num1} curr_num1 {curr_num1} n {n}")
 
         # decision rules here
+        print(f"direction_rate {direction_rate}, delta_direction_rate{delta_direction_rate} %")
+        # if delta_direction_rate <= -60:
+        #     # flip direction
+        #     if direction == "low":
+        #         print("go high#0")
+        #         direction="high"
+        #         pred_n1 = get_high(n1_ppoints, 5, 9)
+        #     elif direction == "high":
+        #         print("go low#0")
+        #         direction="low"
+        #         pred_n1 = get_high(n1_ppoints, 0, 5)
+        #     else:
+        #         print("go all range#0")
+        #         direction="all"
+        #         pred_n1 = get_high(n1_ppoints, 0, 9)
 
-        if below_five_prec > 50:
-            print("go high")
+        if below_five_prec >= 60:
+            print("go high#1")
             direction="high"
-            pred_n1 = get_high(n1_ppoints, 0, 5)
-        elif above_five_prec > 50:
-            print("go low")
+            pred_n1 = get_high(n1_ppoints, 5, 9)
+        elif above_five_prec >= 60:
+            print("go low#1")
             direction="low"
             pred_n1 = get_high(n1_ppoints, 0, 5)
         elif n1_below_five > n1_above_five:
-            print("go low")
+            print("go low#2")
             direction="low"
             pred_n1 = get_high(n1_ppoints, 0, 5)
         elif n1_below_five < n1_above_five:
-            print("go high")
+            print("go high#2")
             direction="high"
             pred_n1 = get_high(n1_ppoints, 5, 9)
         else:
             # 0 point tied flip a coin or random or opposite last direction high or low
             if direction == "low":
                 # go high
-                print("go high")
+                print("go high#3")
                 direction="high"
                 pred_n1 = get_high(n1_ppoints, 5, 9)
             elif direction == "high":
                 # go low - opposite
-                direction="low"
+                direction="low#3"
                 pred_n1 = get_high(n1_ppoints, 0, 5)
             else:
                 # undecided go with next in line all range
@@ -652,20 +670,32 @@ def calculate_n1_ppattern_V2(pattern):
         elif n >=5:
             above_five_cnt += 1
 
+        if n < 5 and direction == "low":
+            direction_correct += 1
+        elif n >=5 and direction == "high":
+            direction_correct += 1
+
         below_five_prec = int((below_five_cnt / i_cnt) * 100)
         above_five_prec = int((above_five_cnt / i_cnt) * 100)
         
-        # direction_rate = int(())
+        prev_direction_rate = direction_rate
+        direction_rate =  int((direction_correct / i_cnt) * 100)
+        if direction_rate == 0:
+            direction_rate = 1
+        if prev_direction_rate == 0:
+            prev_direction_rate = 1
+        delta_direction_rate = int(( direction_rate / prev_direction_rate ) * 100) - 100
+        
         prev_num1 = curr_num1
         curr_num1 = n
 
         #report
-        print(f"below_five {n1_below_five} above_five {n1_above_five} below_five_cnt{below_five_cnt} below_five_prec{below_five_prec} %, above_five_cnt{above_five_cnt} above_five_prec{above_five_prec} %")
+        print(f"below_five {n1_below_five} above_five {n1_above_five} below_five_cnt{below_five_cnt} below_five_prec{below_five_prec} %, above_five_cnt{above_five_cnt} above_five_prec{above_five_prec} % ,direction_rate {direction_rate} %")
         print("\n")
     
 
     #final report outcomes
-    print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)}")
+    print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)} below_five_prec{below_five_prec} %, above_five_prec{above_five_prec} % ,direction_rate {direction_rate} %")
 
 
 #
