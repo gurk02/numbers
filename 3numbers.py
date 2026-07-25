@@ -471,17 +471,17 @@ def get_lowest(numbers, start, end):
 
     return low_idx
 
-n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
-n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-prev_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-curr_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-pred_n1 = 5
-n1_cnt_sorted = []
-n1_match_cnt = 0
-n1_below_five = 0
-n1_above_five = 0
-n1_at_five = 0
-zero_nine_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+# n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+# n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+# prev_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+# curr_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+# pred_n1 = 5
+# n1_cnt_sorted = []
+# n1_match_cnt = 0
+# n1_below_five = 0
+# n1_above_five = 0
+# n1_at_five = 0
+# zero_nine_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 
 def calculate_n1_ppattern_V1(pattern):
     print('\t calculate_n1_ppattern')
@@ -560,6 +560,19 @@ def calculate_n1_ppattern_V1(pattern):
     print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)}")
 
 def calculate_n1_ppattern_V2(pattern):
+  
+    n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+    n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    prev_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    curr_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    pred_n1 = 5
+    n1_cnt_sorted = []
+    n1_match_cnt = 0
+    n1_below_five = 0
+    n1_above_five = 0
+    n1_at_five = 0
+    zero_nine_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+
     print('\t calculate_n1_ppattern V2')
     n1_match_cnt = 0
     n1_below_five = 0
@@ -722,6 +735,187 @@ def calculate_n1_ppattern_V2(pattern):
     #final report outcomes
     print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)} below_five_prec{below_five_prec} %, above_five_prec{above_five_prec} % ,direction_rate {direction_rate} %")
 
+def calculate_n1_ppattern_V3(pattern, draw_count, hot_pick_count):
+  
+    n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+    n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      
+    n1_ppoints = hot_pick_count
+    n1_cnt = draw_count
+    
+    prev_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    curr_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    pred_n1 = 5
+    n1_cnt_sorted = []
+    n1_match_cnt = 0
+    n1_below_five = 0
+    n1_above_five = 0
+    n1_at_five = 0
+    zero_nine_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+
+    print('\t calculate_n1_ppattern V3')
+    n1_match_cnt = 0
+    n1_below_five = 0
+    n1_above_five = 0
+    prev_num1 = 0
+    curr_num1 = 0
+
+    # gen_pairs()
+    # exit()
+
+    direction = ""
+    direction_rate = 0
+    prev_direction_rate = 0
+    delta_direction_rate = 0
+    direction_correct = 0
+    direction_draw = 0
+    direction_below_five = 0
+    direction_above_five = 0
+    below_five_prec = 0
+    above_five_prec = 0
+
+    below_five_cnt = 0
+    above_five_cnt = 0
+    i_cnt = 0
+
+    for n in pattern:
+
+        print("draw# ", i_cnt)
+        print("previous")
+        print(f"prev_num1 {prev_num1} curr_num1 {curr_num1} n {n}")
+
+        # decision rules here
+
+        print(f"direction_rate {direction_rate}, delta_direction_rate {delta_direction_rate} %")
+        print(f"previous direction = {direction}")
+        # rule#1 if direction rate very high go in opposite
+        if delta_direction_rate <= -6:
+            # flip direction
+            if direction == "low":
+                print("go high#0")
+                direction="high"
+                pred_n1 = get_high(n1_ppoints, 5, 9)
+            elif direction == "high":
+                print("go low#0")
+                direction="low"
+                pred_n1 = get_high(n1_ppoints, 0, 5)
+            else:
+                print("go all range#0")
+                direction="all"
+                pred_n1 = get_high(n1_ppoints, 0, 9)
+        
+        # rule#2 precent below or above five
+        if below_five_prec >= 60:
+            print("go high#1")
+            direction="high"
+            pred_n1 = get_high(n1_ppoints, 5, 9)
+        elif above_five_prec >= 60:
+            print("go low#1")
+            direction="low"
+            pred_n1 = get_high(n1_ppoints, 0, 5)
+        elif n1_below_five > n1_above_five:
+            print("go low#2")
+            direction="low"
+            pred_n1 = get_high(n1_ppoints, 0, 5)
+        elif n1_below_five < n1_above_five:
+            print("go high#2")
+            direction="high"
+            pred_n1 = get_high(n1_ppoints, 5, 9)
+        else:
+            # # 0 point tied flip a coin or random or opposite last direction high or low
+            if direction == "low":
+                # go high
+                print("go high#3")
+                direction="high"
+                pred_n1 = get_high(n1_ppoints, 5, 9)
+            elif direction == "high":
+                # go low - opposite
+                print("go low#3")
+                direction="low"
+                pred_n1 = get_high(n1_ppoints, 0, 5)
+            else:
+                # undecided go with next in line all range
+                print("go all range")
+                direction="all"
+                pred_n1 = get_high(n1_ppoints, 0, 9)
+
+
+        # pred_n1 = get_high(n1_ppoints)
+        #pred_n1 = get_high(n1_ppoints)
+        # pred_n1 = 4
+                
+        print("predict ", pred_n1)
+        print(f"pred_n1 {pred_n1}, below_five {n1_below_five} above_five {n1_above_five} direction {direction}")
+        # predict
+        if n == pred_n1:
+            n1_ppoints[pred_n1] += 1
+            n1_match_cnt += 1
+            print(f"{n} Match {pred_n1}? Y")
+        else:
+            print(f"{n} Match {pred_n1}? N")
+            n1_ppoints[pred_n1] -= 1
+
+        # print(f"n {n}, prev_n1 {prev_n1[n]}, curr_n1 {curr_n1[n]}", f"\nn1_cnt {n1_cnt}",f"\nn1_ppoints {n1_ppoints}")
+        print(f"\nn1_cnt {n1_cnt}",f"\nn1_ppoints {n1_ppoints}")
+
+
+        # calcutaions 
+        n1_cnt[n] += 1
+        i_cnt += 1 
+
+        if n < 5:    
+            n1_below_five += 1
+            n1_above_five -= 1
+        else: 
+            n1_above_five += 1
+            n1_below_five -= 1
+    
+        if n < 5:
+            below_five_cnt += 1
+        elif n >=5:
+            above_five_cnt += 1
+
+        if n < 5 and direction == "low":
+            direction_correct += 1
+        elif n >=5 and direction == "high":
+            direction_correct += 1
+
+        below_five_prec = int((below_five_cnt / i_cnt) * 100)
+        above_five_prec = int((above_five_cnt / i_cnt) * 100)
+
+
+        # if pred_n1 < 5:
+        #     direction_below_five += 1
+        # elif pred_n1 >=5 and pred_n1 <=9:
+        #     direction_above_five += 1
+
+        prev_direction_rate = direction_rate
+        direction_rate =  int((direction_correct / i_cnt) * 100)
+        
+        if direction_rate == 0:
+            direction_rate = 1
+        if prev_direction_rate == 0:
+            prev_direction_rate = 1
+        
+        delta_direction_rate = int(( direction_rate / prev_direction_rate ) * 100) - 100
+        
+        prev_num1 = curr_num1
+        curr_num1 = n
+
+        print("report")
+        #report
+        print(f"below_five {n1_below_five} above_five {n1_above_five}")
+        print(f"below_five_cnt {below_five_cnt} below_five_prec {below_five_prec} %")
+        print(f"above_five_cnt {above_five_cnt} above_five_prec {above_five_prec} % ")
+        print(f"direction_rate {direction_rate} % direction_correct {direction_correct}")
+        print(f"match_cnt {n1_match_cnt}")
+        print("\n")
+    
+
+    #final report outcomes
+    print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)} below_five_prec{below_five_prec} %, above_five_prec{above_five_prec} % ,direction_rate {direction_rate} %")
+
+
 
 #
 # Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
@@ -729,8 +923,8 @@ def calculate_n1_ppattern_V2(pattern):
 def calculate_pattern(pattern):
     # print("pattern ", pattern)
     
-    calculate_n1_ppattern_V2(pattern)
-    exit()
+    # calculate_n1_ppattern_V3(pattern)
+    # exit()
 
     i = 0   # current count draws
     prev_cnt = 0 # previous count draws since last seen
@@ -808,6 +1002,8 @@ def calculate_pattern(pattern):
     
     for s in pattern_spreads:
         print('=' * abs(s))
+
+    calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
 
     return hot_picks, draw_number_count, hot_picks_count 
 
