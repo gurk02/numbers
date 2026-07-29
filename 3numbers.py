@@ -93,6 +93,30 @@ eve_top3_nums = [0,0,0]
 # N1 - model
 n1_model_base_idx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 n1_model_pair_idx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+n1_model_rank_order = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+n1_model_rank_score = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+n1_model_predict = [n1_model_rank_order, n1_model_rank_score]
+
+n1_predict_next_num = 0 # predict num
+
+# model - predict total score
+n1_pairs_predict_store = [ 
+                       #BASE - PAIR
+[0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
+[0,0,0,0,0,0,0,0,0,0], #1,
+[0,0,0,0,0,0,0,0,0,0], #2
+[0,0,0,0,0,0,0,0,0,0], #3
+[0,0,0,0,0,0,0,0,0,0], #4
+[0,0,0,0,0,0,0,0,0,0], #5
+[0,0,0,0,0,0,0,0,0,0], #6
+[0,0,0,0,0,0,0,0,0,0], #7
+[0,0,0,0,0,0,0,0,0,0], #8
+[0,0,0,0,0,0,0,0,0,0], #9
+]
+
+# actual - pair count
 n1_pairs_store = [ 
                        #BASE - PAIR
 [0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
@@ -218,9 +242,6 @@ n1_pairs_store = [
 # # test
 # print(f"n1_pairs_store {n1_pairs_store}")
 # exit()
-
-n1_model_rank_order = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-n1_model_rank_score = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
 # def n1_cnt():
