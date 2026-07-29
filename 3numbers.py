@@ -263,7 +263,12 @@ def reset_pairs_store(n1_pairs_store, reset_valve):
 def print_pairs_store(pairs_store):
     i = 0
     while i < len(pairs_store):
-        print
+       
+       j = 0
+       while j < 10:
+            
+            print(f"i# {i} {n1_pairs_store[i][j]}")
+
 
 
 i = 0
@@ -290,13 +295,20 @@ for entry in numbers_dl:
         n1_eve_num = n1_eve[i_eve]
         n1_eve_cnt[n1[i]] += 1
        
-        if n1_base == "":
+        if i_eve == 0: #n1_base == "":
+            #n1_base = n1_eve_num
             n1_base = n1_eve_num
-        elif n1_base != "":
-            n1_pairs_store[n1_base][n1_eve_num] += 1 
+        elif i_eve > 0:  #n1_base != "":
+            # n1_pairs_store[n1_base][n1_eve_num] += 1 
+            
+            #swap nums cause we want to go in reverse from bottom up 
+            swap = n1_base
+            n1_base = n1_eve_num
+            n1_eve_num = swap
+            n1_pairs_store[n1_base][n1_eve_num] += 1  # REVERSE cause we want to go bottom up but we are reading file top to bottom
             print(f"i_eve# {i_eve} storing n1_base {n1_base}, n1_eve_num {n1_eve_num} valve {n1_pairs_store[n1_base][n1_eve_num]}")
             # current num becomes n1_base
-            n1_base = n1_eve_num
+            #n1_base = n1_eve_num
 
         i_eve += 1
         
