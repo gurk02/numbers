@@ -90,6 +90,139 @@ mid_top3_nums = [0,0,0]
 eve_top3_cnt = [0,0,0]
 eve_top3_nums = [0,0,0]
 
+# N1 - model
+n1_model_base_idx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+n1_model_pair_idx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+n1_pairs_store = [ 
+                       #BASE - PAIR
+[0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
+[0,0,0,0,0,0,0,0,0,0], #1,
+[0,0,0,0,0,0,0,0,0,0], #2
+[0,0,0,0,0,0,0,0,0,0], #3
+[0,0,0,0,0,0,0,0,0,0], #4
+[0,0,0,0,0,0,0,0,0,0], #5
+[0,0,0,0,0,0,0,0,0,0], #6
+[0,0,0,0,0,0,0,0,0,0], #7
+[0,0,0,0,0,0,0,0,0,0], #8
+[0,0,0,0,0,0,0,0,0,0], #9
+]
+# PAIRS - BASE, PAIR
+# 0,0
+# 0,1
+# 0,2
+# 0,3
+# 0,4
+# 0,5
+# 0,6
+# 0,7
+# 0,8
+# 0,9
+# 1,0
+# 1,1
+# 1,2
+# 1,3
+# 1,4
+# 1,5
+# 1,6
+# 1,7
+# 1,8
+# 1,9
+# 2,0
+# 2,1
+# 2,2
+# 2,3
+# 2,4
+# 2,5
+# 2,6
+# 2,7
+# 2,8
+# 2,9
+# 3,0
+# 3,1
+# 3,2
+# 3,3
+# 3,4
+# 3,5
+# 3,6
+# 3,7
+# 3,8
+# 3,9
+# 4,0
+# 4,1
+# 4,2
+# 4,3
+# 4,4
+# 4,5
+# 4,6
+# 4,7
+# 4,8
+# 4,9
+# 5,0
+# 5,1
+# 5,2
+# 5,3
+# 5,4
+# 5,5
+# 5,6
+# 5,7
+# 5,8
+# 5,9
+# 6,0
+# 6,1
+# 6,2
+# 6,3
+# 6,4
+# 6,5
+# 6,6
+# 6,7
+# 6,8
+# 6,9
+# 7,0
+# 7,1
+# 7,2
+# 7,3
+# 7,4
+# 7,5
+# 7,6
+# 7,7
+# 7,8
+# 7,9
+# 8,0
+# 8,1
+# 8,2
+# 8,3
+# 8,4
+# 8,5
+# 8,6
+# 8,7
+# 8,8
+# 8,9
+# 9,0
+# 9,1
+# 9,2
+# 9,3
+# 9,4
+# 9,5
+# 9,6
+# 9,7
+# 9,8
+# 9,9
+
+#
+# Test
+#
+# n1_pairs_store[0][0] = 2
+# n1_pairs_store[0][1] = 3
+# print(n1_model)
+# exit()
+# # test
+# print(f"n1_pairs_store {n1_pairs_store}")
+# exit()
+
+n1_model_rank_order = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+n1_model_rank_score = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+
 # def n1_cnt():
 #     i=0
 #     for entry in numbers_dl:
@@ -102,9 +235,42 @@ eve_top3_nums = [0,0,0]
 #
 # calculate
 #
+
+# 
+# initialize n1_pairs_store - Reset all Store Values
+#
+def reset_pairs_store(n1_pairs_store, reset_valve):
+    print(f"len(n1_pairs_store) {len(n1_pairs_store)}")
+
+    i = 0
+    n1_base_idx = 0
+    n1_pair_idx = 0
+    while i < len(n1_pairs_store):
+
+        n1_pair_idx = 0
+        while n1_pair_idx < 10:
+            n1_pairs_store[n1_base_idx][n1_pair_idx] = 0
+            n1_pair_idx += 1
+
+        i +=1
+        n1_base_idx += 1
+
+    # test
+    print(f"n1_pairs_store {n1_pairs_store}")
+    # exit()
+
+
+def print_pairs_store(pairs_store):
+    i = 0
+    while i < len(pairs_store):
+        print
+
+
 i = 0
 i_mid = 0
 i_eve = 0
+n1_eve_num = ""
+n1_base = ""
 for entry in numbers_dl:
     n1[i] = int(entry['n1']) #extract n1 from each line entry
     n1_cnt[n1[i]] += 1
@@ -121,13 +287,25 @@ for entry in numbers_dl:
     elif entry['draw']=='EVE':
       
         n1_eve[i_eve] = int(entry['n1'])
+        n1_eve_num = n1_eve[i_eve]
         n1_eve_cnt[n1[i]] += 1
-        i_eve += 1
+       
+        if n1_base == "":
+            n1_base = n1_eve_num
+        elif n1_base != "":
+            n1_pairs_store[n1_base][n1_eve_num] += 1 
+            print(f"i_eve# {i_eve} storing n1_base {n1_base}, n1_eve_num {n1_eve_num} valve {n1_pairs_store[n1_base][n1_eve_num]}")
+            # current num becomes n1_base
+            n1_base = n1_eve_num
 
+        i_eve += 1
+        
     #print(f"i {i}, n1 {n1[i]}")
     i += 1
 
+print(n1_pairs_store)
 
+exit()
     #
     # N2
     #
@@ -736,13 +914,22 @@ def calculate_n1_ppattern_V2(pattern):
     print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)} below_five_prec{below_five_prec} %, above_five_prec{above_five_prec} % ,direction_rate {direction_rate} %")
 
 def calculate_n1_ppattern_V3(pattern, draw_count, hot_pick_count):
-  
-    n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
-    n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    # n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+    # n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       
-    n1_ppoints = hot_pick_count
-    n1_cnt = draw_count
     
+    n1_ppoints = []
+    n1_cnt = []
+
+    for i in draw_count:
+        n1_cnt.append(i)
+        
+
+    for i in hot_pick_count:
+        n1_ppoints.append(i)
+        
+
     prev_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     curr_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     pred_n1 = 5
@@ -1003,7 +1190,7 @@ def calculate_pattern(pattern):
     for s in pattern_spreads:
         print('=' * abs(s))
 
-    calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
+    # calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
 
     return hot_picks, draw_number_count, hot_picks_count 
 
