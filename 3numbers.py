@@ -42,22 +42,29 @@ hotpicks_dl = import_csv_data_as_dictlist(hotpicks_file_csv)
 
 n1 = np.arange(len(numbers_dl))
 print("len N1",len(n1))
-n1_mid = np.arange(int(len(numbers_dl)/2)+1)
+# n1_mid = np.arange(int(len(numbers_dl)/2)+1)
+n1_mid = np.arange(int(len(numbers_dl)/2))
 print("n1_mid len", len(n1_mid))
-n1_eve = np.arange(int(len(numbers_dl)/2)+1)
+# n1_eve = np.arange(int(len(numbers_dl)/2)+1)
+n1_eve = np.arange(int(len(numbers_dl)/2))
 print("n1_mid len", len(n1_eve))
 
+
 n2 = np.arange(len(numbers_dl))
-n2_mid = np.arange(int(len(numbers_dl)/2)+1)
+# n2_mid = np.arange(int(len(numbers_dl)/2)+1)
+n2_mid = np.arange(int(len(numbers_dl)/2))
 print("n2_mid len", len(n2_mid))
-n2_eve = np.arange(int(len(numbers_dl)/2)+1)
+# n2_eve = np.arange(int(len(numbers_dl)/2)+1)
+n2_eve = np.arange(int(len(numbers_dl)/2))
 print("n2_mid len", len(n2_eve))
 
 
 n3 = np.arange(len(numbers_dl))
-n3_mid = np.arange(int(len(numbers_dl)/2)+1)
+# n3_mid = np.arange(int(len(numbers_dl)/2)+1)
+n3_mid = np.arange(int(len(numbers_dl)/2))
 print("n3_mid len", len(n3_mid))
-n3_eve = np.arange(int(len(numbers_dl)/2)+1)
+# n3_eve = np.arange(int(len(numbers_dl)/2)+1)
+n3_eve = np.arange(int(len(numbers_dl)/2))
 print("n3_mid len", len(n3_eve))
 
 # n4 = np.arange(len(numbers_dl))
@@ -100,6 +107,15 @@ n1_model_rank_score = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 n1_model_predict = [n1_model_rank_order, n1_model_rank_score]
 
 n1_predict_next_num = 0 # predict num
+
+n1_model = [
+        -1,           #num
+        [[], [], []], #0 #attribute1 [], #attribute#2 [], #attribute#3 []
+        [-1,-1,-1],    # top pick from attribute1, attribute2, attribute3
+        ["", "", ""], #direction
+
+ #9 #attribute1 [], #attribute#2 [], #attribute#3 []
+]
 
 # model - predict total score
 n1_pairs_predict_store = [ 
@@ -293,8 +309,12 @@ def print_pairs_store(pairs_store):
 
 def find_highest_pairs(pairs_store):
 
-    pair = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    highest = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    top_pair = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    top_highest = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    prev_highest = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    prev_high = -1
+    prev_base = -1
+    prev_pair = -1
     tied_highest = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     pairs = []
 
@@ -305,16 +325,22 @@ def find_highest_pairs(pairs_store):
 
         j = 0
         prev_high = -1
+        prev_base = -1
+        prev_pair = -1
         high = -1
         while j < 10:
 
-            if pairs_store[i][j] >= high:   # if use >= high will get last high in the array
+            if pairs_store[i][j] > high:   # if use >= high will get last high in the array
                 prev_high = high
-                high = pairs_store[i][j]
-                pair[i] = j
-                highest[i] = high
+                prev_base = i
+                prev_pair = j
+                prev_highest[i] = prev_high
 
-                print(f"new high pair is {i}, {j} count {high}, prev high {prev_high}")
+                high = pairs_store[i][j]
+                top_pair[i] = j
+                top_highest[i] = high
+
+                print(f"new high pair is {i}, {j} count {high}, prev high {prev_high}, prev pair {prev_base},{prev_pair} ")
         
             j += 1
         
@@ -323,14 +349,14 @@ def find_highest_pairs(pairs_store):
 
     i = 0
     while i < 10:
-        print(f"{i},{pair[i]} highest {highest[i]}")
-        pairs.append([i,pair[i], highest[i]])
+        print(f"{i},{top_pair[i]} highest {top_highest[i]} prev_highest {prev_highest[i]}")
+        pairs.append([i,top_pair[i], top_highest[i]])
         i += 1
 
-    print(pair)
-    print(highest)
+    print(top_pair)
+    print(top_highest)
     print(f"top pairs {pairs}")
-    return pair, highest
+    return pairs, top_pair, top_highest
 
 
 
@@ -379,10 +405,19 @@ for entry in numbers_dl:
     #print(f"i {i}, n1 {n1[i]}")
     i += 1
 
+#
+# Test find highest in n1_pairs_store
+#
 print(n1_pairs_store)
-find_highest_pairs(n1_pairs_store)
+highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store)
 
-exit()
+i = 0
+for pair in highest_pairs:
+    print(f"pair#{i}, {pair}")
+    i += 1
+
+# exit()
+
     #
     # N2
     #
@@ -1371,6 +1406,20 @@ def calculate_n1_pattern_direction_V1(pattern, draw_count, hot_pick_count):
     print(f"match_cnt {n1_match_cnt} pattern len {len(pattern)} win_rate {int((n1_match_cnt / len(pattern)) * 100)} below_five_prec{below_five_prec} %, above_five_prec{above_five_prec} % ,direction_rate {direction_rate} %")
 
     return direction
+
+# find max number 0 - 9 in array
+def max_number(array):
+    max = -1
+    position = -1
+    i = 0
+    while i < len(array):
+        if array[i] > max:
+            max = array[i] 
+            position = i
+        i += 1
+
+    return max, position         
+
 #
 # Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
 #
@@ -1423,7 +1472,7 @@ def calculate_pattern(pattern):         # calculate occurence count and pattern 
 
         spread_five = n - 5
 
-        #
+        # 
         # rate of last seen
         #
         prev_last_seen_draw_loc = last_seen_draw_loc[n]
@@ -1462,8 +1511,8 @@ def calculate_pattern(pattern):         # calculate occurence count and pattern 
     #
     # Attribute:1 occurence count
     # Attribute:2 pattern count
-    # Attribute:3 guess direction
-    #
+    # Attribute:3 store pair (prev, current num) - count
+    # Atrribute:4 use guess direction
     #
 
     # calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
@@ -1475,11 +1524,377 @@ def calculate_pattern(pattern):         # calculate occurence count and pattern 
     # feed model N1- N and methods 1,2,3, with output - top3
     #
     most_recent_num_drawn = n
-    print(f"most recent num drawn {n}")
+   
+    ##
+    # build model calculate - model pick
+    #
+    print("calcultion TOP numbers so far")
+    print(f"most_recent_num_drawn {most_recent_num_drawn}")
+    print(f"direction guess {direction}")
+    print(f"hot_picks {hot_picks}")
+    print(f"by count {draw_number_count}")
+    print(f"by pattern {hot_picks_count}")
 
-    print(f"look up model - guess")
+    n1_pairs_store[most_recent_num_drawn]
+    print(n1_pairs_store)
+    print(f"check {most_recent_num_drawn} at n1_pairs_store {n1_pairs_store[most_recent_num_drawn]}")
+    # highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store)
 
+    print(f"attribute:1 {draw_number_count}")
+    print(f"attribute:2 {hot_picks_count}")
+    print(f"attribute:3 {n1_pairs_store[most_recent_num_drawn]}")
+    i = 0
+    for pair in highest_pairs:
+        print(f"pair#{i}, {pair}")
+        i += 1
+    
+    max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
+    max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
+    max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(n1_pairs_store[most_recent_num_drawn])
+    
+    print(f"max number draw_number_count ", max_number_draw_number_count)
+    print(f"max number hot_picks_count ", max_number_hot_picks_count)
+    print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
+
+    ##
+    # update - store info in model
+    #
+    n1_model[most_recent_num_drawn].append(draw_number_count)
+    n1_model[most_recent_num_drawn].append(hot_picks_count)
+    n1_model[most_recent_num_drawn].append(n1_pairs_store[most_recent_num_drawn])
+
+    print(f"n1_model now is {n1_model}")
+
+    exit()
+    
     return hot_picks, draw_number_count, hot_picks_count 
+
+#
+# Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
+#
+def calculate_pattern_v2(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
+    # print("pattern ", pattern)
+    
+    # calculate_n1_ppattern_V3(pattern)
+    # exit()
+
+    i = 0   # current count draws
+    prev_cnt = 0 # previous count draws since last seen
+    find_number_count = 0
+    draw_number_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    prev_draw_number_count = 0
+    last_seen_draw_loc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    diff_last_seen_draw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    hot_picks =  [False, False, False, False, False, False, False, False, False, False]
+    hot_picks_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    debug = False
+    debug = True
+    i = 0
+    total_draws = len(pattern)
+    print("calculate_pattern - total draws ", total_draws)
+    mean_draw_number_count = 0
+    if debug == True:
+        print (i, " ", "n", "s_cnt", " steps_diff", " ", "steps_diff_prev", " ", "steps_diff", " ", "HP")
+    
+    prev_n = 0
+    n1_n2_spread = 0
+
+    pattern_spreads = []
+    total_nums_val = 0
+    below_five = 0
+    above_five = 0
+    at_five = 0
+    spread_five = 0
+    for n in pattern:
+        i += 1
+        total_nums_val += n
+
+        draw_number_count[n] +=1            # attribute #1: simply count
+
+        if n == 5:
+            at_five += 1 
+        elif n < 5:
+            below_five += 1
+        elif n > 5:
+            above_five += 1
+
+        spread_five = n - 5
+
+        # 
+        # rate of last seen
+        #
+        prev_last_seen_draw_loc = last_seen_draw_loc[n]
+        last_seen_draw_loc[n] = i
+
+        prev_diff_last_seen_draw = diff_last_seen_draw[n]
+        diff_last_seen_draw[n] = last_seen_draw_loc[n] - prev_last_seen_draw_loc
+    
+        # rate_of_change =  prev_diff_last_seen_draw - diff_last_seen_draw[n]
+
+        rate_of_change =  diff_last_seen_draw[n] - prev_diff_last_seen_draw
+
+        n1_n2_spread = int(n - prev_n)
+
+        if hot_pick(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_diff_last_seen_draw, prev_last_seen_draw_loc, rate_of_change) == True:
+            if debug == True:
+                print(i," ",n, draw_number_count[n],diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "HP", hot_picks_count[n]+1, '\t', n,prev_n, n1_n2_spread, ' ', 'at_five',at_five, 'below_five', below_five, 'above_five', above_five, 'spread_five', spread_five)
+            hot_picks[n] = True
+            hot_picks_count[n] += 1             #attribute #2: count hot pick for each N
+        else:
+            # hot_picks[n] = False
+            if debug == True:
+                print(i," ",n, draw_number_count[n], diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "    ", '\t',n,prev_n, n1_n2_spread, ' ', 'at_five',at_five, 'below_five', below_five, 'above_five', above_five,'spread_five', spread_five)
+        
+        prev_n = n
+        pattern_spreads.append(n1_n2_spread)
+
+    print('mean distribution: ', total_nums_val/i)
+    print('at_five',at_five, 'below_five', below_five, 'above_five', above_five)
+    print('pattern_spreads,', len(pattern_spreads), pattern_spreads)
+    
+    for s in pattern_spreads:
+        print('=' * abs(s))
+
+
+    #
+    # Attribute:1 occurence count
+    # Attribute:2 pattern count
+    # Attribute:3 store pair (prev, current num) - count
+    # Atrribute:4 use guess direction
+    #
+
+    most_recent_num_drawn = n
+
+    # calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
+    direction1 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, draw_number_count)
+    print(f"guessing direction draw_number_count {direction1}")
+    
+    direction2 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, hot_picks_count)
+    print(f"guessing direction hot_picks_count {direction2}")
+    
+    direction3 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, n1_pairs_store[most_recent_num_drawn])
+    print(f"guessing direction n1_pairs_store {direction3}")
+  
+    # 
+    # feed model N1- N and methods 1,2,3, with output - top3
+    #
+   
+    ##
+    # build model calculate - model pick
+    #
+    print("calcultion TOP numbers so far")
+
+    print(f"most_recent_num_drawn {most_recent_num_drawn}")
+    print(f"direction guess by count {direction1}")
+    print(f"direction guess by pattern {direction2}")
+    print(f"direction guess by n1_pair_store {direction3}")
+
+    print(f"hot_picks {hot_picks}")
+    print(f"by count {draw_number_count}")
+    print(f"by pattern {hot_picks_count}")
+    print(f"store is {n1_pairs_store}")
+    print(f"store for  {most_recent_num_drawn} at n1_pairs_store {n1_pairs_store[most_recent_num_drawn]}")
+    # highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store)
+
+    print(f"attribute:1 {draw_number_count}")
+    print(f"attribute:2 {hot_picks_count}")
+    print(f"attribute:3 {n1_pairs_store[most_recent_num_drawn]}")
+    i = 0
+    for pair in highest_pairs:
+        print(f"pair#{i}, {pair}")
+        i += 1
+    
+    max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
+    max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
+    max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(n1_pairs_store[most_recent_num_drawn])
+    
+    print(f"max number draw_number_count ", max_number_draw_number_count)
+    print(f"max number hot_picks_count ", max_number_hot_picks_count)
+    print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
+
+    ##
+    # update - store info in model
+    #
+    n1_model[0] = int(most_recent_num_drawn)
+    n1_model[1][0] = draw_number_count
+    n1_model[1][1] = hot_picks_count
+    n1_model[1][2] = n1_pairs_store[most_recent_num_drawn]
+    n1_model[2][0] = max_number_draw_number_count
+    n1_model[2][1] = max_number_hot_picks_count
+    n1_model[2][2] = max_number_n1_pairs_store_most_recent_num_drawn
+    n1_model[3][0] = direction1
+    n1_model[3][1] = direction2
+    n1_model[3][2] = direction3
+
+    print(f"for {most_recent_num_drawn}  n1_model now is {n1_model}")
+    exit()
+    
+    return hot_picks, draw_number_count, hot_picks_count 
+
+#
+# Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
+#
+def calculate_pattern_v3(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
+    # print("pattern ", pattern)
+    
+    # calculate_n1_ppattern_V3(pattern)
+    # exit()
+
+    i = 0   # current count draws
+    prev_cnt = 0 # previous count draws since last seen
+    find_number_count = 0
+    draw_number_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    prev_draw_number_count = 0
+    last_seen_draw_loc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    diff_last_seen_draw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    hot_picks =  [False, False, False, False, False, False, False, False, False, False]
+    hot_picks_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    debug = False
+    debug = True
+    i = 0
+    total_draws = len(pattern)
+    print("calculate_pattern - total draws ", total_draws)
+    mean_draw_number_count = 0
+    if debug == True:
+        print (i, " ", "n", "s_cnt", " steps_diff", " ", "steps_diff_prev", " ", "steps_diff", " ", "HP")
+    
+    prev_n = 0
+    n1_n2_spread = 0
+
+    pattern_spreads = []
+    total_nums_val = 0
+    below_five = 0
+    above_five = 0
+    at_five = 0
+    spread_five = 0
+    for n in pattern:
+        i += 1
+        total_nums_val += n
+
+        draw_number_count[n] +=1            # attribute #1: simply count
+
+        if n == 5:
+            at_five += 1 
+        elif n < 5:
+            below_five += 1
+        elif n > 5:
+            above_five += 1
+
+        spread_five = n - 5
+
+        # 
+        # rate of last seen
+        #
+        prev_last_seen_draw_loc = last_seen_draw_loc[n]
+        last_seen_draw_loc[n] = i
+
+        prev_diff_last_seen_draw = diff_last_seen_draw[n]
+        diff_last_seen_draw[n] = last_seen_draw_loc[n] - prev_last_seen_draw_loc
+    
+        # rate_of_change =  prev_diff_last_seen_draw - diff_last_seen_draw[n]
+
+        rate_of_change =  diff_last_seen_draw[n] - prev_diff_last_seen_draw
+
+        n1_n2_spread = int(n - prev_n)
+
+        if hot_pick(i, n, draw_number_count[n], diff_last_seen_draw[n],  prev_diff_last_seen_draw, prev_last_seen_draw_loc, rate_of_change) == True:
+            if debug == True:
+                print(i," ",n, draw_number_count[n],diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "HP", hot_picks_count[n]+1, '\t', n,prev_n, n1_n2_spread, ' ', 'at_five',at_five, 'below_five', below_five, 'above_five', above_five, 'spread_five', spread_five)
+            hot_picks[n] = True
+            hot_picks_count[n] += 1             #attribute #2: count hot pick for each N
+        else:
+            # hot_picks[n] = False
+            if debug == True:
+                print(i," ",n, draw_number_count[n], diff_last_seen_draw[n], " ",prev_diff_last_seen_draw, " ", rate_of_change, "    ", '\t',n,prev_n, n1_n2_spread, ' ', 'at_five',at_five, 'below_five', below_five, 'above_five', above_five,'spread_five', spread_five)
+        
+        prev_n = n
+        pattern_spreads.append(n1_n2_spread)
+
+    print('mean distribution: ', total_nums_val/i)
+    print('at_five',at_five, 'below_five', below_five, 'above_five', above_five)
+    print('pattern_spreads,', len(pattern_spreads), pattern_spreads)
+    
+    for s in pattern_spreads:
+        print('=' * abs(s))
+
+
+    #
+    # Attribute:1 occurence count
+    # Attribute:2 pattern count
+    # Attribute:3 store pair (prev, current num) - count
+    # Atrribute:4 use guess direction
+    #
+
+    most_recent_num_drawn = n
+
+    # calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
+    direction1 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, draw_number_count)
+    print(f"guessing direction draw_number_count {direction1}")
+    
+    direction2 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, hot_picks_count)
+    print(f"guessing direction hot_picks_count {direction2}")
+    
+    direction3 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, n1_pairs_store[most_recent_num_drawn])
+    print(f"guessing direction n1_pairs_store {direction3}")
+  
+    # 
+    # feed model N1- N and methods 1,2,3, with output - top3
+    #
+   
+    ##
+    # build model calculate - model pick
+    #
+    print("calcultion TOP numbers so far")
+
+    print(f"most_recent_num_drawn {most_recent_num_drawn}")
+    print(f"direction guess by count {direction1}")
+    print(f"direction guess by pattern {direction2}")
+    print(f"direction guess by n1_pair_store {direction3}")
+
+    print(f"hot_picks {hot_picks}")
+    print(f"by count {draw_number_count}")
+    print(f"by pattern {hot_picks_count}")
+    print(f"store is {n1_pairs_store}")
+    print(f"store for  {most_recent_num_drawn} at n1_pairs_store {n1_pairs_store[most_recent_num_drawn]}")
+    # highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store)
+
+    print(f"attribute:1 {draw_number_count}")
+    print(f"attribute:2 {hot_picks_count}")
+    print(f"attribute:3 {n1_pairs_store[most_recent_num_drawn]}")
+    i = 0
+    for pair in highest_pairs:
+        print(f"pair#{i}, {pair}")
+        i += 1
+    
+    max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
+    max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
+    max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(n1_pairs_store[most_recent_num_drawn])
+    
+    print(f"max number draw_number_count ", max_number_draw_number_count)
+    print(f"max number hot_picks_count ", max_number_hot_picks_count)
+    print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
+
+    ##
+    # update - store info in model
+    #
+    n1_model[0] = int(most_recent_num_drawn)
+    n1_model[1][0] = draw_number_count
+    n1_model[1][1] = hot_picks_count
+    n1_model[1][2] = n1_pairs_store[most_recent_num_drawn]
+    n1_model[2][0] = max_number_draw_number_count
+    n1_model[2][1] = max_number_hot_picks_count
+    n1_model[2][2] = max_number_n1_pairs_store_most_recent_num_drawn
+    n1_model[3][0] = direction1
+    n1_model[3][1] = direction2
+    n1_model[3][2] = direction3
+
+    print(f"for {most_recent_num_drawn}  n1_model now is {n1_model}")
+    exit()
+    
+    return hot_picks, draw_number_count, hot_picks_count 
+
 
 
 # debug = False
@@ -1516,7 +1931,7 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
 
     # print(test_pattern)
     print("calculate_pattern ...")
-    hot_picks, draw_number_count, hot_picks_count = calculate_pattern(sampling_arr[:sample_draws])
+    hot_picks, draw_number_count, hot_picks_count = calculate_pattern_v3(sampling_arr[:sample_draws])
     print("draw number count ", draw_number_count)
     draw_count_top3_nums = [0, 0, 0]
     draw_count_top3_cnt = [0, 0, 0]
@@ -1629,6 +2044,7 @@ draw_sz = 100
 draw_sz = 30
 draw_sz = 21
 # draw_sz = 14
+# draw_sz = sampling_draws[6]
 
 draw_types = ['MID', 'EVE', 'ALL']
 draw_type = draw_types[1]
@@ -1649,9 +2065,25 @@ sample_arr_n3 = n3_eve
 # sample_arr_n3 = n3_mid
 # sample_arr_n4 = n4_eve
 
+##
+# Test comment out
+#
+
+print(f"before reverse {sample_arr_n1}")
+i = 0
+for entry in n1_eve:
+    print(f"i{i}, entry {entry}")
+    i += 1
+sample_arr_n1 = sample_arr_n1[::-1]
+print(f"after reverse {sample_arr_n1}")
+sample_arr_n1 = sample_arr_n1[len(sample_arr_n1)-draw_sz:]
+print(f"after reverse trim {sample_arr_n1}")
+# exit()
+
 n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
 print("generate numbers for N1 ...", n1_picks)
 exit()
+
 n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', draw_type,sample_arr_n2,draw_sz)
 print("generate numbers for N2 ...", n2_picks)
 
