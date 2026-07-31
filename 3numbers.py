@@ -108,14 +108,38 @@ n1_model_predict = [n1_model_rank_order, n1_model_rank_score]
 
 n1_predict_next_num = 0 # predict num
 
+# original structure
 n1_model = [
         -1,           #num
         [[], [], []], #0 #attribute1 [], #attribute#2 [], #attribute#3 []
-        [-1,-1,-1],    # top pick from attribute1, attribute2, attribute3
+        [-1,-1,-1],   # top pick from attribute1, attribute2, attribute3
         ["", "", ""], #direction
 
- #9 #attribute1 [], #attribute#2 [], #attribute#3 []
+                      #9 #attribute1 [], #attribute#2 [], #attribute#3 []
 ]
+
+#model
+# new model structure
+n1_model_base_num_layer = -1    # input layer
+n1_model_attribute1 = []        # COUNT
+n1_model_attribute2 = []        # HP PATTERN
+n1_model_attribute3 = []        # PAIRS PATTERN
+n1_model_attribute4 = []        # HIGH LOW
+
+n1_model_score_layer = [
+    0,0,0,0,0,0,0,0,0,0
+]
+
+n1_model_picks_layer = [        # top3 picks -predict
+    0,0,0
+]
+
+n1_model_actual_curr_winner_num = -1
+
+n1_model_plays_cnt = 0
+n1_model_match_cnt = 0
+n1_model_win_rate = 0
+n1_model_miss_rate = 0
 
 # model - predict total score
 n1_pairs_predict_store = [ 
@@ -774,6 +798,19 @@ def get_lowest(numbers, start, end):
 # zero_nine_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 
 def calculate_n1_ppattern_V1(pattern):
+
+    n1_ppoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+    n1_cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    prev_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    curr_n1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    pred_n1 = 5
+    n1_cnt_sorted = []
+    n1_match_cnt = 0
+    n1_below_five = 0
+    n1_above_five = 0
+    n1_at_five = 0
+    zero_nine_counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+
     print('\t calculate_n1_ppattern')
     n1_match_cnt = 0
     n1_below_five = 0
@@ -1420,8 +1457,83 @@ def max_number(array):
 
     return max, position         
 
+
 #
-# Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
+# Update Model
+#
+def update_model(most_recent_num_n, draw_number_count, hot_picks_count, pairs_store_for_num, plays_i, is_winner):
+
+    global n1_model_base_num_layer, n1_model_attribute1, n1_model_attribute2, n1_model_attribute3, n1_model_attribute4
+    global n1_model_score_layer, n1_model_picks_layer, n1_model_plays_cnt, n1_model_win_rate,  n1_model_miss_rate, n1_model_actual_curr_winner_num
+
+    print("update model")
+    most_recent_num_drawn = most_recent_num_n
+    
+    n1_model_base_num_layer = most_recent_num_drawn # input layer
+    n1_model_attribute1 = draw_number_count         # COUNT
+    n1_model_attribute2 = hot_picks_count           # HP PATTERN
+    n1_model_attribute3 = pairs_store_for_num       # PAIRS PATTERN - for specific num
+    n1_model_attribute4 = []                        # HIGH LOW
+
+    # n1_model_score_layer = [
+    #     0,0,0,0,0,0,0,0,0,0
+    # ]
+
+    print(f"n1 model base num is {n1_model_base_num_layer}")
+
+    #
+    # calculate total score from attribute 1 -3
+    #
+    m = 0
+    while m < 10:
+        n1_model_score_layer[m] = n1_model_score_layer[m] + n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m] 
+        m += 1
+
+    print(f"n1 model score layer is {n1_model_score_layer }")
+
+    max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
+    max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
+    max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(pairs_store_for_num)
+        
+    print(f"max number draw_number_count ", max_number_draw_number_count)
+    print(f"max number hot_picks_count ", max_number_hot_picks_count)
+    print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
+ 
+    # n1_model_picks_layer = [        # top3 picks from 3 attributes -predict
+    #     max_number_draw_number_count,max_number_hot_picks_count,max_number_n1_pairs_store_most_recent_num_drawn
+    # ]
+
+    #
+    # select top scores from this layer
+    #
+    max_number_cnt, max_number_n1_model_score_layer = max_number(n1_model_score_layer)
+
+    print(f"max number max_number_n1_model_score_layer ", max_number_n1_model_score_layer)
+
+    n1_model_picks_layer = [        # top3 picks from combine score -predict
+        max_number_n1_model_score_layer, max_number_n1_model_score_layer, max_number_n1_model_score_layer
+    ]
+
+    print(f"n1 model predict numbers...{n1_model_picks_layer}")
+
+    # n1_model_actual_curr_winner_num = -1
+
+    n1_model_plays_cnt = plays_i
+
+    if is_winner == True:
+        n1_model_win_rate += 1
+    else:
+        n1_model_miss_rate += 1
+
+    return n1_model_picks_layer         #predict next number
+
+
+def update_model_score_layer(n1_model_score_layer, pos, valve):
+
+    n1_model_score_layer[int(pos)] = valve
+    
+#
+# Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw - dont' use outdated!
 #
 def calculate_pattern(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
     # print("pattern ", pattern)
@@ -1500,6 +1612,8 @@ def calculate_pattern(pattern):         # calculate occurence count and pattern 
         prev_n = n
         pattern_spreads.append(n1_n2_spread)
 
+        # update_model(n, draw_number_count, hot_picks_count, n1_pairs_store[most_recent_num_drawn], i)
+
     print('mean distribution: ', total_nums_val/i)
     print('at_five',at_five, 'below_five', below_five, 'above_five', above_five)
     print('pattern_spreads,', len(pattern_spreads), pattern_spreads)
@@ -1543,6 +1657,7 @@ def calculate_pattern(pattern):         # calculate occurence count and pattern 
     print(f"attribute:1 {draw_number_count}")
     print(f"attribute:2 {hot_picks_count}")
     print(f"attribute:3 {n1_pairs_store[most_recent_num_drawn]}")
+
     i = 0
     for pair in highest_pairs:
         print(f"pair#{i}, {pair}")
@@ -1570,7 +1685,7 @@ def calculate_pattern(pattern):         # calculate occurence count and pattern 
     return hot_picks, draw_number_count, hot_picks_count 
 
 #
-# Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
+# Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw - don't use outdated!
 #
 def calculate_pattern_v2(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
     # print("pattern ", pattern)
@@ -1741,6 +1856,11 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # calculate_n1_ppattern_V3(pattern)
     # exit()
 
+    
+    global n1_model_base_num_layer, n1_model_attribute1, n1_model_attribute2, n1_model_attribute3, n1_model_attribute4
+    global n1_model_score_layer, n1_model_picks_layer, n1_model_plays_cnt, n1_model_win_rate,  n1_model_miss_rate, n1_model_actual_curr_winner_num
+
+
     i = 0   # current count draws
     prev_cnt = 0 # previous count draws since last seen
     find_number_count = 0
@@ -1769,7 +1889,50 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     above_five = 0
     at_five = 0
     spread_five = 0
+    
     for n in pattern:
+          
+        is_winner = False
+        #
+        # Predict Num check against actual winner
+        #
+        if i > 0:
+            winner1 = -1
+            winner2 = -1
+            winner3 = -1
+            x = 0
+            while x < len(n1_model_score_layer):
+                if n1_model_picks_layer[0] == x: 
+                    print(f"{n1_model_picks_layer[0]} winner!")
+                    n1_model_score_layer[ int(n1_model_picks_layer[0]) ] += 5 # True winner update increase score by some points
+                    is_winner = True
+                    winner1 = n1_model_picks_layer[0]
+                elif n1_model_picks_layer[1] == x: 
+                    print(f"{n1_model_picks_layer[1]} winner!")
+                    n1_model_score_layer[ int(n1_model_picks_layer[1]) ] += 5 # True winner update increase score by some points
+                    is_winner = True
+                    winner2 = n1_model_picks_layer[1]
+                elif n1_model_picks_layer[2] == x: 
+                    print(f"{n1_model_picks_layer[2]} winner!")
+                    is_winner = True
+                    n1_model_score_layer[ int(n1_model_picks_layer[2]) ] += 5 # True winner update increase score by some points
+                    winner3 = n1_model_picks_layer[2]
+                else:
+                    n1_model_score_layer[ int(x) ] -= 1
+                    print(f"{n1_model_score_layer[ int(x) ]} not matched!")
+
+
+            if is_winner == True:
+                n1_model_match_cnt += 1
+                if winner1 != -1:
+                    n1_model_actual_curr_winner_num = winner1 
+                if winner2 != -1:
+                    n1_model_actual_curr_winner_num = winner2
+                if winner3 != -1:
+                    n1_model_actual_curr_winner_num = winner3         
+
+        if (i == 20):
+            exit
         i += 1
         total_nums_val += n
 
@@ -1811,7 +1974,11 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
         
         prev_n = n
         pattern_spreads.append(n1_n2_spread)
+        
+        most_recent_num_drawn = n
+        update_model(n, draw_number_count, hot_picks_count, n1_pairs_store[most_recent_num_drawn], i, is_winner)
 
+    
     print('mean distribution: ', total_nums_val/i)
     print('at_five',at_five, 'below_five', below_five, 'above_five', above_five)
     print('pattern_spreads,', len(pattern_spreads), pattern_spreads)
@@ -1827,6 +1994,7 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # Atrribute:4 use guess direction
     #
 
+    print(f" total predict correct rate {n1_model_win_rate} miss rate { n1_model_miss_rate}")
     most_recent_num_drawn = n
 
     # calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
