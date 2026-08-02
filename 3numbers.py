@@ -1527,14 +1527,40 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     print(f"n1 model score layer is {n1_model_score_layer[n1_model_base_num_layer] }")
     print(f"calculated n1 model score layer is {calculated_n1_model_score_layer}")
 
-    max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
-    max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
-    max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(pairs_store_for_num)
+    # max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
+    # max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
+    # max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(pairs_store_for_num)
         
-    print(f"max number draw_number_count ", max_number_draw_number_count)
-    print(f"max number hot_picks_count ", max_number_hot_picks_count)
-    print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
+    # print(f"max number draw_number_count ", max_number_draw_number_count)
+    # print(f"max number hot_picks_count ", max_number_hot_picks_count)
+    # print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
  
+    draw_count_top3_nums = [0, 0, 0]
+    draw_count_top3_cnt = [0, 0, 0]
+    pattern_hot_picks_top3_nums = [0, 0, 0]
+    pattern_hot_picks_top3_cnt = [0, 0, 0]
+    pattern_pairs_top3_nums = [0, 0, 0]
+    pattern_pairs_top3_cnt = [0, 0, 0]
+
+    #
+    # top3 draw count
+    #
+    find_top3(n1_model_attribute1, draw_count_top3_cnt, draw_count_top3_nums)
+    print(f"top3 numbers draw_number_count ", draw_count_top3_nums)
+
+    #
+    # top3 pattern hot pick count
+    #
+    find_top3(n1_model_attribute2, pattern_hot_picks_top3_cnt, pattern_hot_picks_top3_nums)
+    print(f"top3 numbers hotpick pattern ", pattern_hot_picks_top3_nums)
+
+    #
+    # top3 pairs count
+    #
+    find_top3(n1_model_attribute3, pattern_pairs_top3_cnt, pattern_pairs_top3_nums)
+    print(f"top3 numbers pairs pattern count ", pattern_pairs_top3_nums)
+
+
     # n1_model_picks_layer = [        # top3 picks from 3 attributes -predict
     #     max_number_draw_number_count,max_number_hot_picks_count,max_number_n1_pairs_store_most_recent_num_drawn
     # ]
@@ -1543,32 +1569,32 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     # select top scores from this layer
     #
     # max_number_cnt, max_number_n1_model_score_layer = max_number(n1_model_score_layer[n1_model_base_num_layer])
-    max_number_cnt, max_number_n1_model_score_layer = max_number(calculated_n1_model_score_layer)
+    # max_number_cnt, max_number_n1_model_score_layer = max_number(calculated_n1_model_score_layer)
 
-    print(f"max number max_number_n1_model_score_layer ", max_number_n1_model_score_layer)
+    # print(f"max number max_number_n1_model_score_layer ", max_number_n1_model_score_layer)
 
-    n1_model_picks_layer = [        # top3 picks from combine score -predict
-        max_number_n1_model_score_layer, max_number_n1_model_score_layer, max_number_n1_model_score_layer
-    ]
+    # n1_model_picks_layer = [        # top3 picks from combine score -predict
+    #     max_number_n1_model_score_layer, max_number_n1_model_score_layer, max_number_n1_model_score_layer
+    # ]
 
-    print(f"n1 model predict numbers...{n1_model_picks_layer}")
+    #
+    # top 3 score layer
+    #
+    scores_layer_top3_cnt = [0,0,0]
+    find_top3(calculated_n1_model_score_layer, scores_layer_top3_cnt , n1_model_picks_layer)
+    print(f"top 3 scores n1_model_score_layer {n1_model_picks_layer}")
 
-    # n1_model_actual_curr_winner_num = -1
+    # n1_model_picks_layer = [        # top3 picks from combine score -predict
+    #     max_number_n1_model_score_layer, max_number_n1_model_score_layer, max_number_n1_model_score_layer
+    # ]
 
-    # n1_model_plays_cnt = plays_i
 
-    # print(f"n1_model_play cnt is {n1_model_plays_cnt}")
-    # if is_winner == True:
-    #     n1_model_win_rate += 1
-    # else:
-    #     n1_model_miss_rate += 1
-
-    # print(f"n1_model_win_rate {n1_model_win_rate}, n1_model_miss_rate {n1_model_miss_rate}")
+    # print(f"n1 model predict numbers...{n1_model_picks_layer}")
 
     return n1_model_picks_layer         #predict next number
 
 
-def update_model_score_layer(n1_model_score_layer, pos, valve):
+def update_model_score_layer(n1_model_score_layer, pos, valve):#
 
     n1_model_score_layer[int(pos)] = valve
     
@@ -1937,7 +1963,7 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # Test controlled pattern here
     ##
     # pattern = [ 0,  9, 9, 9, 3, 9]
-    # pattern = [9, 4, 1, 3, 4, 1]    # outcome win rate: 2, miss rate: 3
+    #pattern = [9, 4, 1, 3, 4, 1]    # outcome win rate: 2, miss rate: 3
 
     ##
     # Magic:
