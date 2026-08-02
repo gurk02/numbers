@@ -1491,6 +1491,8 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     global n1_model_base_num_layer, n1_model_attribute1, n1_model_attribute2, n1_model_attribute3, n1_model_attribute4
     global n1_model_score_layer, n1_model_picks_layer, n1_model_plays_cnt, n1_model_win_rate,  n1_model_miss_rate, n1_model_actual_curr_winner_num, n1_model_match_cnt
 
+    calculated_n1_model_score_layer = [0,0,0,0,0,0,0,0,0,0] # calculated temp used for only score ranking
+
     print("\nupdate model predict")
     most_recent_num_drawn = most_recent_num_n
     
@@ -1516,12 +1518,14 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     m = 0
     while m < 10:
         # n1_model_score_layer[m] = n1_model_score_layer[m] + n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m] 
-        n1_model_score_layer[n1_model_base_num_layer][m] = n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m] 
+        # n1_model_score_layer[n1_model_base_num_layer][m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m])
+        # n1_model_score_layer[n1_model_base_num_layer][m] = n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m]
+        calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m])
 
         m += 1
 
-
-    print(f"calculated n1 model score layer is {n1_model_score_layer[n1_model_base_num_layer] }")
+    print(f"n1 model score layer is {n1_model_score_layer[n1_model_base_num_layer] }")
+    print(f"calculated n1 model score layer is {calculated_n1_model_score_layer}")
 
     max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
     max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
@@ -1538,7 +1542,8 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     #
     # select top scores from this layer
     #
-    max_number_cnt, max_number_n1_model_score_layer = max_number(n1_model_score_layer[n1_model_base_num_layer])
+    # max_number_cnt, max_number_n1_model_score_layer = max_number(n1_model_score_layer[n1_model_base_num_layer])
+    max_number_cnt, max_number_n1_model_score_layer = max_number(calculated_n1_model_score_layer)
 
     print(f"max number max_number_n1_model_score_layer ", max_number_n1_model_score_layer)
 
@@ -1927,17 +1932,26 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
 
     print(f"(n1_model_score_layer) {n1_model_score_layer}")
     print(f"pattern len {len(pattern)}")
-   
+
+    ##
+    # Test controlled pattern here
+    ##
+    pattern = [ 0,  9, 9, 9]
+    ##
+    # Magic:
+    ##
     for n in pattern:
 
         is_winner = False
         most_recent_num_drawn = n
+        print( "=" * 40)
+        print(f"draw# _{i} winning n is ({n})")
 
         if i > 0:
             ##
             # predict next number...
             ##
-            print(f"make predict next number")
+            print(f"\t-> model predict next number")
             print(f"prev draw {prev_n} current draw num is {n}, previous n1_model_picks_layer {n1_model_picks_layer} is winner {is_winner}")
 
             # predict_numbers = update_model_predict(n, draw_number_count, hot_picks_count, n1_pairs_store[most_recent_num_drawn], i, is_winner)
@@ -1956,7 +1970,7 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
             winner2 = -1
             winner3 = -1
             x = 0
-            print(f"\tchecking n1_model_picks_layer {n1_model_picks_layer} if winner!")
+            print(f"\t-> checking n1_model_picks_layer {n1_model_picks_layer} if winner!")
             while x < len(n1_model_score_layer[prev_n]):
                 if n1_model_picks_layer[0] == n:        # predict number matched drawn increase score
                     print(f"{n1_model_picks_layer[0]} winner! score increase")
@@ -1974,11 +1988,12 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
                     n1_model_score_layer[prev_n][ int(n1_model_picks_layer[2]) ] += 3 # True winner update increase score by some points
                     winner3 = n1_model_picks_layer[2]
                 elif x == n1_model_picks_layer[0] or x == n1_model_picks_layer[1] or x == n1_model_picks_layer[2]:      # if predict missed to match, penalty is heavy
-                    n1_model_score_layer[prev_n][ int(x) ] -= 5
+                    # n1_model_score_layer[prev_n][ int(x) ] -= 5
+                    n1_model_score_layer[prev_n][ int(x) ] -= 1
                     print(f"{x}# draw {n} does not match pick!  {n1_model_picks_layer}")
                     print(f"updated lower score {n1_model_score_layer[prev_n][ int(x) ]}")
                 elif x == n: # drawn winning number 5 point
-                    n1_model_score_layer[prev_n][ int(x) ] += 5
+                    n1_model_score_layer[prev_n][ int(x) ] += 2
                     print(f"{x}# {n} score increase {n1_model_picks_layer}")
                     print(f"updated lower score {n1_model_score_layer[prev_n][ int(x) ]}")
                 else:   # all other numbers 1 point
@@ -1999,8 +2014,12 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
                 if winner3 != -1:
                     n1_model_actual_curr_winner_num = winner3         
                 print(f"{n1_model_picks_layer} is winner {is_winner}")
+            else:
+                print(f"{n1_model_picks_layer} NOT winner {is_winner}, drawn number was {n}, prev_n {prev_n}")
 
-        if i == 20:          ## HIT BRAKES - TESTING ANALYSIS
+            print(f"update score layer now is {n1_model_score_layer}")
+
+        if i == 3:          ## HIT BRAKES - TESTING ANALYSIS
             exit()
 
 
@@ -2051,14 +2070,16 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
         pattern_spreads.append(n1_n2_spread)
         
 
-    
+    print("\n")
     print('mean distribution: ', total_nums_val/i)
     print('at_five',at_five, 'below_five', below_five, 'above_five', above_five)
     print('pattern_spreads,', len(pattern_spreads), pattern_spreads)
     
     for s in pattern_spreads:
         print('=' * abs(s))
+    print("\n")
 
+    exit()
 
     #
     # Attribute:1 occurence count
@@ -2080,58 +2101,58 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     direction3 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, n1_pairs_store[most_recent_num_drawn])
     print(f"guessing direction n1_pairs_store {direction3}")
   
-    # 
-    # feed model N1- N and methods 1,2,3, with output - top3
-    #
+    # # 
+    # # feed model N1- N and methods 1,2,3, with output - top3
+    # #
    
-    ##
-    # build model calculate - model pick
-    #
-    print("calcultion TOP numbers so far")
+    # ##
+    # # build model calculate - model pick
+    # #
+    # print("calcultion TOP numbers so far")
 
-    print(f"most_recent_num_drawn {most_recent_num_drawn}")
-    print(f"direction guess by count {direction1}")
-    print(f"direction guess by pattern {direction2}")
-    print(f"direction guess by n1_pair_store {direction3}")
+    # print(f"most_recent_num_drawn {most_recent_num_drawn}")
+    # print(f"direction guess by count {direction1}")
+    # print(f"direction guess by pattern {direction2}")
+    # print(f"direction guess by n1_pair_store {direction3}")
 
-    print(f"hot_picks {hot_picks}")
-    print(f"by count {draw_number_count}")
-    print(f"by pattern {hot_picks_count}")
-    print(f"store is {n1_pairs_store}")
-    print(f"store for  {most_recent_num_drawn} at n1_pairs_store {n1_pairs_store[most_recent_num_drawn]}")
-    # highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store)
+    # print(f"hot_picks {hot_picks}")
+    # print(f"by count {draw_number_count}")
+    # print(f"by pattern {hot_picks_count}")
+    # print(f"store is {n1_pairs_store}")
+    # print(f"store for  {most_recent_num_drawn} at n1_pairs_store {n1_pairs_store[most_recent_num_drawn]}")
+    # # highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store)
 
-    print(f"attribute:1 {draw_number_count}")
-    print(f"attribute:2 {hot_picks_count}")
-    print(f"attribute:3 {n1_pairs_store[most_recent_num_drawn]}")
-    i = 0
-    for pair in highest_pairs:
-        print(f"pair#{i}, {pair}")
-        i += 1
+    # print(f"attribute:1 {draw_number_count}")
+    # print(f"attribute:2 {hot_picks_count}")
+    # print(f"attribute:3 {n1_pairs_store[most_recent_num_drawn]}")
+    # i = 0
+    # for pair in highest_pairs:
+    #     print(f"pair#{i}, {pair}")
+    #     i += 1
     
-    max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
-    max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
-    max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(n1_pairs_store[most_recent_num_drawn])
+    # max_number_cnt, max_number_draw_number_count = max_number(draw_number_count)
+    # max_number_cnt, max_number_hot_picks_count = max_number(hot_picks_count)
+    # max_number_cnt, max_number_n1_pairs_store_most_recent_num_drawn = max_number(n1_pairs_store[most_recent_num_drawn])
     
-    print(f"max number draw_number_count ", max_number_draw_number_count)
-    print(f"max number hot_picks_count ", max_number_hot_picks_count)
-    print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
+    # print(f"max number draw_number_count ", max_number_draw_number_count)
+    # print(f"max number hot_picks_count ", max_number_hot_picks_count)
+    # print(f"max number n1_pairs_store[most_recent_num_drawn] ", max_number_n1_pairs_store_most_recent_num_drawn)
 
-    ##
-    # update - store info in model
-    #
-    n1_model[0] = int(most_recent_num_drawn)
-    n1_model[1][0] = draw_number_count
-    n1_model[1][1] = hot_picks_count
-    n1_model[1][2] = n1_pairs_store[most_recent_num_drawn]
-    n1_model[2][0] = max_number_draw_number_count
-    n1_model[2][1] = max_number_hot_picks_count
-    n1_model[2][2] = max_number_n1_pairs_store_most_recent_num_drawn
-    n1_model[3][0] = direction1
-    n1_model[3][1] = direction2
-    n1_model[3][2] = direction3
+    # ##
+    # # update - store info in model
+    # #
+    # n1_model[0] = int(most_recent_num_drawn)
+    # n1_model[1][0] = draw_number_count
+    # n1_model[1][1] = hot_picks_count
+    # n1_model[1][2] = n1_pairs_store[most_recent_num_drawn]
+    # n1_model[2][0] = max_number_draw_number_count
+    # n1_model[2][1] = max_number_hot_picks_count
+    # n1_model[2][2] = max_number_n1_pairs_store_most_recent_num_drawn
+    # n1_model[3][0] = direction1
+    # n1_model[3][1] = direction2
+    # n1_model[3][2] = direction3
 
-    print(f"for {most_recent_num_drawn}  n1_model now is {n1_model}")
+    # print(f"for {most_recent_num_drawn}  n1_model now is {n1_model}")
     exit()
     
     return hot_picks, draw_number_count, hot_picks_count 
