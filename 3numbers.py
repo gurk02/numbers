@@ -1555,15 +1555,15 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
 
     # n1_model_actual_curr_winner_num = -1
 
-    n1_model_plays_cnt = plays_i
+    # n1_model_plays_cnt = plays_i
 
-    print(f"n1_model_play cnt is {n1_model_plays_cnt}")
-    if is_winner == True:
-        n1_model_win_rate += 1
-    else:
-        n1_model_miss_rate += 1
+    # print(f"n1_model_play cnt is {n1_model_plays_cnt}")
+    # if is_winner == True:
+    #     n1_model_win_rate += 1
+    # else:
+    #     n1_model_miss_rate += 1
 
-    print(f"n1_model_win_rate {n1_model_win_rate}, n1_model_miss_rate {n1_model_miss_rate}")
+    # print(f"n1_model_win_rate {n1_model_win_rate}, n1_model_miss_rate {n1_model_miss_rate}")
 
     return n1_model_picks_layer         #predict next number
 
@@ -1936,16 +1936,19 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     ##
     # Test controlled pattern here
     ##
-    pattern = [ 0,  9, 9, 9]
+    # pattern = [ 0,  9, 9, 9, 3, 9]
+    # pattern = [9, 4, 1, 3, 4, 1]    # outcome win rate: 2, miss rate: 3
+
     ##
     # Magic:
     ##
     for n in pattern:
 
         is_winner = False
+        is_winner_guess = False
         most_recent_num_drawn = n
-        print( "=" * 40)
-        print(f"draw# _{i} winning n is ({n})")
+        print( "=" * 50)
+        print(f"\n\t -> draw#_{i} winning n is ({n})")
 
         if i > 0:
             ##
@@ -1959,8 +1962,8 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
 
             print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
                     
-        print(f"\n\t** drawing #{i} winning num is {n}")
-
+        print(f"\n\t -> drawing #{i} winning num is ({n})")
+        print(f"checking if winner?")
         ##
         # Predict Num check against actual winner - adjust scores
         ##
@@ -1972,40 +1975,45 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
             x = 0
             print(f"\t-> checking n1_model_picks_layer {n1_model_picks_layer} if winner!")
             while x < len(n1_model_score_layer[prev_n]):
-                if n1_model_picks_layer[0] == n:        # predict number matched drawn increase score
-                    print(f"{n1_model_picks_layer[0]} winner! score increase")
+                if is_winner_guess == False and n1_model_picks_layer[0] == n and x == n:        # predict number matched drawn increase score
+                    print(f"{n1_model_picks_layer[0]} winner1! score increase")
                     n1_model_score_layer[prev_n][ int(n1_model_picks_layer[0]) ] += 3 # True winner update increase score by some points
                     is_winner = True
+                    is_winner_guess = True
                     winner1 = n1_model_picks_layer[0] 
-                elif n1_model_picks_layer[1] == n:      # predict number matched drawn increase score
-                    print(f"{n1_model_picks_layer[1]} winner! score increase")
+                elif is_winner_guess == False and n1_model_picks_layer[1] == n and x == n:      # predict number matched drawn increase score
+                    print(f"{n1_model_picks_layer[1]} winner2! score increase")
                     n1_model_score_layer[prev_n][ int(n1_model_picks_layer[1]) ] += 3 # True winner update increase score by some points
                     is_winner = True
+                    is_winner_guess = True
                     winner2 = n1_model_picks_layer[1]
-                elif n1_model_picks_layer[2] == n:      # predict number matched drawn increase score
-                    print(f"{n1_model_picks_layer[2]} winner! score increase")
+                elif is_winner_guess == False and n1_model_picks_layer[2] == n and x == n:      # predict number matched drawn increase score
+                    print(f"{n1_model_picks_layer[2]} winner3! score increase")
                     is_winner = True
+                    is_winner_guess = True
                     n1_model_score_layer[prev_n][ int(n1_model_picks_layer[2]) ] += 3 # True winner update increase score by some points
                     winner3 = n1_model_picks_layer[2]
                 elif x == n1_model_picks_layer[0] or x == n1_model_picks_layer[1] or x == n1_model_picks_layer[2]:      # if predict missed to match, penalty is heavy
                     # n1_model_score_layer[prev_n][ int(x) ] -= 5
-                    n1_model_score_layer[prev_n][ int(x) ] -= 1
-                    print(f"{x}# draw {n} does not match pick!  {n1_model_picks_layer}")
-                    print(f"updated lower score {n1_model_score_layer[prev_n][ int(x) ]}")
-                elif x == n: # drawn winning number 5 point
+                    n1_model_score_layer[prev_n][ int(x) ] -= 5
+                    print(f"{x} draw {n} does not match guess picks!  {n1_model_picks_layer}")
+                    print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
+                elif x == n and (is_winner == False and is_winner_guess == False): # drawn winning number increase point
                     n1_model_score_layer[prev_n][ int(x) ] += 2
-                    print(f"{x}# {n} score increase {n1_model_picks_layer}")
-                    print(f"updated lower score {n1_model_score_layer[prev_n][ int(x) ]}")
+                    print(f"{x}# {n} score increase")
+                    print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
                 else:   # all other numbers 1 point
                     1   # else for all other numbers add 1 to score
                     n1_model_score_layer[prev_n][ int(x) ] += 1
-
+                    
                 print(f"update n1 model score layer is {n1_model_score_layer[prev_n]} for pair {prev_n}, current draw is {n}")
+                # if is_winner == True:
+                #     break
 
                 x += 1
 
 
-            if is_winner == True:
+            if is_winner_guess == True:
                 n1_model_match_cnt += 1
                 if winner1 != -1:
                     n1_model_actual_curr_winner_num = winner1 
@@ -2013,14 +2021,23 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
                     n1_model_actual_curr_winner_num = winner2
                 if winner3 != -1:
                     n1_model_actual_curr_winner_num = winner3         
-                print(f"{n1_model_picks_layer} is winner {is_winner}")
+                print(f"YES, {n1_model_picks_layer} is winner ({is_winner}) (n1_model_actual_curr_winner_num)!!!!")
             else:
-                print(f"{n1_model_picks_layer} NOT winner {is_winner}, drawn number was {n}, prev_n {prev_n}")
+                print(f"NO! {n1_model_picks_layer} NOT winner {is_winner}, drawn number was {n}, prev_n {prev_n}")
 
             print(f"update score layer now is {n1_model_score_layer}")
 
-        if i == 3:          ## HIT BRAKES - TESTING ANALYSIS
-            exit()
+            print(f"n1_model_play cnt is {n1_model_plays_cnt}")
+            if is_winner_guess == True:
+                n1_model_win_rate += 1
+            else:
+                n1_model_miss_rate += 1
+
+            print(f"n1_model_win_rate {n1_model_win_rate}, n1_model_miss_rate {n1_model_miss_rate}")
+
+
+        # if i == 10:          ## HIT BRAKES - TESTING ANALYSIS
+        #     exit()
 
 
         ##
@@ -2070,7 +2087,8 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
         pattern_spreads.append(n1_n2_spread)
         
 
-    print("\n")
+    print("\nSTATS")
+    print(f"n1_model_win_rate {n1_model_win_rate}, n1_model_miss_rate {n1_model_miss_rate}")
     print('mean distribution: ', total_nums_val/i)
     print('at_five',at_five, 'below_five', below_five, 'above_five', above_five)
     print('pattern_spreads,', len(pattern_spreads), pattern_spreads)
@@ -2303,8 +2321,8 @@ draw_sz = sampling_draws[1]
 # draw_sz = 15
 # draw_sz = 10
 draw_sz = 100
-draw_sz = 30
-draw_sz = 21
+# draw_sz = 30
+# draw_sz = 21
 # draw_sz = 14
 # draw_sz = sampling_draws[6]
 
