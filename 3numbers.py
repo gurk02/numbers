@@ -2235,6 +2235,10 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # exit()
     
     # return hot_picks, draw_number_count, hot_picks_count
+    predict_numbers = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[prev_n], i, is_winner)
+                print(f"\t-> model predict next numbers ?")
+    print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
+                        
     return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer
 
 
