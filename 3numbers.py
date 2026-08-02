@@ -1926,6 +1926,37 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     global n1_model_base_num_layer, n1_model_attribute1, n1_model_attribute2, n1_model_attribute3, n1_model_attribute4
     global n1_model_score_layer, n1_model_picks_layer, n1_model_plays_cnt, n1_model_win_rate,  n1_model_miss_rate, n1_model_actual_curr_winner_num, n1_model_match_cnt
 
+    n1_model_base_num_layer = -1    # input layer
+    n1_model_attribute1 = []        # COUNT
+    n1_model_attribute2 = []        # HP PATTERN
+    n1_model_attribute3 = []        # PAIRS PATTERN
+    n1_model_attribute4 = []        # HIGH LOW
+
+    n1_model_score_layer = [
+                            #BASE - PAIR
+    [0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
+    [0,0,0,0,0,0,0,0,0,0], #1,
+    [0,0,0,0,0,0,0,0,0,0], #2
+    [0,0,0,0,0,0,0,0,0,0], #3
+    [0,0,0,0,0,0,0,0,0,0], #4
+    [0,0,0,0,0,0,0,0,0,0], #5
+    [0,0,0,0,0,0,0,0,0,0], #6
+    [0,0,0,0,0,0,0,0,0,0], #7
+    [0,0,0,0,0,0,0,0,0,0], #8
+    [0,0,0,0,0,0,0,0,0,0], #9
+
+    ]
+
+    n1_model_picks_layer = [        # top3 picks -predict
+        0,0,0
+    ]
+
+    n1_model_actual_curr_winner_num = -1
+
+    n1_model_plays_cnt = 0
+    n1_model_match_cnt = 0
+    n1_model_win_rate = 0
+    n1_model_miss_rate = 0
 
     i = 0   # current count draws
     prev_cnt = 0 # previous count draws since last seen
@@ -2123,7 +2154,7 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
         print('=' * abs(s))
     print("\n")
 
-    exit()
+    # exit()            # FOR TESTING ABOVE
 
     #
     # Attribute:1 occurence count
@@ -2132,18 +2163,22 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # Atrribute:4 use guess direction
     #
 
-    print(f" total predict correct rate {n1_model_win_rate} miss rate { n1_model_miss_rate}")
-    most_recent_num_drawn = n
+    ##
+    # Todo: move to update_mode_predict, implement later...
+    ##
+    if 1 == 2:
+        print(f" total predict correct rate {n1_model_win_rate} miss rate { n1_model_miss_rate}")
+        most_recent_num_drawn = n
 
-    # calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
-    direction1 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, draw_number_count)
-    print(f"guessing direction draw_number_count {direction1}")
-    
-    direction2 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, hot_picks_count)
-    print(f"guessing direction hot_picks_count {direction2}")
-    
-    direction3 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, n1_pairs_store[most_recent_num_drawn])
-    print(f"guessing direction n1_pairs_store {direction3}")
+        # calculate_n1_ppattern_V3(pattern, draw_number_count, hot_picks_count)
+        direction1 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, draw_number_count)
+        print(f"guessing direction draw_number_count {direction1}")
+        
+        direction2 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, hot_picks_count)
+        print(f"guessing direction hot_picks_count {direction2}")
+        
+        direction3 = calculate_n1_pattern_direction_V1(pattern, draw_number_count, n1_pairs_store[most_recent_num_drawn])
+        print(f"guessing direction n1_pairs_store {direction3}")
   
     # # 
     # # feed model N1- N and methods 1,2,3, with output - top3
@@ -2197,10 +2232,10 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # n1_model[3][2] = direction3
 
     # print(f"for {most_recent_num_drawn}  n1_model now is {n1_model}")
-    exit()
+    # exit()
     
-    return hot_picks, draw_number_count, hot_picks_count 
-
+    # return hot_picks, draw_number_count, hot_picks_count
+    return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer
 
 
 # debug = False
@@ -2216,6 +2251,7 @@ debug = False
 
 def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
 
+    global n1_model_picks_layer
     debug = False
 
     # sampling_arr = n1_eve
@@ -2237,7 +2273,7 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
 
     # print(test_pattern)
     print("calculate_pattern ...")
-    hot_picks, draw_number_count, hot_picks_count = calculate_pattern_v3(sampling_arr[:sample_draws])
+    hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer = calculate_pattern_v3(sampling_arr[:sample_draws])
     print("draw number count ", draw_number_count)
     draw_count_top3_nums = [0, 0, 0]
     draw_count_top3_cnt = [0, 0, 0]
@@ -2307,7 +2343,7 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
     
     # print ('picks -> ', picks)
     # return picks
-    return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums
+    return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums, n1_model_picks_layer
 
 
 #
@@ -2346,7 +2382,7 @@ draw_sz = sampling_draws[1]
 
 # draw_sz = 15
 # draw_sz = 10
-draw_sz = 100
+draw_sz = len(n1_eve)
 # draw_sz = 30
 # draw_sz = 21
 # draw_sz = 14
@@ -2375,6 +2411,9 @@ sample_arr_n3 = n3_eve
 # Test comment out
 #
 
+##
+# N1 - RESULTS
+##
 print(f"before reverse {sample_arr_n1}")
 i = 0
 for entry in n1_eve:
@@ -2386,15 +2425,44 @@ sample_arr_n1 = sample_arr_n1[len(sample_arr_n1)-draw_sz:]
 print(f"after reverse trim {sample_arr_n1}")
 # exit()
 
-n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
+n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums, n1_model_picks_layer_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
 print("generate numbers for N1 ...", n1_picks)
-exit()
+print(f"generate numbers for N1 n1_model_picks_layer {n1_model_picks_layer_nums}")
+# exit()
 
-n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums = generate_numbers('N2', draw_type,sample_arr_n2,draw_sz)
+##
+# N1 - RESULTS
+##
+print(f"before reverse {sample_arr_n2}")
+# i = 0
+# for entry in n2_eve:
+#     print(f"i{i}, entry {entry}")
+#     i += 1
+sample_arr_n2 = sample_arr_n2[::-1]
+print(f"after reverse {sample_arr_n2}")
+sample_arr_n2 = sample_arr_n2[len(sample_arr_n2)-draw_sz:]
+print(f"after reverse trim {sample_arr_n2}")
+
+n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums, n2_model_picks_layer_nums = generate_numbers('N2', draw_type, sample_arr_n2, draw_sz)
 print("generate numbers for N2 ...", n2_picks)
+print(f"generate numbers for N2 n1_model_picks_layer {n2_model_picks_layer_nums}")
 
-n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums = generate_numbers('N3', draw_type,sample_arr_n3,draw_sz)
+##
+# N1 - RESULTS
+##
+print(f"before reverse {sample_arr_n3}")
+# i = 0
+# for entry in n3_eve:
+#     print(f"i{i}, entry {entry}")
+#     i += 1
+sample_arr_n3 = sample_arr_n3[::-1]
+print(f"after reverse {sample_arr_n3}")
+sample_arr_n3 = sample_arr_n3[len(sample_arr_n3)-draw_sz:]
+print(f"after reverse trim {sample_arr_n3}")
+
+n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums, n3_model_picks_layer_nums = generate_numbers('N3', draw_type, sample_arr_n3, draw_sz)
 print("generate numbers for N3 ...", n3_picks)
+print(f"generate numbers for N3 n1_model_picks_layer {n3_model_picks_layer_nums}")
 
 # n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', draw_type,sample_arr_n4,draw_sz)
 # print("generate numbers for N4 ...", n4_picks)
@@ -2684,6 +2752,23 @@ elif generated_method == 'combo':
 
             dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
             n +=1
+
+        print (f"Generate numbers by model_picks_layer numbers ...")
+        print (f"n1_model_picks_layer_nums {n1_model_picks_layer_nums}")
+        print (f"n2_model_picks_layer_nums {n2_model_picks_layer_nums}")
+        print (f"n3_model_picks_layer_nums {n3_model_picks_layer_nums}")
+                
+        n = 0
+        generated_combo_picks = generate_combo_picks(n1_model_picks_layer_nums, n2_model_picks_layer_nums, n3_model_picks_layer_nums)
+        for combo_pick in generated_combo_picks:
+            if is_numbers_in_source(combo_pick[0],combo_pick[1],combo_pick[2], numbers_dl) == True:
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "exists")
+            elif is_number_repeat(combo_pick[0],combo_pick[1],combo_pick[2]):
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t", "nr")        # digit repeat
+            else:
+                print(combo_pick[0],"\t",  combo_pick[1],"\t", combo_pick[2],"\t")
+                
+    
         print ('total combos#', n)
 
 else:
