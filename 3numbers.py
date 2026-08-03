@@ -2021,8 +2021,9 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
                     
         print(f"\n\t -> drawing #{i} winning num is ({n})")
         print(f"checking if winner?")
+
         ##
-        # Predict Num check against actual winner - adjust scores
+        # Predict Num check against actual winner - adjust scores - scoring system ...
         ##
         if i > 0:
 
@@ -2236,10 +2237,10 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     
     # return hot_picks, draw_number_count, hot_picks_count
     predict_numbers = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[prev_n], i, is_winner)
-                print(f"\t-> model predict next numbers ?")
+    print(f"\t-> model predict next numbers ?")
     print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
                         
-    return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer
+    return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate
 
 
 # debug = False
@@ -2255,7 +2256,7 @@ debug = False
 
 def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
 
-    global n1_model_picks_layer
+    global n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate
     debug = False
 
     # sampling_arr = n1_eve
@@ -2277,7 +2278,7 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
 
     # print(test_pattern)
     print("calculate_pattern ...")
-    hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer = calculate_pattern_v3(sampling_arr[:sample_draws])
+    hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate = calculate_pattern_v3(sampling_arr[:sample_draws])
     print("draw number count ", draw_number_count)
     draw_count_top3_nums = [0, 0, 0]
     draw_count_top3_cnt = [0, 0, 0]
@@ -2347,7 +2348,7 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
     
     # print ('picks -> ', picks)
     # return picks
-    return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums, n1_model_picks_layer
+    return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate
 
 
 #
@@ -2403,13 +2404,23 @@ draw_type = draw_types[1]
 draw_type = draw_types[1]   # EVE
 # draw_type = draw_types[0] # MID
 
-sample_arr_n1 = n1_eve
-sample_arr_n2 = n2_eve
-sample_arr_n3 = n3_eve
-# sample_arr_n1 = n1_mid
-# sample_arr_n2 = n2_mid
-# sample_arr_n3 = n3_mid
-# sample_arr_n4 = n4_eve
+if draw_type == 'EVE':
+    sample_arr_n1 = n1_eve
+    sample_arr_n2 = n2_eve
+    sample_arr_n3 = n3_eve
+elif draw_type == 'MID':
+    sample_arr_n1 = n1_mid
+    sample_arr_n2 = n2_mid
+    sample_arr_n3 = n3_mid
+    # sample_arr_n4 = n4_eve
+elif draw_type == 'ALL':
+    sample_arr_n1 = n1
+    sample_arr_n2 = n2
+    sample_arr_n3 = n3
+else:
+    print(f"stop unknown source...")
+    exit()
+        
 
 ##
 # Test comment out
@@ -2429,7 +2440,14 @@ sample_arr_n1 = sample_arr_n1[len(sample_arr_n1)-draw_sz:]
 print(f"after reverse trim {sample_arr_n1}")
 # exit()
 
-n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums, n1_model_picks_layer_nums = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
+n1_win_rate = 0 
+n1_miss_rate = 0
+n2_win_rate = 0 
+n2_miss_rate = 0
+n3_win_rate = 0 
+n3_miss_rate = 0
+
+n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums, n1_model_picks_layer_nums, n1_win_rate, n1_miss_rate = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
 print("generate numbers for N1 ...", n1_picks)
 print(f"generate numbers for N1 n1_model_picks_layer {n1_model_picks_layer_nums}")
 # exit()
@@ -2447,7 +2465,7 @@ print(f"after reverse {sample_arr_n2}")
 sample_arr_n2 = sample_arr_n2[len(sample_arr_n2)-draw_sz:]
 print(f"after reverse trim {sample_arr_n2}")
 
-n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums, n2_model_picks_layer_nums = generate_numbers('N2', draw_type, sample_arr_n2, draw_sz)
+n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums, n2_model_picks_layer_nums, n2_win_rate, n2_miss_rate  = generate_numbers('N2', draw_type, sample_arr_n2, draw_sz)
 print("generate numbers for N2 ...", n2_picks)
 print(f"generate numbers for N2 n1_model_picks_layer {n2_model_picks_layer_nums}")
 
@@ -2464,7 +2482,7 @@ print(f"after reverse {sample_arr_n3}")
 sample_arr_n3 = sample_arr_n3[len(sample_arr_n3)-draw_sz:]
 print(f"after reverse trim {sample_arr_n3}")
 
-n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums, n3_model_picks_layer_nums = generate_numbers('N3', draw_type, sample_arr_n3, draw_sz)
+n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums, n3_model_picks_layer_nums, n3_win_rate, n3_miss_rate  = generate_numbers('N3', draw_type, sample_arr_n3, draw_sz)
 print("generate numbers for N3 ...", n3_picks)
 print(f"generate numbers for N3 n1_model_picks_layer {n3_model_picks_layer_nums}")
 
@@ -2759,9 +2777,11 @@ elif generated_method == 'combo':
 
         print (f"Generate numbers by model_picks_layer numbers ...")
         print (f"n1_model_picks_layer_nums {n1_model_picks_layer_nums}")
+        print (f"N1 acc .. {n1_win_rate} {n1_miss_rate} {int( (n1_win_rate/n1_miss_rate) * 100) }%")
         print (f"n2_model_picks_layer_nums {n2_model_picks_layer_nums}")
+        print (f"N2 acc .. {n2_win_rate} {n2_miss_rate} {int( (n2_win_rate/n2_miss_rate) * 100) }%")
         print (f"n3_model_picks_layer_nums {n3_model_picks_layer_nums}")
-                
+        print (f"N3 acc .. {n3_win_rate} {n3_miss_rate} {int( (n3_win_rate/n3_miss_rate) * 100) }%")
         n = 0
         generated_combo_picks = generate_combo_picks(n1_model_picks_layer_nums, n2_model_picks_layer_nums, n3_model_picks_layer_nums)
         for combo_pick in generated_combo_picks:
