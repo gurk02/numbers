@@ -183,6 +183,52 @@ n1_pairs_predict_store = [
 
 # actual - pair count
 n1_pairs_store = [ 
+
+[ 
+                       #BASE - PAIR - ALL GAME
+[0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
+[0,0,0,0,0,0,0,0,0,0], #1,
+[0,0,0,0,0,0,0,0,0,0], #2
+[0,0,0,0,0,0,0,0,0,0], #3
+[0,0,0,0,0,0,0,0,0,0], #4
+[0,0,0,0,0,0,0,0,0,0], #5
+[0,0,0,0,0,0,0,0,0,0], #6
+[0,0,0,0,0,0,0,0,0,0], #7
+[0,0,0,0,0,0,0,0,0,0], #8
+[0,0,0,0,0,0,0,0,0,0], #9
+], 
+
+[ 
+                       #BASE - PAIR - MID GAME
+[0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
+[0,0,0,0,0,0,0,0,0,0], #1,
+[0,0,0,0,0,0,0,0,0,0], #2
+[0,0,0,0,0,0,0,0,0,0], #3
+[0,0,0,0,0,0,0,0,0,0], #4
+[0,0,0,0,0,0,0,0,0,0], #5
+[0,0,0,0,0,0,0,0,0,0], #6
+[0,0,0,0,0,0,0,0,0,0], #7
+[0,0,0,0,0,0,0,0,0,0], #8
+[0,0,0,0,0,0,0,0,0,0], #9
+],
+
+[ 
+                       #BASE - PAIR - EVE GAME
+[0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
+[0,0,0,0,0,0,0,0,0,0], #1,
+[0,0,0,0,0,0,0,0,0,0], #2
+[0,0,0,0,0,0,0,0,0,0], #3
+[0,0,0,0,0,0,0,0,0,0], #4
+[0,0,0,0,0,0,0,0,0,0], #5
+[0,0,0,0,0,0,0,0,0,0], #6
+[0,0,0,0,0,0,0,0,0,0], #7
+[0,0,0,0,0,0,0,0,0,0], #8
+[0,0,0,0,0,0,0,0,0,0], #9
+]
+
+]   # end n1_pairs_store
+
+n2_pairs_store = [ 
                        #BASE - PAIR
 [0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
 [0,0,0,0,0,0,0,0,0,0], #1,
@@ -195,6 +241,26 @@ n1_pairs_store = [
 [0,0,0,0,0,0,0,0,0,0], #8
 [0,0,0,0,0,0,0,0,0,0], #9
 ]
+
+n3_pairs_store = [ 
+                       #BASE - PAIR
+[0,0,0,0,0,0,0,0,0,0], #0 - 0, 1, 2, 3, 4, 5, 6, 7, 8,
+[0,0,0,0,0,0,0,0,0,0], #1,
+[0,0,0,0,0,0,0,0,0,0], #2
+[0,0,0,0,0,0,0,0,0,0], #3
+[0,0,0,0,0,0,0,0,0,0], #4
+[0,0,0,0,0,0,0,0,0,0], #5
+[0,0,0,0,0,0,0,0,0,0], #6
+[0,0,0,0,0,0,0,0,0,0], #7
+[0,0,0,0,0,0,0,0,0,0], #8
+[0,0,0,0,0,0,0,0,0,0], #9
+]
+
+n1_pairs_store_ALL_idx = 0
+n1_pairs_store_MID_idx = 1
+n1_pairs_store_EVE_idx = 2
+
+
 # PAIRS - BASE, PAIR
 # 0,0
 # 0,1
@@ -414,18 +480,47 @@ i = 0
 i_mid = 0
 i_eve = 0
 n1_eve_num = ""
-n1_base = ""
+n1_mid_num = ""
+n1_all_num = ""
+n1_base_eve = ""
+n1_base_mid = ""
+n1_base_all = ""
+prev_entry = ""
+n1_source_debug = False
+zero_zero = 0       # testing 0-0 pair count  # spot checking if source good and algo below works ok reading source
 for entry in numbers_dl:
+    swap = ""
     n1[i] = int(entry['n1']) #extract n1 from each line entry
+    n1_all_num = n1[i]
     n1_cnt[n1[i]] += 1
 
     n1_cnt_prec[n1[i]] = round( n1_cnt[n1[i]] / len(numbers_dl) , 3)
 
+    if i == 0:
+        n1_base_all = n1_all_num
+    elif i > 0:
+        swap = n1_base_all
+        n1_base_all = n1_all_num
+        n1_all_num = swap
+        n1_pairs_store[n1_pairs_store_ALL_idx][n1_base_all][n1_all_num] += 1
+        # print(f"all# {i} storing n1_base {n1_base_all}, n1_all_num {n1_all_num} valve {n1_pairs_store[n1_pairs_store_ALL_idx][n1_base_all][n1_all_num]}")
 
     if entry['draw']=='MID':
 
         n1_mid[i_mid] = int(entry['n1'])
+        n1_mid_num = n1_mid[i_mid]
         n1_mid_cnt[n1[i]] += 1
+  
+        if i_mid == 0: #n1_base == "":
+            n1_base_mid = n1_mid_num
+        elif i_mid > 0:  #n1_base != "":
+                    
+            #swap nums cause we want to go in reverse from bottom up 
+            swap = n1_base_mid
+            n1_base_mid = n1_mid_num
+            n1_mid_num = swap
+            n1_pairs_store[n1_pairs_store_MID_idx][n1_base_mid][n1_mid_num] += 1  # REVERSE cause we want to go bottom up but we are reading file top to bottom
+            # print(f"i_mid# {i_mid} storing n1_base {n1_base_mid}, n1_eve_num {n1_mid_num} valve {n1_pairs_store[n1_pairs_store_MID_idx][n1_base_mid][n1_mid_num]}")
         i_mid += 1
 
     elif entry['draw']=='EVE':
@@ -436,16 +531,16 @@ for entry in numbers_dl:
        
         if i_eve == 0: #n1_base == "":
             #n1_base = n1_eve_num
-            n1_base = n1_eve_num
+            n1_base_eve = n1_eve_num
         elif i_eve > 0:  #n1_base != "":
             # n1_pairs_store[n1_base][n1_eve_num] += 1 
             
             #swap nums cause we want to go in reverse from bottom up 
-            swap = n1_base
-            n1_base = n1_eve_num
+            swap = n1_base_eve
+            n1_base_eve = n1_eve_num
             n1_eve_num = swap
-            n1_pairs_store[n1_base][n1_eve_num] += 1  # REVERSE cause we want to go bottom up but we are reading file top to bottom
-            print(f"i_eve# {i_eve} storing n1_base {n1_base}, n1_eve_num {n1_eve_num} valve {n1_pairs_store[n1_base][n1_eve_num]}")
+            n1_pairs_store[n1_pairs_store_EVE_idx][n1_base_eve][n1_eve_num] += 1  # REVERSE cause we want to go bottom up but we are reading file top to bottom
+            # print(f"i_eve# {i_eve} storing n1_base {n1_base_eve}, n1_eve_num {n1_eve_num} valve {n1_pairs_store[n1_pairs_store_EVE_idx][n1_base_eve][n1_eve_num]}")
             # current num becomes n1_base
             #n1_base = n1_eve_num
 
@@ -454,16 +549,39 @@ for entry in numbers_dl:
     #print(f"i {i}, n1 {n1[i]}")
     i += 1
 
+    #
+    # debugging: check if specfic base, pair exists and count
+    # 
+    if (n1_source_debug == True and n1_base_all == 0 and n1_all_num == 0):
+        zero_zero += 1
+        print(f"-> {n1[i]}")
+        print(f"prev entry {prev_entry}")
+        print(f"entry {entry}")
+        print(f"zero_zero {zero_zero} all# {i} storing n1_base {n1_base_all}, n1_all_num {n1_all_num} valve {n1_pairs_store[n1_pairs_store_ALL_idx][n1_base_all][n1_all_num]}")
+        if zero_zero == 5:
+            break
+    prev_entry = entry
+
+print (f"len(n1){len(n1)}, len(n1_mid) {len(n1_mid)}, len(n1_eve) {len(n1_eve)}")
+print(n1_pairs_store[n1_pairs_store_ALL_idx])
+print(n1_pairs_store[n1_pairs_store_MID_idx])
+print(n1_pairs_store[n1_pairs_store_EVE_idx])
+
+# exit()
+
 #
 # Test find highest in n1_pairs_store
 #
 print(n1_pairs_store)
-highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store)
+highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store[n1_pairs_store_MID_idx])
+
 
 i = 0
 for pair in highest_pairs:
     print(f"pair#{i}, {pair}")
     i += 1
+
+# exit()
 
 # exit()
 
@@ -1486,7 +1604,7 @@ def max_number(array):
 #
 # Update Model
 #
-def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, pairs_store_for_num, plays_i, is_winner):
+def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, pairs_store_for_num, plays_i, is_winner, drawtype_store):
 
     global n1_model_base_num_layer, n1_model_attribute1, n1_model_attribute2, n1_model_attribute3, n1_model_attribute4
     global n1_model_score_layer, n1_model_picks_layer, n1_model_plays_cnt, n1_model_win_rate,  n1_model_miss_rate, n1_model_actual_curr_winner_num, n1_model_match_cnt
@@ -1508,7 +1626,7 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
 
     print(f"attribute:1 {draw_number_count}")
     print(f"attribute:2 {hot_picks_count}")
-    print(f"attribute:3 {n1_pairs_store[most_recent_num_drawn]}")
+    print(f"attribute:3 {n1_pairs_store[drawtype_store][most_recent_num_drawn]}")
     print(f"base score layer is {n1_model_score_layer[n1_model_base_num_layer]}")
     print(f"n1 model base num is {n1_model_base_num_layer}")
 
@@ -1591,7 +1709,7 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
 
     # print(f"n1 model predict numbers...{n1_model_picks_layer}")
 
-    return n1_model_picks_layer         #predict next number
+    return n1_model_picks_layer, n1_model_attribute1, n1_model_attribute2, n1_model_attribute3, n1_model_score_layer, calculated_n1_model_score_layer           #predict next number
 
 
 def update_model_score_layer(n1_model_score_layer, pos, valve):#
@@ -1600,8 +1718,8 @@ def update_model_score_layer(n1_model_score_layer, pos, valve):#
     
 #
 # Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw - dont' use outdated!
-#
-def calculate_pattern(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
+#   Old:
+def calculate_pattern_defunk(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
     # print("pattern ", pattern)
     
     # calculate_n1_ppattern_V3(pattern)
@@ -1752,8 +1870,8 @@ def calculate_pattern(pattern):         # calculate occurence count and pattern 
 
 #
 # Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw - don't use outdated!
-#
-def calculate_pattern_v2(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
+#   Old:
+def calculate_pattern_v2_defunk(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
     # print("pattern ", pattern)
     
     # calculate_n1_ppattern_V3(pattern)
@@ -1915,8 +2033,8 @@ def calculate_pattern_v2(pattern):         # calculate occurence count and patte
 
 #
 # Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
-#
-def calculate_pattern_v3(pattern):         # calculate occurence count and pattern count defined by hot_pick function rule
+#   Active:
+def calculate_pattern_v3(pattern, draw_store):         # calculate occurence count and pattern count defined by hot_pick function rule
     # print("pattern ", pattern)
     
     # calculate_n1_ppattern_V3(pattern)
@@ -1996,6 +2114,10 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # pattern = [ 0,  9, 9, 9, 3, 9]
     #pattern = [9, 4, 1, 3, 4, 1]    # outcome win rate: 2, miss rate: 3
 
+    print(f"calculating pattern using pairs store {draw_store}")
+    print(f"n1 pairs store {n1_pairs_store[draw_store]}")
+    # exit()
+
     ##
     # Magic:
     ##
@@ -2015,7 +2137,7 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
             print(f"prev draw {prev_n} current draw num is {n}, previous n1_model_picks_layer {n1_model_picks_layer} is winner {is_winner}")
 
             # predict_numbers = update_model_predict(n, draw_number_count, hot_picks_count, n1_pairs_store[most_recent_num_drawn], i, is_winner)
-            predict_numbers = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[prev_n], i, is_winner)
+            predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
 
             print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
                     
@@ -2053,7 +2175,7 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
                     winner3 = n1_model_picks_layer[2]
                 elif x == n1_model_picks_layer[0] or x == n1_model_picks_layer[1] or x == n1_model_picks_layer[2]:      # if predict missed to match, penalty is heavy
                     # n1_model_score_layer[prev_n][ int(x) ] -= 5
-                    n1_model_score_layer[prev_n][ int(x) ] -= 5
+                    n1_model_score_layer[prev_n][ int(x) ] -= 3
                     print(f"{x} draw {n} does not match guess picks!  {n1_model_picks_layer}")
                     print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
                 elif x == n and (is_winner == False and is_winner_guess == False): # drawn winning number increase point
@@ -2062,7 +2184,7 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
                     print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
                 else:   # all other numbers 1 point
                     1   # else for all other numbers add 1 to score
-                    n1_model_score_layer[prev_n][ int(x) ] += 1
+                    n1_model_score_layer[prev_n][ int(x) ] += 3
                     
                 print(f"update n1 model score layer is {n1_model_score_layer[prev_n]} for pair {prev_n}, current draw is {n}")
                 # if is_winner == True:
@@ -2236,11 +2358,11 @@ def calculate_pattern_v3(pattern):         # calculate occurence count and patte
     # exit()
     
     # return hot_picks, draw_number_count, hot_picks_count
-    predict_numbers = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[prev_n], i, is_winner)
+    predict_numbers,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
     print(f"\t-> model predict next numbers ?")
     print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
                         
-    return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate
+    return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer
 
 
 # debug = False
@@ -2276,9 +2398,23 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
     if draw_time == '':
         draw_time = 'unknown'
 
+    draw_store = 0
+    if draw_time == 'MID':
+        draw_store = n1_pairs_store_MID_idx
+    elif draw_time == 'EVE':
+        draw_store = n1_pairs_store_EVE_idx
+    elif draw_time == 'ALL':
+        draw_store = n1_pairs_store_ALL_idx
+    else:
+        print(f"unknown draw source ...")
+        exit()
+
+    print(f"generating numbers: using pairs store idx {draw_store}, {draw_time}")
+ 
+
     # print(test_pattern)
     print("calculate_pattern ...")
-    hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate = calculate_pattern_v3(sampling_arr[:sample_draws])
+    hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = calculate_pattern_v3(sampling_arr[:sample_draws], draw_store)
     print("draw number count ", draw_number_count)
     draw_count_top3_nums = [0, 0, 0]
     draw_count_top3_cnt = [0, 0, 0]
@@ -2348,7 +2484,7 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
     
     # print ('picks -> ', picks)
     # return picks
-    return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate
+    return picks, draw_count_top3_nums ,pattern_hot_picks_top3_nums, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer
 
 
 #
@@ -2387,7 +2523,7 @@ draw_sz = sampling_draws[1]
 
 # draw_sz = 15
 # draw_sz = 10
-draw_sz = len(n1_eve)
+# draw_sz = len(n1_eve)
 # draw_sz = 30
 # draw_sz = 21
 # draw_sz = 14
@@ -2401,44 +2537,76 @@ draw_type = draw_types[1]
 # sample_arr_n3 = n3_mid
 # sample_arr_n4 = n4_mid
 
-draw_type = draw_types[1]   # EVE
-# draw_type = draw_types[0] # MID
+# draw_type = draw_types[0]   # ALL
+# draw_type = draw_types[1]   # EVE
+draw_type = draw_types[0]   # MID
+# draw_type = draw_types[2] # ALL
+sample_arr_n1 = []
+sample_arr_n2 = []
+sample_arr_n3 = []
 
 if draw_type == 'EVE':
     sample_arr_n1 = n1_eve
     sample_arr_n2 = n2_eve
     sample_arr_n3 = n3_eve
+    draw_sz = len(n1_eve)
+
 elif draw_type == 'MID':
     sample_arr_n1 = n1_mid
     sample_arr_n2 = n2_mid
     sample_arr_n3 = n3_mid
+    draw_sz = len(n1_mid)
     # sample_arr_n4 = n4_eve
+
 elif draw_type == 'ALL':
     sample_arr_n1 = n1
     sample_arr_n2 = n2
     sample_arr_n3 = n3
+    draw_sz = len(n1)
+
 else:
     print(f"stop unknown source...")
     exit()
-        
+
+print(f"draw_type selected {draw_type}")
+# exit()   
 
 ##
-# Test comment out
-#
+# Reverse source of N1, N2, N3 cause reading from top to bottom but want data to go from bottom to top
+##
+
+    ##
+    # Test comment out
+    #
 
 ##
 # N1 - RESULTS
 ##
 print(f"before reverse {sample_arr_n1}")
-i = 0
-for entry in n1_eve:
-    print(f"i{i}, entry {entry}")
-    i += 1
+# i = 0
+# for entry in n1_eve:
+#     print(f"i{i}, entry {entry}")
+#     i += 1
+
 sample_arr_n1 = sample_arr_n1[::-1]
 print(f"after reverse {sample_arr_n1}")
 sample_arr_n1 = sample_arr_n1[len(sample_arr_n1)-draw_sz:]
 print(f"after reverse trim {sample_arr_n1}")
+
+
+# sample_arr_n2 = sample_arr_n2[::-1]
+# print(f"after reverse {sample_arr_n2}")
+# sample_arr_n2 = sample_arr_n2[len(sample_arr_n2)-draw_sz:]
+# print(f"after reverse trim {sample_arr_n2}")
+
+# sample_arr_n3 = sample_arr_n3[::-1]
+# print(f"after reverse {sample_arr_n3}")
+# sample_arr_n3 = sample_arr_n3[len(sample_arr_n3)-draw_sz:]
+# print(f"after reverse trim {sample_arr_n3}")
+    
+    
 # exit()
+
 
 n1_win_rate = 0 
 n1_miss_rate = 0
@@ -2447,44 +2615,55 @@ n2_miss_rate = 0
 n3_win_rate = 0 
 n3_miss_rate = 0
 
-n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums, n1_model_picks_layer_nums, n1_win_rate, n1_miss_rate = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
+n1_picks, n1_draw_count_top3_nums ,n1_pattern_hot_picks_top3_nums, n1_model_picks_layer_nums, n1_win_rate, n1_miss_rate, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = generate_numbers('N1', draw_type,sample_arr_n1,draw_sz)
 print("generate numbers for N1 ...", n1_picks)
 print(f"generate numbers for N1 n1_model_picks_layer {n1_model_picks_layer_nums}")
 # exit()
 
-##
-# N1 - RESULTS
-##
-print(f"before reverse {sample_arr_n2}")
-# i = 0
-# for entry in n2_eve:
-#     print(f"i{i}, entry {entry}")
-#     i += 1
-sample_arr_n2 = sample_arr_n2[::-1]
-print(f"after reverse {sample_arr_n2}")
-sample_arr_n2 = sample_arr_n2[len(sample_arr_n2)-draw_sz:]
-print(f"after reverse trim {sample_arr_n2}")
-
-n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums, n2_model_picks_layer_nums, n2_win_rate, n2_miss_rate  = generate_numbers('N2', draw_type, sample_arr_n2, draw_sz)
-print("generate numbers for N2 ...", n2_picks)
-print(f"generate numbers for N2 n1_model_picks_layer {n2_model_picks_layer_nums}")
 
 ##
-# N1 - RESULTS
+# For testing N1 ignore N2, N3
 ##
-print(f"before reverse {sample_arr_n3}")
-# i = 0
-# for entry in n3_eve:
-#     print(f"i{i}, entry {entry}")
-#     i += 1
-sample_arr_n3 = sample_arr_n3[::-1]
-print(f"after reverse {sample_arr_n3}")
-sample_arr_n3 = sample_arr_n3[len(sample_arr_n3)-draw_sz:]
-print(f"after reverse trim {sample_arr_n3}")
+n2_draw_count_top3_nums = [ 0, 0, 0]
+n2_pattern_hot_picks_top3_nums = [ 0, 0, 0]
+n3_draw_count_top3_nums = [ 0, 0, 0]
+n3_pattern_hot_picks_top3_nums = [ 0, 0, 0]
+n2_model_picks_layer_nums = [ 0, 0, 0 ]
+n3_model_picks_layer_nums = [ 0, 0, 0]
 
-n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums, n3_model_picks_layer_nums, n3_win_rate, n3_miss_rate  = generate_numbers('N3', draw_type, sample_arr_n3, draw_sz)
-print("generate numbers for N3 ...", n3_picks)
-print(f"generate numbers for N3 n1_model_picks_layer {n3_model_picks_layer_nums}")
+# ##
+# # N2 - RESULTS
+# ##
+# print(f"before reverse {sample_arr_n2}")
+# # i = 0
+# # for entry in n2_eve:
+# #     print(f"i{i}, entry {entry}")
+# #     i += 1
+# sample_arr_n2 = sample_arr_n2[::-1]
+# print(f"after reverse {sample_arr_n2}")
+# sample_arr_n2 = sample_arr_n2[len(sample_arr_n2)-draw_sz:]
+# print(f"after reverse trim {sample_arr_n2}")
+
+# n2_picks, n2_draw_count_top3_nums ,n2_pattern_hot_picks_top3_nums, n2_model_picks_layer_nums, n2_win_rate, n2_miss_rate,  n2_attribute1, n2_attribute2, n2_attribute3, n2_score_layer, calculated_n2_score_layer  = generate_numbers('N2', draw_type, sample_arr_n2, draw_sz)
+# print("generate numbers for N2 ...", n2_picks)
+# print(f"generate numbers for N2 n1_model_picks_layer {n2_model_picks_layer_nums}")
+
+# ##
+# # N3 - RESULTS
+# ##
+# print(f"before reverse {sample_arr_n3}")
+# # i = 0
+# # for entry in n3_eve:
+# #     print(f"i{i}, entry {entry}")
+# #     i += 1
+# sample_arr_n3 = sample_arr_n3[::-1]
+# print(f"after reverse {sample_arr_n3}")
+# sample_arr_n3 = sample_arr_n3[len(sample_arr_n3)-draw_sz:]
+# print(f"after reverse trim {sample_arr_n3}")
+
+# n3_picks, n3_draw_count_top3_nums ,n3_pattern_hot_picks_top3_nums, n3_model_picks_layer_nums, n3_win_rate, n3_miss_rate,  n3_attribute1, n3_attribute2, n3_attribute3, n3_score_layer, calculated_n3_score_layer  = generate_numbers('N3', draw_type, sample_arr_n3, draw_sz)
+# print("generate numbers for N3 ...", n3_picks)
+# print(f"generate numbers for N3 n1_model_picks_layer {n3_model_picks_layer_nums}")
 
 # n4_picks, n4_draw_count_top3_nums ,n4_pattern_hot_picks_top3_nums = generate_numbers('N4', draw_type,sample_arr_n4,draw_sz)
 # print("generate numbers for N4 ...", n4_picks)
@@ -2608,7 +2787,7 @@ def is_numbers_in_source(n1,n2,n3, source):
 #         number_repeat_cnt += 1
 
 #     if combo_pick[2] == combo_pick[0] or combo_pick[2] == combo_pick[1] or combo_pick[2] == combo_pick[3]:
-#         # print (f"number repeat {combo_pick}")
+#         # print (f"number repeat {combo_picn2_model_picks_layer_numsk}")
 #         # return True
 #         number_repeat_cnt += 1
 
@@ -2775,13 +2954,29 @@ elif generated_method == 'combo':
             dump_to_file(generated_hotpicks_combo_file_csv, data, 'a')
             n +=1
 
+        print('\n\n\t\t***REPORT***',today_date)
+        print(f" draw type {draw_type} draw_sz {draw_sz}")
+
         print (f"Generate numbers by model_picks_layer numbers ...")
         print (f"n1_model_picks_layer_nums {n1_model_picks_layer_nums}")
         print (f"N1 acc .. {n1_win_rate} {n1_miss_rate} {int( (n1_win_rate/n1_miss_rate) * 100) }%")
-        print (f"n2_model_picks_layer_nums {n2_model_picks_layer_nums}")
-        print (f"N2 acc .. {n2_win_rate} {n2_miss_rate} {int( (n2_win_rate/n2_miss_rate) * 100) }%")
-        print (f"n3_model_picks_layer_nums {n3_model_picks_layer_nums}")
-        print (f"N3 acc .. {n3_win_rate} {n3_miss_rate} {int( (n3_win_rate/n3_miss_rate) * 100) }%")
+        # print (f"n2_model_picks_layer_nums {n2_model_picks_layer_nums}")
+        # print (f"N2 acc .. {n2_win_rate} {n2_miss_rate} {int( (n2_win_rate/n2_miss_rate) * 100) }%")
+        # print (f"n3_model_picks_layer_nums {n3_model_picks_layer_nums}")
+        # print (f"N3 acc .. {n3_win_rate} {n3_miss_rate} {int( (n3_win_rate/n3_miss_rate) * 100) }%")
+
+        ##
+        # debug: calculated data
+        ##
+        print("\tN1")
+        print(f"pairs store {n1_pairs_store}")
+        print(f" n1_attribute1 {n1_attribute1}")
+        print(f" n1_attribute2 {n1_attribute2}")
+        print(f" n1_attribute3 {n1_attribute3}")
+        print(f" n1_score_layer {n1_score_layer}")
+        print(f" calculated_n1_score_layer {calculated_n1_score_layer}")
+        
+
         n = 0
         generated_combo_picks = generate_combo_picks(n1_model_picks_layer_nums, n2_model_picks_layer_nums, n3_model_picks_layer_nums)
         for combo_pick in generated_combo_picks:
