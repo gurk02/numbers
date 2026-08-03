@@ -1617,7 +1617,8 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     n1_model_base_num_layer = most_recent_num_drawn # input layer
     n1_model_attribute1 = draw_number_count         # COUNT
     n1_model_attribute2 = hot_picks_count           # HP PATTERN
-    n1_model_attribute3 = pairs_store_for_num       # PAIRS PATTERN - for specific num
+    # n1_model_attribute3 = pairs_store_for_num       # PAIRS PATTERN - for specific num
+    n1_model_attribute3 = n1_pairs_store[drawtype_store][most_recent_num_drawn]       # PAIRS PATTERN - for specific num
     n1_model_attribute4 = []                        # HIGH LOW
 
     # n1_model_score_layer = [
@@ -1633,13 +1634,29 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     #
     # calculate total score from attribute 1 -3
     #
+    weight1 = 3
+    weight2 = 2
     m = 0
     while m < 10:
         # n1_model_score_layer[m] = n1_model_score_layer[m] + n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m] 
         # n1_model_score_layer[n1_model_base_num_layer][m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m])
         # n1_model_score_layer[n1_model_base_num_layer][m] = n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m]
-        calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m])
+        # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + int((n1_model_attribute1[m]/2) * int(n1_model_attribute2[m]/2) * (n1_model_attribute3[m] * 1) )
+        ##
+        # debug
+        ##
+        print(f"m {m}")
+        print(f"n1_model_score_layer[n1_model_base_num_layer][m] {n1_model_score_layer[n1_model_base_num_layer][m]}")
+        print(f"n1_model_attribute1[m] {n1_model_attribute1[m]}")
+        print(f"n1_model_attribute2[m] {n1_model_attribute2[m]}")
+        print(f"n1_model_attribute3[m] {n1_model_attribute3[m]}")
+        # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] * n1_model_attribute2[m] * n1_model_attribute3[m]  )
+        double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m]) 
+        print(f"double it {( 2 * n1_model_attribute3[m]) }")
+        # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( ( n1_model_attribute1[m] * weight2) * ( n1_model_attribute2[m] * weight1) * double_it  )
+        calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( n1_model_attribute1[m] * n1_model_attribute2[m] * double_it  )
 
+        print(f" calculated_n1_model_score_layer[m] { calculated_n1_model_score_layer[m]}")
         m += 1
 
     print(f"n1 model score layer is {n1_model_score_layer[n1_model_base_num_layer] }")
@@ -2184,7 +2201,7 @@ def calculate_pattern_v3(pattern, draw_store):         # calculate occurence cou
                     print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
                 else:   # all other numbers 1 point
                     1   # else for all other numbers add 1 to score
-                    n1_model_score_layer[prev_n][ int(x) ] += 3
+                    n1_model_score_layer[prev_n][ int(x) ] += 1
                     
                 print(f"update n1 model score layer is {n1_model_score_layer[prev_n]} for pair {prev_n}, current draw is {n}")
                 # if is_winner == True:
