@@ -1953,9 +1953,12 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
         if n1_model_attribute3[m] == 0:
             print(f"adjust n1_model_attribute3[m] {n1_model_attribute3[m]} to 1")
             n1_model_attribute3[m] = 1
+          
 
         # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] * n1_model_attribute2[m] * n1_model_attribute3[m]  )
+        # double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
         double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
+
         print(f"double it {( 2 * n1_model_attribute3[m]) }")
         # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( ( n1_model_attribute1[m] * weight2) * ( n1_model_attribute2[m] * weight1) * double_it  )
         
@@ -2371,7 +2374,8 @@ def calculate_pattern_v3(pattern, draw_store, digit):         # calculate occure
         exit()
 
     print(f"calculate_pattern_v3 analyzing {digit} pattern {pattern}")
-    if digit == 'N2':
+    if digit == 'N10':
+        # print(f"pattern {pattern}")
         exit()
 
     n1_model_base_num_layer = -1    # input layer
@@ -2712,7 +2716,9 @@ def calculate_pattern_v3(pattern, draw_store, digit):         # calculate occure
     print(f"\t-> model predict next numbers ?")
 
     print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
-                        
+
+    if digit == 'N10':
+        exit()               
     return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer
 
 
@@ -2948,20 +2954,20 @@ print(f"after reverse {sample_arr_n1}")
 sample_arr_n1 = sample_arr_n1[len(sample_arr_n1)-draw_sz:]
 print(f"after reverse trim {sample_arr_n1}")
 
-print(f"before reverse {sample_arr_n2}")
+# print(f"before reverse {sample_arr_n2}")
 
-sample_arr_n2 = sample_arr_n2[::-1]
-print(f"after reverse {sample_arr_n2}")
-sample_arr_n2 = sample_arr_n2[len(sample_arr_n2)-draw_sz:]
-print(f"after reverse trim {sample_arr_n2}")
+# sample_arr_n2 = sample_arr_n2[::-1]
+# print(f"after reverse {sample_arr_n2}")
+# sample_arr_n2 = sample_arr_n2[len(sample_arr_n2)-draw_sz:]
+# print(f"after reverse trim {sample_arr_n2}")
 
 
-print(f"before reverse {sample_arr_n3}")
+# print(f"before reverse {sample_arr_n3}")
 
-sample_arr_n3 = sample_arr_n3[::-1]
-print(f"after reverse {sample_arr_n3}")
-sample_arr_n3 = sample_arr_n3[len(sample_arr_n3)-draw_sz:]
-print(f"after reverse trim {sample_arr_n3}")
+# sample_arr_n3 = sample_arr_n3[::-1]
+# print(f"after reverse {sample_arr_n3}")
+# sample_arr_n3 = sample_arr_n3[len(sample_arr_n3)-draw_sz:]
+# print(f"after reverse trim {sample_arr_n3}")
     
     
 # exit()
