@@ -542,8 +542,9 @@ def find_highest_pairs(pairs_store):
     return pairs, top_pair, top_highest
 
 
-
-
+##
+# N1 
+##
 i = 0
 i_mid = 0
 i_eve = 0
@@ -553,7 +554,9 @@ n1_all_num = ""
 n1_base_eve = ""
 n1_base_mid = ""
 n1_base_all = ""
-prev_entry = ""
+prev_all_entry = ""
+prev_mid_entry = ""
+prev_eve_entry = ""
 n1_source_debug = False
 zero_zero = 0       # testing 0-0 pair count  # spot checking if source good and algo below works ok reading source
 for entry in numbers_dl:
@@ -590,6 +593,7 @@ for entry in numbers_dl:
             n1_pairs_store[n1_pairs_store_MID_idx][n1_base_mid][n1_mid_num] += 1  # REVERSE cause we want to go bottom up but we are reading file top to bottom
             # print(f"i_mid# {i_mid} storing n1_base {n1_base_mid}, n1_eve_num {n1_mid_num} valve {n1_pairs_store[n1_pairs_store_MID_idx][n1_base_mid][n1_mid_num]}")
         i_mid += 1
+        prev_mid_entry = entry
 
     elif entry['draw']=='EVE':
       
@@ -613,6 +617,7 @@ for entry in numbers_dl:
             #n1_base = n1_eve_num
 
         i_eve += 1
+        prev_eve_entry = entry
         
     #print(f"i {i}, n1 {n1[i]}")
     i += 1
@@ -620,38 +625,32 @@ for entry in numbers_dl:
     #
     # debugging: check if specfic base, pair exists and count
     # 
-    if (n1_source_debug == True and n1_base_all == 0 and n1_all_num == 0):
+    if (n1_source_debug == True and n1_base_eve == 0 and n1_eve_num == 0):
         zero_zero += 1
         print(f"-> {n1[i]}")
-        print(f"prev entry {prev_entry}")
+        print(f"prev entry {prev_eve_entry}")
         print(f"entry {entry}")
         print(f"zero_zero {zero_zero} all# {i} storing n1_base {n1_base_all}, n1_all_num {n1_all_num} valve {n1_pairs_store[n1_pairs_store_ALL_idx][n1_base_all][n1_all_num]}")
         if zero_zero == 5:
             break
-    prev_entry = entry
 
-print (f"len(n1){len(n1)}, len(n1_mid) {len(n1_mid)}, len(n1_eve) {len(n1_eve)}")
-print(n1_pairs_store[n1_pairs_store_ALL_idx])
-print(n1_pairs_store[n1_pairs_store_MID_idx])
-print(n1_pairs_store[n1_pairs_store_EVE_idx])
+    prev_all_entry = entry
 
-# exit()
 
-#
+
+# print (f"len(n1){len(n1)}, len(n1_mid) {len(n1_mid)}, len(n1_eve) {len(n1_eve)}")
+# print(n1_pairs_store[n1_pairs_store_ALL_idx])
+# print(n1_pairs_store[n1_pairs_store_MID_idx])
+# print(n1_pairs_store[n1_pairs_store_EVE_idx])
+
+
 # Test find highest in n1_pairs_store
-#
+
 print(n1_pairs_store)
-highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store[n1_pairs_store_MID_idx])
+print(f"n1_pairs_store[n1_pairs_store_EVE_idx] {n1_pairs_store[n1_pairs_store_EVE_idx]}")
+highest_pairs, pair, highest = find_highest_pairs(n1_pairs_store[n1_pairs_store_EVE_idx])
 
-
-i = 0
-for pair in highest_pairs:
-    print(f"pair#{i}, {pair}")
-    i += 1
-
-# exit()
-
-# exit()
+# # exit()
 
 #     #
 #     # N2
@@ -693,7 +692,9 @@ n2_all_num = ""
 n2_base_eve = ""
 n2_base_mid = ""
 n2_base_all = ""
-prev_entry = ""
+prev_all_entry = ""
+prev_mid_entry = ""
+prev_eve_entry = ""
 n2_source_debug = False
 zero_zero = 0       # testing 0-0 pair count  # spot checking if source good and algo below works ok reading source
 for entry in numbers_dl:
@@ -730,6 +731,7 @@ for entry in numbers_dl:
             n2_pairs_store[n2_pairs_store_MID_idx][n2_base_mid][n2_mid_num] += 1  # REVERSE cause we want to go bottom up but we are reading file top to bottom
             # print(f"i_mid# {i_mid} storing n2_base {n2_base_mid}, n2_eve_num {n2_mid_num} valve {n2_pairs_store[n2_pairs_store_MID_idx][n2_base_mid][n2_mid_num]}")
         i_mid += 1
+        prev_mid_entry = entry
 
     elif entry['draw']=='EVE':
       
@@ -753,6 +755,7 @@ for entry in numbers_dl:
             #n2_base = n2_eve_num
 
         i_eve += 1
+        prev_eve_entry = entry
         
     #print(f"i {i}, n2 {n2[i]}")
     i += 1
@@ -760,16 +763,34 @@ for entry in numbers_dl:
     #
     # debugging: check if specfic base, pair exists and count
     # 
-    if (n2_source_debug == True and n2_base_all == 0 and n2_all_num == 0):
+    if (n2_source_debug == True and n2_base_eve == 0 and n2_eve_num == 0):
         zero_zero += 1
         print(f"-> {n2[i]}")
-        print(f"prev entry {prev_entry}")
+        print(f"prev entry {prev_eve_entry}")
         print(f"entry {entry}")
         print(f"zero_zero {zero_zero} all# {i} storing n2_base {n2_base_all}, n2_all_num {n2_all_num} valve {n2_pairs_store[n2_pairs_store_ALL_idx][n2_base_all][n2_all_num]}")
         if zero_zero == 5:
             break
-    prev_entry = entry
-    
+
+    prev_all_entry = entry
+
+
+
+# Test find highest in n1_pairs_store
+
+print(n2_pairs_store)
+print(f"n2_pairs_store[n2_pairs_store_EVE_idx] {n2_pairs_store[n2_pairs_store_EVE_idx]}")
+highest_pairs, pair, highest = find_highest_pairs(n2_pairs_store[n2_pairs_store_EVE_idx])
+
+
+i = 0
+for pair in highest_pairs:
+    print(f"pair#{i}, {pair}")
+    i += 1
+
+# exit()
+
+
 #     ##
 #     # n3
 #     ##
@@ -808,7 +829,9 @@ n3_all_num = ""
 n3_base_eve = ""
 n3_base_mid = ""
 n3_base_all = ""
-prev_entry = ""
+prev_all_entry = ""
+prev_mid_entry = ""
+prev_eve_entry = ""
 n3_source_debug = False
 zero_zero = 0       # testing 0-0 pair count  # spot checking if source good and algo below works ok reading source
 for entry in numbers_dl:
@@ -845,6 +868,7 @@ for entry in numbers_dl:
             n3_pairs_store[n3_pairs_store_MID_idx][n3_base_mid][n3_mid_num] += 1  # REVERSE cause we want to go bottom up but we are reading file top to bottom
             # print(f"i_mid# {i_mid} storing n3_base {n3_base_mid}, n3_eve_num {n3_mid_num} valve {n3_pairs_store[n3_pairs_store_MID_idx][n3_base_mid][n3_mid_num]}")
         i_mid += 1
+        prev_mid_entry = entry
 
     elif entry['draw']=='EVE':
       
@@ -868,6 +892,7 @@ for entry in numbers_dl:
             #n3_base = n3_eve_num
 
         i_eve += 1
+        prev_eve_entry = entry
         
     #print(f"i {i}, n3 {n3[i]}")
     i += 1
@@ -875,16 +900,30 @@ for entry in numbers_dl:
     #
     # debugging: check if specfic base, pair exists and count
     # 
-    if (n3_source_debug == True and n3_base_all == 0 and n3_all_num == 0):
+    if (n3_source_debug == True and n3_base_eve == 0 and n3_eve_num == 0):
         zero_zero += 1
         print(f"-> {n3[i]}")
-        print(f"prev entry {prev_entry}")
+        print(f"prev entry {prev_eve_entry}")
         print(f"entry {entry}")
         print(f"zero_zero {zero_zero} all# {i} storing n3_base {n3_base_all}, n3_all_num {n3_all_num} valve {n3_pairs_store[n3_pairs_store_ALL_idx][n3_base_all][n3_all_num]}")
         if zero_zero == 5:
             break
-    prev_entry = entry
 
+    prev_all_entry = entry
+
+
+
+# Test find highest in n1_pairs_store
+
+print(n3_pairs_store)
+print(f"n3_pairs_store[n3_pairs_store_EVE_idx] {n3_pairs_store[n3_pairs_store_EVE_idx]}")
+highest_pairs, pair, highest = find_highest_pairs(n3_pairs_store[n3_pairs_store_EVE_idx])
+
+i = 0
+for pair in highest_pairs:
+    print(f"pair#{i}, {pair}")
+    i += 1
+# exit()
 
 ##
 # N4
@@ -1905,10 +1944,21 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
         print(f"n1_model_attribute1[m] {n1_model_attribute1[m]}")
         print(f"n1_model_attribute2[m] {n1_model_attribute2[m]}")
         print(f"n1_model_attribute3[m] {n1_model_attribute3[m]}")
+        if n1_model_attribute1[m] == 0:
+            print(f"adjust n1_model_attribute1[m] {n1_model_attribute1[m]} to 1")
+            n1_model_attribute1[m] = 1
+        if n1_model_attribute2[m] == 0:
+            print(f"adjust n1_model_attribute2[m] {n1_model_attribute2[m]} to 1")
+            n1_model_attribute2[m] = 1
+        if n1_model_attribute3[m] == 0:
+            print(f"adjust n1_model_attribute3[m] {n1_model_attribute3[m]} to 1")
+            n1_model_attribute3[m] = 1
+
         # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] * n1_model_attribute2[m] * n1_model_attribute3[m]  )
         double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
         print(f"double it {( 2 * n1_model_attribute3[m]) }")
         # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( ( n1_model_attribute1[m] * weight2) * ( n1_model_attribute2[m] * weight1) * double_it  )
+        
         calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( n1_model_attribute1[m] * n1_model_attribute2[m] * double_it  )
    
         print(f" calculated_n1_model_score_layer[m] { calculated_n1_model_score_layer[m]}")
@@ -2306,7 +2356,7 @@ def calculate_pattern_v2_defunk(pattern):         # calculate occurence count an
 #
 # Calculate Hot Pattern Data - last saw, count, diff last saw, rate of change of last saw
 #   Active:
-def calculate_pattern_v3(pattern, draw_store):         # calculate occurence count and pattern count defined by hot_pick function rule
+def calculate_pattern_v3(pattern, draw_store, digit):         # calculate occurence count and pattern count defined by hot_pick function rule
     # print("pattern ", pattern)
     
     # calculate_n1_ppattern_V3(pattern)
@@ -2315,6 +2365,14 @@ def calculate_pattern_v3(pattern, draw_store):         # calculate occurence cou
     
     global n1_model_base_num_layer, n1_model_attribute1, n1_model_attribute2, n1_model_attribute3, n1_model_attribute4
     global n1_model_score_layer, n1_model_picks_layer, n1_model_plays_cnt, n1_model_win_rate,  n1_model_miss_rate, n1_model_actual_curr_winner_num, n1_model_match_cnt
+
+    if digit != 'N1' and digit != 'N2' and digit != 'N3':
+        print(f"digit {digit} not valid!")
+        exit()
+
+    print(f"calculate_pattern_v3 analyzing {digit} pattern {pattern}")
+    if digit == 'N2':
+        exit()
 
     n1_model_base_num_layer = -1    # input layer
     n1_model_attribute1 = []        # COUNT
@@ -2336,6 +2394,8 @@ def calculate_pattern_v3(pattern, draw_store):         # calculate occurence cou
     [0,0,0,0,0,0,0,0,0,0], #9
 
     ]
+
+    print(f"calculate pattern v3 reset score layer {n1_model_score_layer}")
 
     n1_model_picks_layer = [        # top3 picks -predict
         0,0,0
@@ -2387,7 +2447,7 @@ def calculate_pattern_v3(pattern, draw_store):         # calculate occurence cou
     #pattern = [9, 4, 1, 3, 4, 1]    # outcome win rate: 2, miss rate: 3
 
     print(f"calculating pattern using pairs store {draw_store}")
-    print(f"n1 pairs store {n1_pairs_store[draw_store]}")
+    # print(f"n1 pairs store {n1_pairs_store[draw_store]}")
     # exit()
 
     ##
@@ -2409,7 +2469,15 @@ def calculate_pattern_v3(pattern, draw_store):         # calculate occurence cou
             print(f"prev draw {prev_n} current draw num is {n}, previous n1_model_picks_layer {n1_model_picks_layer} is winner {is_winner}")
 
             # predict_numbers = update_model_predict(n, draw_number_count, hot_picks_count, n1_pairs_store[most_recent_num_drawn], i, is_winner)
-            predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+            if digit == 'N1':
+                predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+            elif digit == 'N2':
+                predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n2_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+            elif digit == 'N3':
+                predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n3_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+            else:
+                print(f"analyzing pattern stopped digit {digit} not valid!")
+                exit()
 
             print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
                     
@@ -2498,7 +2566,7 @@ def calculate_pattern_v3(pattern, draw_store):         # calculate occurence cou
         print(f"\ncalcuate attributes #1, #2,..etc. to make predict next number ...")
         i += 1
         total_nums_val += n
-
+   
         draw_number_count[n] +=1            # attribute #1: simply count
 
         if n == 5:
@@ -2630,8 +2698,19 @@ def calculate_pattern_v3(pattern, draw_store):         # calculate occurence cou
     # exit()
     
     # return hot_picks, draw_number_count, hot_picks_count
-    predict_numbers,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+    # predict_numbers,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+    if digit == 'N1':
+        predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n1_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+    elif digit == 'N2':
+        predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n2_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+    elif digit == 'N3':
+        predict_numbers, n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = update_model_predict(prev_n, draw_number_count, hot_picks_count, n3_pairs_store[draw_store][prev_n], i, is_winner, draw_store)
+    else:
+        print(f"analyzing pattern stopped digit {digit} not valid!")
+        exit()
+
     print(f"\t-> model predict next numbers ?")
+
     print(f"predict winner numbers (n1_model_score_layer) {n1_model_score_layer}")
                         
     return hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer
@@ -2667,8 +2746,12 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
 
     if digit == '':
         digit = 'unknown'
+        print(f"digit {digit} not valid")
+        exit()
     if draw_time == '':
         draw_time = 'unknown'
+        print(f"draw_time {draw_time} not valid")
+        exit()
 
     draw_store = 0
     if draw_time == 'MID':
@@ -2681,12 +2764,12 @@ def generate_numbers(digit, draw_time, sample_arr, sampling_draws):
         print(f"unknown draw source ...")
         exit()
 
-    print(f"generating numbers: using pairs store idx {draw_store}, {draw_time}")
+    print(f"generating numbers  for {digit}: using pairs store idx {draw_store}, {draw_time}")
  
 
     # print(test_pattern)
     print("calculate_pattern ...")
-    hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = calculate_pattern_v3(sampling_arr[:sample_draws], draw_store)
+    hot_picks, draw_number_count, hot_picks_count, n1_model_picks_layer, n1_model_win_rate, n1_model_miss_rate,  n1_attribute1, n1_attribute2, n1_attribute3, n1_score_layer, calculated_n1_score_layer = calculate_pattern_v3(sampling_arr[:sample_draws], draw_store, digit)
     print("draw number count ", draw_number_count)
     draw_count_top3_nums = [0, 0, 0]
     draw_count_top3_cnt = [0, 0, 0]
@@ -2810,8 +2893,8 @@ draw_type = draw_types[1]
 # sample_arr_n4 = n4_mid
 
 # draw_type = draw_types[0]   # ALL
-# draw_type = draw_types[1]   # EVE
-draw_type = draw_types[0]   # MID
+draw_type = draw_types[1]   # EVE
+# draw_type = draw_types[0]   # MID
 # draw_type = draw_types[2] # ALL
 sample_arr_n1 = []
 sample_arr_n2 = []
