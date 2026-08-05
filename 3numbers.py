@@ -1979,6 +1979,8 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
     #
     weight1 = 3
     weight2 = 2
+    weight1 = .5
+    weight2 = .25
     m = 0
     while m < 10:
         # n1_model_score_layer[m] = n1_model_score_layer[m] + n1_model_attribute1[m] + n1_model_attribute2[m] + n1_model_attribute3[m] 
@@ -2004,13 +2006,14 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
             n1_model_attribute3[m] = 1
           
 
-        calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] * n1_model_attribute2[m] * n1_model_attribute3[m]  )
-        double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
-        double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
+        # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + (n1_model_attribute1[m] * n1_model_attribute2[m] * n1_model_attribute3[m]  )
+        # double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
+        double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m]) * .25
 
         print(f"square it {( n1_model_attribute3[m] * n1_model_attribute3[m]) }")
-        # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( ( n1_model_attribute1[m] * weight2) * ( n1_model_attribute2[m] * weight1) * double_it  )
-        
+        calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] *  ( ( n1_model_attribute1[m] * weight2) * ( n1_model_attribute2[m] * weight1) + double_it ) 
+        calculated_n1_model_score_layer[m]  = abs(        calculated_n1_model_score_layer[m] )
+
         # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( n1_model_attribute1[m] * n1_model_attribute2[m] * double_it  )
 
 
@@ -2587,13 +2590,13 @@ def calculate_pattern_v3(pattern, draw_store, digit):         # calculate occure
             while x < len(n1_model_score_layer[prev_n]):
                 if is_winner_guess == False and n1_model_picks_layer[0] == n and x == n:        # predict number matched drawn increase score
                     print(f"{n1_model_picks_layer[0]} winner1! score increase")
-                    n1_model_score_layer[prev_n][ int(n1_model_picks_layer[0]) ] += 3  # True winner update increase score by some points
+                    n1_model_score_layer[prev_n][ int(n1_model_picks_layer[0]) ] += 5  # True winner update increase score by some points
                     is_winner = True
                     is_winner_guess = True
                     winner1 = n1_model_picks_layer[0] 
                 elif is_winner_guess == False and n1_model_picks_layer[1] == n and x == n:      # predict number matched drawn increase score
                     print(f"{n1_model_picks_layer[1]} winner2! score increase")
-                    n1_model_score_layer[prev_n][ int(n1_model_picks_layer[1]) ] += 3  # True winner update increase score by some points
+                    n1_model_score_layer[prev_n][ int(n1_model_picks_layer[1]) ] += 5  # True winner update increase score by some points
                     is_winner = True
                     is_winner_guess = True
                     winner2 = n1_model_picks_layer[1]
@@ -2601,7 +2604,7 @@ def calculate_pattern_v3(pattern, draw_store, digit):         # calculate occure
                     print(f"{n1_model_picks_layer[2]} winner3! score increase")
                     is_winner = True
                     is_winner_guess = True
-                    n1_model_score_layer[prev_n][ int(n1_model_picks_layer[2]) ] += 3  # True winner update increase score by some points
+                    n1_model_score_layer[prev_n][ int(n1_model_picks_layer[2]) ] += 5  # True winner update increase score by some points
                     winner3 = n1_model_picks_layer[2]
                 elif x == n1_model_picks_layer[0] or x == n1_model_picks_layer[1] or x == n1_model_picks_layer[2]:      # if predict missed to match, penalty is heavy
                     # n1_model_score_layer[prev_n][ int(x) ] -= 5
@@ -2612,12 +2615,12 @@ def calculate_pattern_v3(pattern, draw_store, digit):         # calculate occure
                     # else:           # acutal - calculated value (result positive) # under guessed
                     #     n1_model_score_layer[prev_n][ int(x) ] += int((n - x))
                     
-                    n1_model_score_layer[prev_n][ int(x) ] -= 3 
+                    n1_model_score_layer[prev_n][ int(x) ] -= 3
 
                     print(f"{x} draw {n} does not match guess picks!  {n1_model_picks_layer}")
                     print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
                 elif x == n and (is_winner == False and is_winner_guess == False): # drawn winning number increase point
-                    n1_model_score_layer[prev_n][ int(x) ] += 2
+                    n1_model_score_layer[prev_n][ int(x) ] += 5
                     print(f"{x}# {n} score increase")
                     print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
                 else:   # all other numbers 1 point
