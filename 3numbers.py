@@ -40,39 +40,88 @@ numbers_dl = import_csv_data_as_dictlist(numbers_file_csv)
 
 hotpicks_dl = import_csv_data_as_dictlist(hotpicks_file_csv)
 
+##
+# N1 - array sizing
+##
 n1 = np.arange(len(numbers_dl))
 print("len N1",len(n1))
-# n1_mid = np.arange(int(len(numbers_dl)/2)+1)
-n1_mid = np.arange(int(len(numbers_dl)/2))
-print("n1_mid len", len(n1_mid))
-# n1_eve = np.arange(int(len(numbers_dl)/2)+1)
-n1_eve = np.arange(int(len(numbers_dl)/2))
-print("n1_mid len", len(n1_eve))
+print(f"len(n1) % 2 {len(n1) % 2}")
+if len(n1) % 2 == 0:
+    n1_mid = np.arange(int(len(numbers_dl)/2))
+    print("n1_mid len", len(n1_mid))
+    n1_eve = np.arange(int(len(numbers_dl)/2))
+    print("n1_eve len", len(n1_eve))
+else:
+    n1_mid = np.arange(int(len(numbers_dl)/2)+1)
+    print("n1_mid len", len(n1_mid))
+    n1_eve = np.arange(int(len(numbers_dl)/2)+1)
+    print("n1_eve len", len(n1_eve))
 
+# # n1_mid = np.arange(int(len(numbers_dl)/2)+1)
+# n1_mid = np.arange(int(len(numbers_dl)/2)+1)
+# print("n1_mid len", len(n1_mid))
+# n1_eve = np.arange(int(len(numbers_dl)/2)+1)
+# # n1_eve = np.arange(int(len(numbers_dl)/2))
+# print("n1_eve len", len(n1_eve))
+
+##
+# N2 - array sizing
+##
 
 n2 = np.arange(len(numbers_dl))
-# n2_mid = np.arange(int(len(numbers_dl)/2)+1)
-n2_mid = np.arange(int(len(numbers_dl)/2))
-print("n2_mid len", len(n2_mid))
+print("len N2",len(n2))
+print(f"len(n2) % 2 {len(n2) % 2}")
+if len(n2) % 2 == 0:
+    n2_mid = np.arange(int(len(numbers_dl)/2))
+    print("n2_mid len", len(n2_mid))
+    n2_eve = np.arange(int(len(numbers_dl)/2))
+    print("n2_eve len", len(n2_eve))
+else:
+    n2_mid = np.arange(int(len(numbers_dl)/2)+1)
+    print("n2_mid len", len(n2_mid))
+    n2_eve = np.arange(int(len(numbers_dl)/2)+1)
+    print("n2_eve len", len(n2_eve))
+
+# n2 = np.arange(len(numbers_dl))
+# # n2_mid = np.arange(int(len(numbers_dl)/2)+1)
+# n2_mid = np.arange(int(len(numbers_dl)/2))
+# print("n2_mid len", len(n2_mid))
 # n2_eve = np.arange(int(len(numbers_dl)/2)+1)
-n2_eve = np.arange(int(len(numbers_dl)/2))
-print("n2_mid len", len(n2_eve))
+# # n2_eve = np.arange(int(len(numbers_dl)/2))
+# print("n2_mid len", len(n2_eve))
 
-
+##
+# N3 - array sizing
+##
 n3 = np.arange(len(numbers_dl))
-# n3_mid = np.arange(int(len(numbers_dl)/2)+1)
-n3_mid = np.arange(int(len(numbers_dl)/2))
-print("n3_mid len", len(n3_mid))
+print("len N3",len(n3))
+print(f"len(n3) % 2 {len(n3) % 2}")
+if len(n3) % 2 == 0:
+    n3_mid = np.arange(int(len(numbers_dl)/2))
+    print("n3_mid len", len(n3_mid))
+    n3_eve = np.arange(int(len(numbers_dl)/2))
+    print("n3_eve len", len(n3_eve))
+else:
+    n3_mid = np.arange(int(len(numbers_dl)/2)+1)
+    print("n3_mid len", len(n3_mid))
+    n3_eve = np.arange(int(len(numbers_dl)/2)+1)
+    print("n3_eve len", len(n3_eve))
+
+
+
+# n3 = np.arange(len(numbers_dl))
+# # n3_mid = np.arange(int(len(numbers_dl)/2)+1)
+# n3_mid = np.arange(int(len(numbers_dl)/2))
+# print("n3_mid len", len(n3_mid))
 # n3_eve = np.arange(int(len(numbers_dl)/2)+1)
-n3_eve = np.arange(int(len(numbers_dl)/2))
-print("n3_mid len", len(n3_eve))
+# # n3_eve = np.arange(int(len(numbers_dl)/2))
+# print("n3_mid len", len(n3_eve))
 
 # n4 = np.arange(len(numbers_dl))
 # n4_mid = np.arange(int(len(numbers_dl)/2)+1)
 # print("n4_mid len", len(n4_mid))
 # n4_eve = np.arange(int(len(numbers_dl)/2)+1)
 # print("n4_mid len", len(n4_eve))
-
 
 n1_cnt = [0,0,0,0,0,0,0,0,0,0]
 n1_cnt_prec = [0,0,0,0,0,0,0,0,0,0]
@@ -1959,7 +2008,7 @@ def update_model_predict(most_recent_num_n, draw_number_count, hot_picks_count, 
         # double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
         double_it = (  n1_model_attribute3[m] * n1_model_attribute3[m])
 
-        print(f"double it {( 2 * n1_model_attribute3[m]) }")
+        print(f"square it {( n1_model_attribute3[m] * n1_model_attribute3[m]) }")
         # calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( ( n1_model_attribute1[m] * weight2) * ( n1_model_attribute2[m] * weight1) * double_it  )
         
         calculated_n1_model_score_layer[m] = n1_model_score_layer[n1_model_base_num_layer][m] + ( n1_model_attribute1[m] * n1_model_attribute2[m] * double_it  )
@@ -2519,7 +2568,8 @@ def calculate_pattern_v3(pattern, draw_store, digit):         # calculate occure
                     winner3 = n1_model_picks_layer[2]
                 elif x == n1_model_picks_layer[0] or x == n1_model_picks_layer[1] or x == n1_model_picks_layer[2]:      # if predict missed to match, penalty is heavy
                     # n1_model_score_layer[prev_n][ int(x) ] -= 5
-                    n1_model_score_layer[prev_n][ int(x) ] -= 3
+                    # n1_model_score_layer[prev_n][ int(x) ] -= 3
+                    n1_model_score_layer[prev_n][ int(x) ] -= int(abs(x - n))
                     print(f"{x} draw {n} does not match guess picks!  {n1_model_picks_layer}")
                     print(f"updated score {n1_model_score_layer[prev_n][ int(x) ]}")
                 elif x == n and (is_winner == False and is_winner_guess == False): # drawn winning number increase point
@@ -2911,6 +2961,7 @@ if draw_type == 'EVE':
     sample_arr_n2 = n2_eve
     sample_arr_n3 = n3_eve
     draw_sz = len(n1_eve)
+    draw_sz = 30
 
 elif draw_type == 'MID':
     sample_arr_n1 = n1_mid
@@ -2985,6 +3036,7 @@ print("generate numbers for N1 ...", n1_picks)
 print(f"generate numbers for N1 n1_model_picks_layer {n1_model_picks_layer_nums}")
 # exit()
 
+exit()
 
 ##
 # For testing N1 ignore N2, N3
